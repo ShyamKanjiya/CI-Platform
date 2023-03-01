@@ -1,0 +1,108 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CI_platform</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @await RenderSectionAsync("CssValue", required: false)
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/plateformLandingPage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
+</head>
+<body>
+
+    <header>
+        <!-- navigation bar -->
+        <nav class="navbar navbar-expand-md navbar-light bg-light">
+            <div class="container-fluid " id="top-header-row">
+                <div id="nav-bar">
+                    <button class="navbar-toggler border-0" href="#menubar" role="button" data-bs-toggle="offcanvas"
+                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+                            id="navbar-toggler-btn">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="menubar" aria-labelledby="offcanvasExampleLabel">
+                        <div class="offcanvas-header">
+                            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Menu</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="offcanvas-body" id="offcanvas-body" style="margin-left:3vw;">
+                            <ul class="navbar-nav nav-item">
+                                <a class="nav-link" aria-current="page" href="#">Stories</a>
+                            </ul>
+                            <ul class="navbar-nav nav-item dropdown">
+                                <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    Privacy
+                                    <img src="~/images/drop-down.png" style="margin-left:5px" />
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                    <li><a class="dropdown-item" href="#">First Link</a></li>
+                                    <li><a class="dropdown-item" href="#">Second Link</a></li>
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+                                    <li><a class="dropdown-item" href="#">Third Link</a></li>
+                                </ul>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="nav-bar">
+                    <ul class="navbar-nav d-flex">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link profile-link-part" href="#" id="navbarScrollingDropdown " role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/images/user-img.png" class="rounded-circle" height="35" width="35" alt="Profile pic"
+                                     loading="lazy" />
+                                <span style="margin-left:5px;">Evan Donohue</span>
+                                <img src="~/images/drop-down.png" style="margin-left:5px" />
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item" href="#">First Link</a></li>
+                                <li><a class="dropdown-item" href="#">Second Link</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="#">Third Link</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div>
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer1">
+        <div class="container">
+            <a href="#" class="text-start">Privacy Policy</a>
+        </div>
+    </footer>
+
+    <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/platfromLandingPage.js"></script>
+    <script src="~/js/volunteeringMissionPage.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,731 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@{
+    ViewData["Title"] = "volunteeringMissionPage";
+    Layout = "~/Views/Shared/_LayoutNavbar.cshtml";
+}
+
+
+<div class="container">
+
+    <!--Top PART-->
+    <div class="row mt-5">
+        <!-- Container for the image gallery -->
+        <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
+            <div class="col-lg-6 col-md-12 w-100 px-3">
+
+                <!-- Full-width images with number text -->
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img11.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+
+
+                <!-- Thumbnail images -->
+                <div class="row mt-4 position-relative " style="height:10%">
+                    <div class="column mx-auto">
+                        @*<a class="prev" onclick="plusSlides(-1)">&#10094;</a>*@
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img11.png" style="width:100%" onclick="currentSlide(4)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(5)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
+                        @*<a class="next" onclick="plusSlides(1)">&#10095;</a>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data for image -->
+        <div class="container-fluid col-lg-6 d-flex justify-content-center align-items-center" id="data">
+
+            <div class="col-lg-6 col-md-12 w-100">
+                <div class="card-body p-0">
+                    <h1 class="pe-3">CSR initiative stands for Coffee & Farmer Equity</h1>
+
+                    <p class="pe-3 mt-3" style="font-size: 1.3rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
+
+                    <div class="border-top border-bottom mt-5" id="missionInfo" style="position: relative;">
+                        <div class="text-center border mb-2" id="missionPeriod">
+                            <p class="my-0" style="font-size : 1.3rem">Plant 10,000 Trees</p>
+                        </div>
+                        <div class="d-flex mt-2 pb-4 justify-content-around align-items-center py-3">
+                            <div class="d-flex justify-content-center align-items-center " style="width:max-content">
+                                <img class="me-2" height="30" src="/images/Seats-left.png" alt="">
+                                <div>
+                                    <p class="mb-0" style="font-size:1.3rem">10</p>
+                                    <small>Seats Left</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <img class="me-2" height="25" src="~/images/achieved.png" alt="">
+                                <div>
+                                    <div class="progress" style="min-width:100px; width: 10vw; height: 15px;">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <small><span>8000</span> achieved</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container mx-auto row mt-4 mb-4">
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div class="d-flex">
+                                <a href="#" class="btn d-flex align-items-center justify-content-center mx-auto addRecommand">
+                                    <img class="me-2" src="/images/heart1.png" alt="">
+                                    <small class="mb-0 pe-4 h6">Add to Favourite</small>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-12 col-sm-6 mb-2">
+                            <div class="d-flex">
+                                <a href="#" class="btn d-flex align-items-center justify-content-center mx-auto addRecommand">
+                                    <img class="me-2" src="/images/add1.png" alt="">
+                                    <small class="mb-0 pe-4 h6">Recommend to a Co-worker</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-top mt-3 w-100 text-center d-flex">
+                        <div class="translate-middle-y bg-white mx-content mx-auto">
+                            <img src="~/images/star-empty.png" alt="">
+                            <img src="~/images/star-empty.png" alt="">
+                            <img src="~/images/star-empty.png" alt="">
+                            <img src="~/images/star-empty.png" alt="">
+                            <img src="~/images/star-empty.png" alt="">
+                        </div>
+                    </div>
+
+                    <div class="pt-4 px-0">
+                        <div class="row d-flex justify-content-center">
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/pin1.png" alt="">
+                                <small class="d-flex pt-3 ">City</small>
+                                <p class="mb-0">London</p>
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/web.png" alt="">
+                                <small class="d-flex pt-3">Theme</small>
+                                <p class="mb-0">Environment</p>
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/calender.png" alt="">
+                                <small class="d-flex ">Data</small>
+                                <p class="mb-0">Ongoing Opportunity</p>
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/organization.png" alt="">
+                                <small class="d-flex pt-3">Organization</small>
+                                <p class="mb-0">CSE Network</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-4 applyNowBtn">
+                            <p class="mb-0 pe-4 text-warning">Apply</p>
+                            <img src="/images/right-arrow.png" alt="">
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Middle PART-->
+    <div class="row middle">
+
+        <!--Tab part-->
+        <div class="container col-lg-7 px-3 data" id="tabs">
+            <div class="row">
+                <div class="col-xs-12 ">
+                    <nav>
+                        <div class="nav nav-tabs" role="tablist">
+                            <a class="nav-link actives" data-toggle="tab" href="#nav-home" role="tab" aria-selected="true">Mission</a>
+                            <a class="nav-link" data-toggle="tab" href="#nav-profile" role="tab" aria-selected="false">Organization</a>
+                            <a class="nav-link" data-toggle="tab" href="#nav-contact" role="tab" aria-selected="false">Comments</a>
+                        </div>
+                    </nav>
+                    <div class="tab-content py-3 px-3 px-sm-0" id="nav-tabContent">
+                        
+                        <!--Mission section-->
+                        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                            <h3 class="pb-2">Introduction</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <h3 class="pb-2">Challenge</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                            </p>
+                            <h3 class="pb-2">Documents</h3>
+                            <button class="py-2 px-3 doc_button"><img src="~/images/pdf.png" class="pe-2">loren-ipusem.pdf</button>
+                            <button class="py-2 px-3 doc_button"><img src="~/images/doc.png" class="pe-2">at_vero_eos_accusamus.doc</button>
+                            <button class="py-2 px-3 doc_button"><img src="~/images/xlsx.png" class="pe-2">important_doc.xlsx</button>
+                        </div>
+                        
+                        <!--Organization section-->
+                        <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                            <h3 class="pb-2">Introduction</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                            <h3 class="pb-2">Challenge</h3>
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>
+                        </div>
+                        
+                        <!--Comments section-->
+                        <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+                            <div class="col-12">
+                                <form class="mt-4">
+                                    <textarea class="form-control" name="" id="" cols="30" rows="4" placeholder="Enter your comments.."></textarea>
+                                </form>
+
+                                <button class="btn btn-outline-danger rounded-pill m-3 ms-0 ">Post comments</button>
+
+                                <div class="container w-100  border bg-light" style="overflow: auto;">
+                                    <div style="height: 26rem;" class="row">
+                                        <div class="col-12 bg-white mt-3 mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 bg-white mb-3 pt-2">
+                                            <div class="container-fluid">
+                                                <div class="row">
+                                                    <div class="col-auto my-auto">
+                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
+                                                    </div>
+                                                    <div class="col">
+                                                        <p class="mb-1">Margaret Walsh</p>
+                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
+                                                        <p>Nice mission great opportunity for peoples</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--info and volunteers-->
+        <div class="container col-lg-5 info">
+
+            <!--Info-->
+            <div class="col-12 border pt-3 px-4">
+                <div class="border-bottom">
+                    <h3 class="pb-3 mb-0" style="border-bottom:2px solid black; width:fit-content">Information</h3>
+                </div>
+                <div class="d-flex border-bottom">
+                    <p class="pe-4 py-3">Skills</p>
+                    <p class="py-3">Cool,Easy going,Math,Computer</p>
+                </div>
+                <div class="d-flex border-bottom">
+                    <p class="pe-4 py-3">Days</p>
+                    <p class="py-3">Weekend Only</p>
+                </div>
+                <div class="d-flex pt-3">
+                    <p class="pe-4 mb-4">Ratting</p>
+                    <span class="mb-4">
+                        <img src="~/images/selected-star.png" />
+                        <img src="~/images/selected-star.png" />
+                        <img src="~/images/selected-star.png" />
+                        <img src="~/images/selected-star.png" />
+                        <img src="~/images/selected-star.png" />
+                        <span>(by 125 volunteers)</span>
+                    </span>
+                </div>
+            </div>
+
+            <!--Recent volunteer-->
+            <div class="col-12 border pt-3 px-4 mt-3">
+
+                <div class="border-bottom">
+                    <h3 class="pb-3 mb-0" style="border-bottom:2px solid black; width:fit-content">Recent Volunteers</h3>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer1.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Andrew J</p>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer2.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Charles Vigue</p>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer3.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Kathryn R</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer4.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Estella Fowles</p>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer5.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Rose Lewis</p>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer6.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Raymond P</p>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center justify-content-center my-3">
+                    <div class="col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer7.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Travis Steen</p>
+                    </div>
+
+                    <div class="col-lg-4 col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer8.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Sarah Santillan</p>
+                    </div>
+
+                    <div class="col-lg-4 col-4">
+                        <div class="d-flex justify-content-center">
+                            <img src="~/images/volunteer9.png" class="rounded-circle" height="70" width="70" />
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">Linda Richards</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!--Bottom of Recent volunteer-->
+            <div class="pagging d-flex justify-content-between align-items-center border-1 border-top-0">
+                <button>
+                    <div class="prev">
+                        <img src="~/images/left.png">
+                    </div>
+                </button>
+                <div>
+                    <span>1 - 9 of 25 Recent Volunteers</span>
+                </div>
+                <button>
+                    <div class="next">
+                        <img src="~/images/right-arrow1.png">
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr class="w-100" style="margin-top: 5rem;">
+
+<div class="container">
+
+    <!--Bottom PART Related Mission Part-->
+    <div class="row">
+        <div class="container-fluid text-center my-5">
+            <h2>Related Mission</h2>
+        </div>
+        <div class="container" style="width:90vw">
+            <div class="row">
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card">
+                        <div style="position: relative;">
+                            <img class="card-img-top" id="mission-img"
+                                 src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                            <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                 id="location" style="width: 7rem">
+                                <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                            </div>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                <img src="/images/heart.png" alt="">
+                            </button>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                <img src="/images/user.png" alt="">
+                            </button>
+                            <div>
+                                <p class="d-inline px-2" id="missionTheme">Environment</p>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                            <h5 class="card-title px-3">environment sustainability</h5>
+                            <p class="card-text px-3">
+                                Some quick example text to build on the card title and make up the
+                                bulk
+                                of the
+                                card's content.
+                            </p>
+                            <div class="d-flex justify-content-between px-3">
+                                <div>
+                                    <p>Tree Canada</p>
+                                </div>
+                                <div>
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                </div>
+                            </div>
+                            <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                <div class="border text-center" id="missionPeriod">
+                                    <small>From 10/01/2019 until 25/02/2019</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                   id="applyNowBtn">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card">
+                        <div style="position: relative;">
+                            <img class="card-img-top" id="mission-img"
+                                 src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                            <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                 id="location" style="width: 7rem">
+                                <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                            </div>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                <img src="/images/heart.png" alt="">
+                            </button>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                <img src="/images/user.png" alt="">
+                            </button>
+                            <div>
+                                <p class="d-inline px-2" id="missionTheme">Environment</p>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                            <h5 class="card-title px-3">environment sustainability</h5>
+                            <p class="card-text px-3">
+                                Some quick example text to build on the card title and make up the
+                                bulk
+                                of the
+                                card's content.
+                            </p>
+                            <div class="d-flex justify-content-between px-3">
+                                <div>
+                                    <p>Tree Canada</p>
+                                </div>
+                                <div>
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                </div>
+                            </div>
+                            <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                <div class="border text-center" id="missionPeriod">
+                                    <small>From 10/01/2019 until 25/02/2019</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                   id="applyNowBtn">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-md-6 col-lg-4 mx-auto">
+                    <div class="card ">
+                        <div style="position: relative;">
+                            <img class="card-img-top" id="mission-img"
+                                 src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                            <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                 id="location" style="width: 7rem">
+                                <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                            </div>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                <img src="/images/heart.png" alt="">
+                            </button>
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                <img src="/images/user.png" alt="">
+                            </button>
+                            <div>
+                                <p class="d-inline px-2" id="missionTheme">Environment</p>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                            <h5 class="card-title px-3">environment sustainability</h5>
+                            <p class="card-text px-3">
+                                Some quick example text to build on the card title and make up the
+                                bulk
+                                of the
+                                card's content.
+                            </p>
+                            <div class="d-flex justify-content-between px-3">
+                                <div>
+                                    <p>Tree Canada</p>
+                                </div>
+                                <div>
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/selected-star.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    <img class="rating-star" src="/images/star-empty.png" alt="">
+                                </div>
+                            </div>
+                            <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                <div class="border text-center" id="missionPeriod">
+                                    <small>From 10/01/2019 until 25/02/2019</small>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                        <div>
+                                            <p class="mb-0">10</p>
+                                            <small>Seats Left</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                   id="applyNowBtn">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

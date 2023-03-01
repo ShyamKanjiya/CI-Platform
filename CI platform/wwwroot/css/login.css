@@ -1,0 +1,172 @@
+* {
+    transition: 0.2s all ease;
+}
+
+.carousel-inner img {
+    width: 100%;
+    height: 100vh;
+}
+
+.container-fluid {
+    padding: 0;
+    margin: 0;
+}
+
+.row {
+    padding: 0;
+    margin: 0;
+}
+
+.carousel {
+    padding: 0;
+    margin: 0;
+}
+
+#LoginBtn {
+    border-radius: 50px;
+    border: 2px solid #F88634;
+    background-color: white;
+    color: #F88634;
+    height: 48px;
+    font-size: 20px;
+    margin-top: 40px;
+}
+
+#LoginBtn:hover {
+    color: #ffffff;
+    background-color: #F88634;
+}
+
+.form-group {
+    font-size: 22px;
+    font-family: 'Segoe UI';
+}
+
+#staticNames {
+    color: #414141;
+    padding-bottom: 10px;
+    font-size: 20px;
+}
+
+.lostNewAcc {
+    position: relative;
+    margin-top: 17px;
+    text-align: center;
+}
+
+#InputEmail1 {
+    height: 56px;
+}
+
+#InputPassword1 {
+    height: 56px;
+}
+
+#newPass {
+    margin-top: 15px;
+}
+
+.carousel-item {
+    transition: 0s;
+}
+
+#form {
+    display: grid;
+    grid-template-rows: 95vh 5vh;
+    align-items: center;
+}
+
+form {
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.PP {
+    display: flex;
+    height: 100%;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+#indi {
+    border-radius: 90%;
+    width: 8px;
+    height: 8px;
+    margin: 10px;
+}
+
+@media screen and (max-width : 991px) {
+    label{
+        font-size:20px;
+    }
+
+    .carousel-item img{
+        height:100%;
+    }
+
+    p,a {
+        font-size: 16px;
+    }
+
+    .carousel-caption p{
+        font-size: 15px;
+    }
+
+    #LoginBtn {
+        font-size: 15px;
+    }
+
+    #form {
+        grid-template-rows: 40vh 5vh;
+        align-items: center;
+    }
+
+    .PP {
+        align-items: flex-end;
+    }
+}
+
+@media screen and (max-width : 576px) {
+    .carousel-indicators {
+        display: none;
+    }
+}
+
+@media screen and (max-width : 500px) {
+    form {
+        padding-top: 10%;
+    }
+
+    label {
+        font-size: 15px;
+    }
+
+    p,a {
+        font-size: 15px;
+    }
+
+    .carousel-caption p {
+        font-size: 10px;
+    }
+
+    #InputEmail1 {
+        height: auto;
+    }
+
+    #InputPassword1 {
+        height: auto;
+    }
+
+    #LoginBtn {
+        height: auto;
+        margin-top: 2rem;
+    }
+
+    #form {
+        grid-template-rows: auto;
+    }
+
+    .PP {
+        margin: 5% 0;
+    }
+}

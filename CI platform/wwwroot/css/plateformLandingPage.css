@@ -1,0 +1,261 @@
+* {
+    transition: 0.1s all ease;
+}
+
+.container{
+    max-width: 90vw;
+}
+
+#top-header-row {
+    margin: 0 3rem;
+}
+
+#navbar-toggler-btn {
+    box-shadow: none;
+}
+
+#search-inp .form-control {
+    background: url("../images/search.png") no-repeat;
+    background-position: 12px center;
+    background-size: 1em;
+    width: 350px;
+    font-size: 16px;
+    padding: 8px 16px 5px 48px;
+}
+
+.navbar-nav .dropdown-menu {
+    position: absolute;
+    height:auto;
+    max-height:200px;
+    overflow-x:hidden;
+}
+
+.searchByFilter {
+    border-left: 1px solid #D9D9D9;
+    width: 20%;
+}
+
+.searchByFilter:nth-last-child(1) {
+    border-right: 1px solid #D9D9D9;
+}
+
+.offcanvas-body {
+    justify-content: center;
+}
+
+#offcanvas-body {
+    justify-content: start;
+}
+
+.profile-link-part {
+    margin-right: 3vw;
+}
+
+#search-inp {
+    margin-left: 5vw;
+}
+
+
+.card {
+    margin-bottom: 1rem;
+}
+
+.list-view .row>[class*=col-] {
+    max-width: 100%;
+    flex: 0 0 100%;
+}
+
+.list-view .card {
+    flex-direction: row;
+}
+
+@media (max-width: 575.98px) {
+    .list-view .card {
+        flex-direction: column;
+    }
+
+    .container {
+        max-width: 100vw;
+    }
+}
+
+.list-view .card>.card-img-top {
+    width: auto;
+}
+
+.list-view .card .card-body {
+    display: inline-block;
+}
+
+.dropdown-toggle-split::after {
+    margin-left: 60px;
+}
+
+#gridView,
+#listView {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    background-color: rgb(238, 238, 238);
+}
+
+#mission-img {
+    object-fit: cover;
+    height: 100%;
+}
+
+.list-view #mission-img{
+    width: 25vw;
+}
+
+.card-btn {
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+}
+
+#location {
+    position: absolute;
+    top: 1rem;
+    right: 10px;
+    border-radius: 20px;
+}
+
+#likeThisMission {
+    position: absolute;
+    bottom: 65px;
+    right: 10px;
+}
+
+#shareToFriend {
+    position: absolute;
+    bottom: 20px;
+    right: 10px;
+}
+
+#missionTheme {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 20px;
+    background-color: white;
+}
+
+.rating-star {
+    width: 20px;
+    height: 20px;
+}
+
+#missionPeriod {
+    position: absolute;
+    top: -15px;
+    background-color: white;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 15rem;
+    border-radius: 20px;
+}
+
+#applyNowBtn {
+    width: 8rem;
+    border-radius: 20px;
+}
+
+#applyNowBtn img {
+    height: 15px;
+    width: 20px;
+}
+
+.footer1 {
+    position: relative;
+    display: flex;
+    bottom: 0;
+    height: 8vh;
+    width:100vw;
+    align-items: center;
+}
+
+@media (max-width: 767px) {
+    .searchByFilter {
+        border: none;
+    }
+
+    .searchByFilter:nth-last-child(1) {
+        border: none;
+    }
+
+    #top-header-row {
+        margin: 0 1rem;
+    }
+
+
+    #search-inp {
+        margin-left: 0rem;
+    }
+
+}
+
+@media (max-width: 575px) {
+    #search-icon {
+        display: none;
+    }
+
+    #search-inp> ::placeholder {
+        font-size: 4vw;
+    }
+
+    .profile-link-part {
+        margin-right: 4vw;
+    }
+
+    #top-header-row {
+        margin: 0;
+    }
+
+    .filter-offcanvas {
+        justify-self: center;
+    }
+}
+
+
+.filter-list {
+    background-color: white;
+    border: 1px solid #808080;
+    border-radius: 20px;
+    color: #000;
+    cursor: pointer;
+}
+
+.filter-close-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-left: 5px;
+    color: #888;
+}
+
+.filters-section {
+    margin-top: 2%;
+}
+
+
+
+/*No Mission Found Page*/
+
+#submit-new-mission-btn {
+    background-color: transparent;
+    border: 2px solid #F88634;
+    color: #F88634;
+    border-radius: 24px;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+
+#submit-new-mission-btn :hover,
+{
+    color: #ffff;
+    background-color: #F88634
+}
