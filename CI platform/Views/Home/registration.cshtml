@@ -122,13 +122,12 @@
                         <input type="password" class="form-control" id="InputCheckPassword">
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
-                    <button id="RegisterBtn" class="btn btn-primary col-12" type="submit" onclick="return validation()">Register</button>
+                    <button id="RegisterBtn" class="btn btn-primary col-12 py-0" type="submit">Register</button>
 
                     <div class="lostNewAcc">
                         <a asp-area="" asp-controller="home" asp-action="forgotPassword">Lost your password?</a>
                         <p id="newPass">Don't have an account? <a asp-area="" asp-controller="home" asp-action="login">Login Now</a></p>
                     </div>
-
 
                 </form>
                 <div class="PP text-center mx-auto">

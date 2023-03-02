@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using CI_platform.Entities.DataModels;
 using Microsoft.EntityFrameworkCore;
 
-namespace CI_platform.Entities;
+namespace CI_platform.Entities.DataModels;
 
 public partial class CIDbContext : DbContext
 {

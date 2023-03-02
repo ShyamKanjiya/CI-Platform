@@ -1,4 +1,4 @@
-using CI_platform.Entities;
+using CI_platform.Entities.DataModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -6,6 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<CIDbContext>();
+
+builder.Services.AddSession();
 
 var app = builder.Build();
 
@@ -23,6 +25,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

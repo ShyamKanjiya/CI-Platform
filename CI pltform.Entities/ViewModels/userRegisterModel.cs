@@ -17,11 +17,10 @@ namespace CI_platform.Entities.ViewModels
         public string? LastName { get; set; }
 
         [Required]
-        [RegularExpression(@"/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/", ErrorMessage = "Enter Valid Email")]
         public string Email { get; set; } = null!;
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$", ErrorMessage = "Invalid Password ! Enter Valid Password")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$", ErrorMessage = "Enter Valid Password")]
         public string Password { get; set; } = null!;
 
         [NotMapped]
@@ -31,7 +30,7 @@ namespace CI_platform.Entities.ViewModels
 
         [Required]
         [RegularExpression(@"^(\d{10})$", ErrorMessage = "Mobile no not valid")]
-        public int PhoneNumber { get; set; }
+        public long PhoneNumber { get; set; }
 
         public long CityId { get; set; }
 

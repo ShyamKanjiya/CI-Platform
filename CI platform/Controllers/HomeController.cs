@@ -1,10 +1,8 @@
-﻿using CI_platform.Entities;
-using CI_platform.Entities.DataModels;
+﻿using CI_platform.Entities.DataModels;
 using CI_platform.Entities.ViewModels;
 using CI_platform.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
@@ -68,19 +66,21 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult Login()
         {
+            HttpContext.Session.Clear();
             return View();
         }
 
         [HttpPost]
         public IActionResult Login(userLoginModel obj)
         {
-            var status = _dbContext.Users.FirstOrDefault(m => m.Email == obj.Email && m.Password == GetHash(obj.Password));
+            var status = _dbContext.Users.FirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password);
             if (status == null)
             {
                 ViewBag.LoginStatus = 0;
             }
             else
             {
+                HttpContext.Session.SetString("UserID", obj.Email);
                 return RedirectToAction("platformLandingPage", "Pages");
             }
             return View(obj);
