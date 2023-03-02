@@ -2,555 +2,544 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    var user = Context.Session.GetString("UserID");
-    if (user == null)
-    {
-        
-        Context.Response.Redirect("/Home/login");
+}
+    <!doctype html>
+    <html lang="en">
 
-    }
-    else
-    {
-        <!doctype html>
-        <html lang="en">
-
-        <head>
-            <meta charset="utf-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-            <title>Bootstrap demo</title>
-            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Bootstrap demo</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
               integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-            <link rel="stylesheet" href="/css/plateformLandingPage.css" />
-            <link rel="preconnect" href="https://fonts.googleapis.com">
-            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-            <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
-        </head>
+        <link rel="stylesheet" href="/css/plateformLandingPage.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    </head>
 
-        <body>
-            <div class="filters-section d-flex align-items-center flex-wrap justify-content-center"></div>
-            <!-- grid and list view -->
-            <div class="container py-md-5 py-3">
-                @*<!-- mission heading and icons end -->*@
-                <div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar">
-                    <div id="missionBarLeft">
-                        <p class="mb-0 h2">Explore <strong>72 Missions</strong></p>
-                    </div>
-                    <ul class="d-flex align-items-center ms-auto nav d-none d-md-flex" id="missionBarRight">
-                        <li class="nav-item dropdown">
-                            <a class="pe-3 py-1 me-3 d-flex justify-content-between align-items-center ps-3 border text-decoration-none" href="#"
+    <body>
+        <div class="filters-section d-flex align-items-center flex-wrap justify-content-center"></div>
+        <!-- grid and list view -->
+        <div class="container py-md-5 py-3">
+            @*<!-- mission heading and icons end -->*@
+            <div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar">
+                <div id="missionBarLeft">
+                    <p class="mb-0 h2">Explore <strong>72 Missions</strong></p>
+                </div>
+                <ul class="d-flex align-items-center ms-auto nav d-none d-md-flex" id="missionBarRight">
+                    <li class="nav-item dropdown">
+                        <a class="pe-3 py-1 me-3 d-flex justify-content-between align-items-center ps-3 border text-decoration-none" href="#"
                            id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
                            style="width: 150px; display: block;">
-                                <span style="color:black">Sort By</span>
-                                <img src="~/images/drop-down.png" />
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                <li><a class="dropdown-item" href="#">Skill 1</a></li>
-                                <li><a class="dropdown-item" href="#">Skill 2</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Skill 3</a></li>
-                            </ul>
-                        </li>
-                        <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
-                            <img src="/images/grid.png" alt="" height="25">
-                        </button>
-                        <button class="mx-4 d-flex align-items-center justify-content-center border-0 btn-list" id="listView">
-                            <img src="/images/list.png" alt="" height="18">
-                        </button>
-                    </ul>
-                </div>
-
-                <!-- mission heading and icons end -->
-                <!-- missions gridview and listview start -->
-                <div class="container grid-container">
-                    <div class="row">
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-12 col-md-6 col-lg-4">
-                            <div class="card">
-                                <div style="position: relative;">
-                                    <img class="card-img-top" id="mission-img"
-                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
-                                    <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
-                                     id="location" style="width: 7rem">
-                                        <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
-                                        <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
-                                    </div>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
-                                        <img src="/images/heart.png" alt="">
-                                    </button>
-                                    <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                                        <img src="/images/user.png" alt="">
-                                    </button>
-                                    <div>
-                                        <p class="d-inline px-4" id="missionTheme">Environment</p>
-                                    </div>
-                                </div>
-                                <div class="card-body p-0">
-                                    <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
-                                    <h5 class="card-title px-3">environment sustainability</h5>
-                                    <p class="card-text px-3">
-                                        Some quick example text to build on the card title and make up the
-                                        bulk
-                                        of the
-                                        card's content.
-                                    </p>
-                                    <div class="d-flex justify-content-between px-3">
-                                        <div>
-                                            <p>Tree Canada</p>
-                                        </div>
-                                        <div>
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/selected-star.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                            <img class="rating-star" src="/images/star-empty.png" alt="">
-                                        </div>
-                                    </div>
-                                    <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
-                                        <div class="border text-center px-2" id="missionPeriod">
-                                            <small>From 10/01/2019 until 25/02/2019</small>
-                                        </div>
-                                        <div class="d-flex justify-content-between align-items-center px-4 py-3">
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center">
-                                                <img class="me-2" height="25" src="/images/deadline.png" alt="">
-                                                <div>
-                                                    <p class="mb-0">10</p>
-                                                    <small>Seats Left</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
-                                       id="applyNowBtn">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-                <!-- Pagination -->
-                <div>
-                    <ul class="pagination justify-content-center mt-5">
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">&laquo;</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">&lsaquo;</a>
-                        </li>
-                        <li class="page-item active mx-2">
-                            <a class="page-link" href="#">1</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">2</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">3</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">4</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">5</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">&rsaquo;</a>
-                        </li>
-                        <li class="page-item mx-2">
-                            <a class="page-link" href="#">&raquo;</a>
-                        </li>
-                    </ul>
-                </div>
-
+                            <span style="color:black">Sort By</span>
+                            <img src="~/images/drop-down.png" />
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item" href="#">Skill 1</a></li>
+                            <li><a class="dropdown-item" href="#">Skill 2</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#">Skill 3</a></li>
+                        </ul>
+                    </li>
+                    <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
+                        <img src="/images/grid.png" alt="" height="25">
+                    </button>
+                    <button class="mx-4 d-flex align-items-center justify-content-center border-0 btn-list" id="listView">
+                        <img src="/images/list.png" alt="" height="18">
+                    </button>
+                </ul>
             </div>
-        </body>
+
+            <!-- mission heading and icons end -->
+            <!-- missions gridview and listview start -->
+            <div class="container grid-container">
+                <div class="row">
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-6 col-lg-4">
+                        <div class="card">
+                            <div style="position: relative;">
+                                <img class="card-img-top" id="mission-img"
+                                     src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                                <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
+                                     id="location" style="width: 7rem">
+                                    <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
+                                    <small class="text-light me-auto mb-0" id="locationName">Toronto</small>
+                                </div>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="likeThisMission">
+                                    <img src="/images/heart.png" alt="">
+                                </button>
+                                <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
+                                    <img src="/images/user.png" alt="">
+                                </button>
+                                <div>
+                                    <p class="d-inline px-4" id="missionTheme">Environment</p>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <h5 class="card-title mt-3 px-3">Grow Trees - On the path to</h5>
+                                <h5 class="card-title px-3">environment sustainability</h5>
+                                <p class="card-text px-3">
+                                    Some quick example text to build on the card title and make up the
+                                    bulk
+                                    of the
+                                    card's content.
+                                </p>
+                                <div class="d-flex justify-content-between px-3">
+                                    <div>
+                                        <p>Tree Canada</p>
+                                    </div>
+                                    <div>
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/selected-star.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                        <img class="rating-star" src="/images/star-empty.png" alt="">
+                                    </div>
+                                </div>
+                                <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
+                                    <div class="border text-center px-2" id="missionPeriod">
+                                        <small>From 10/01/2019 until 25/02/2019</small>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center">
+                                            <img class="me-2" height="25" src="/images/deadline.png" alt="">
+                                            <div>
+                                                <p class="mb-0">10</p>
+                                                <small>Seats Left</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2"
+                                       id="applyNowBtn">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <div>
+                <ul class="pagination justify-content-center mt-5">
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">&laquo;</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">&lsaquo;</a>
+                    </li>
+                    <li class="page-item active mx-2">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">4</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">5</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">&rsaquo;</a>
+                    </li>
+                    <li class="page-item mx-2">
+                        <a class="page-link" href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+    </body>
 
 
 
-        </html>
-
-    }
-}
+    </html>

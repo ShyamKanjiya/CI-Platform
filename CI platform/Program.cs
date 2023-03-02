@@ -23,13 +23,12 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
-
 app.UseSession();
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=login}/{id?}");
+    pattern: "{controller=Pages}/{action=platformLandingPage}/{id?}");
 
 app.Run();

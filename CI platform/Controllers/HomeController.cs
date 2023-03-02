@@ -1,11 +1,14 @@
 ﻿using CI_platform.Entities.DataModels;
 using CI_platform.Entities.ViewModels;
 using CI_platform.Models;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -80,12 +83,28 @@ namespace CI_platform.Controllers
             }
             else
             {
-                HttpContext.Session.SetString("UserID", obj.Email);
+                var identity = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Email, status.Email) },
+                CookieAuthenticationDefaults.AuthenticationScheme);
+                identity.AddClaim(new Claim(ClaimTypes.Name, status.FirstName));
+                identity.AddClaim(new Claim(ClaimTypes.Surname, status.LastName));
+                var principle = new ClaimsPrincipal(identity);
+                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principle);
+                HttpContext.Session.SetString("Email", status.Email);
+
                 return RedirectToAction("platformLandingPage", "Pages");
             }
             return View(obj);
         }
         //----------------------------------------------------------//
+
+
+        public IActionResult Logout()
+        {
+            HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
+            return RedirectToAction("Index", "Home");
+        }
+
 
         //---------------------- FOR FORGOT PASSWORD --------------------------//
         [HttpGet]
