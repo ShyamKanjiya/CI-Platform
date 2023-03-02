@@ -9,7 +9,7 @@ namespace CI_platform.Entities.ViewModels
 {
     public class userForgotPasswordModel
     {
-        [Required(ErrorMessage = "Email is required.")]
+        [Required]
         public string? Email { get; set; }
 
         [Required]

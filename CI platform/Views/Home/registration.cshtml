@@ -95,26 +95,32 @@
                     <div class="form-group">
                         <label class="form-label">First Name</label>
                         <input asp-for="FirstName" class="form-control" id="InputName">
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label class="form-label mt-3">Last Name</label>
                         <input asp-for="LastName" class="form-control" id="InputLName">
+                        <span asp-validation-for="LastName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label class="form-label mt-3">Phone Number</label>
                         <input asp-for="PhoneNumber" type="number" class="form-control" id="InputNumber">
+                        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label for="InputEmail1" class="form-label mt-3">Email address</label>
                         <input asp-for="Email" type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp">
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label for="InputPassword1" class="form-label mt-3">Password</label>
                         <input asp-for="Password" type="password" class="form-control" id="InputPassword">
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label for="InputPassword2" class="form-label mt-3">Confirm Password</label>
                         <input type="password" class="form-control" id="InputCheckPassword">
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                     <button id="RegisterBtn" class="btn btn-primary col-12" type="submit" onclick="return validation()">Register</button>
 

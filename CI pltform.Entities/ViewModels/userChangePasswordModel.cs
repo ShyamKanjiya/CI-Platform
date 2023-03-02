@@ -16,7 +16,8 @@ namespace CI_platform.Entities.ViewModels
         [Required]
         public string? Token { get; set; }
 
-        [Required(ErrorMessage = "Password is required.")]
+        [Required]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$", ErrorMessage = "Invalid Password ! Enter valid Password")]
         public string? Password { get; set; }
 
         [NotMapped]
