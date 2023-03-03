@@ -15,9 +15,18 @@
     
     <div class="container-fluid">
         <main role="main">
+             @{
+                Html.RenderPartial("_headerPartialView");
+            }
             @RenderBody()
+            @{
+                 Html.RenderPartial("_footerPartialView");
+            }
+
         </main>
     </div>
+
+
     <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace CI_platform.Entities.DataModels;
 
 public partial class City
 {
+    [Key]
     public long CityId { get; set; }
 
     public long CountryId { get; set; }

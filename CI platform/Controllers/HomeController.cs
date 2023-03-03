@@ -9,8 +9,6 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace CI_platform.Controllers
 {
@@ -43,8 +41,8 @@ namespace CI_platform.Controllers
                 LastName = _userRegisterModel.LastName,
                 PhoneNumber = _userRegisterModel.PhoneNumber,
                 Email = _userRegisterModel.Email,
-                Password = GetHash(_userRegisterModel.Password),
-                CityId = 8, 
+                Password = _userRegisterModel.Password,
+                CityId = 8,
                 CountryId = 1,
 
             };
@@ -102,7 +100,7 @@ namespace CI_platform.Controllers
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             HttpContext.Session.Clear();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("platformLandingPage", "Pages");
         }
 
 
@@ -139,14 +137,14 @@ namespace CI_platform.Controllers
             var toAddress = new MailAddress(_userForgotPasswordModel.Email);
             var subject = "Password reset request";
             var body = $"Hi,<br /><br />Please click on the following link to reset your password:<br /><br /><a href='{resetLink}'>{resetLink}</a>";
-            
+
             var message = new MailMessage(fromAddress, toAddress)
             {
                 Subject = subject,
                 Body = body,
                 IsBodyHtml = true
             };
-            
+
             var smtpClient = new SmtpClient("smtp.gmail.com", 587)
             {
                 UseDefaultCredentials = false,
@@ -191,10 +189,17 @@ namespace CI_platform.Controllers
                 return RedirectToAction("forgetPassword", "Home");
             }
 
-            status.Password = GetHash(_userChangePasswordModel.Password);
+            status.Password = _userChangePasswordModel.Password;
+            _dbContext.Users.Update(status);
             _dbContext.SaveChanges();
 
-            return View();
+            var deletion = _dbContext.PasswordResets.FirstOrDefault(x => x.Token == _userChangePasswordModel.Token && x.Email == _userChangePasswordModel.Email);
+            if (deletion != null)
+            {
+                _dbContext.PasswordResets.Remove(deletion);
+            }
+
+            return RedirectToAction("login", "Home");
         }
 
         //---------------------------------------------------------------------//
@@ -202,7 +207,7 @@ namespace CI_platform.Controllers
 
         //---------------------------- Hashing --------------------------------//
 
-        public static string GetHash(string text)
+        /*public static string GetHash(string text)
         {
             // SHA512 is disposable by inheritance.  
             using (var sha256 = SHA256.Create())
@@ -212,7 +217,7 @@ namespace CI_platform.Controllers
                 // Get the hashed string.  
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
-        }
+        }*/
 
         //---------------------------------------------------------------------//
 
