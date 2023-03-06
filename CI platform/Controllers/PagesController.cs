@@ -1,5 +1,8 @@
 ﻿using CI_platform.Entities.DataModels;
+using CI_platform.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
 
 namespace CI_platform.Controllers
 {
@@ -14,17 +17,62 @@ namespace CI_platform.Controllers
             _dbContext = dbContext;
         }
 
+
+        //---------------------- CARD VIEW --------------------------//
         [HttpGet]
         public IActionResult platformLandingPage()
         {
-            List<Mission> missions = _dbContext.Missions.ToList();
-            foreach (var mission in missions)
-            {
-                _dbContext.Entry(mission).Reference(c => c.City).Load();
-                _dbContext.Entry(mission).Reference(t => t.MissionTheme).Load();
-            }
-            return View(missions);
+            userViewModel obj = new userViewModel();
+            obj = partial();
+            return View(obj);
         }
+
+        public userViewModel partial()
+        {
+            userViewModel obj = new()
+            {
+                Countries = GetCountries(),
+                Cities = GetCities(),
+                Missions = GetMissions(),
+                MissionThemes = GetMissionThemes(),
+                Skills = GetSkills(),
+                GoalMissions =  GetGoalMissions()
+            };
+
+            return obj;
+        }
+
+        public IEnumerable<Mission> GetMissions()
+        {
+            return _dbContext.Missions.ToList();
+        }
+
+        public IEnumerable<Country> GetCountries()
+        {
+            return _dbContext.Countries.ToList();
+        }
+
+        public IEnumerable<City> GetCities()
+        {
+            return _dbContext.Cities.ToList();
+        }
+
+        public IEnumerable<MissionTheme> GetMissionThemes() 
+        {
+            return _dbContext.MissionThemes.ToList();
+        }
+
+        public IEnumerable<Skill> GetSkills() 
+        {   
+            return _dbContext.Skills.ToList();
+        }
+
+        public IEnumerable<GoalMission> GetGoalMissions()        
+        {
+            return _dbContext.GoalMissions.ToList();
+        }
+
+
 
         public IActionResult noMissionFound()
         {
@@ -33,7 +81,9 @@ namespace CI_platform.Controllers
 
         public IActionResult volunteeringMissionPage()
         {
-            return View();
+            userViewModel obj = new userViewModel();
+            obj = partial();
+            return View(obj);
         }
 
         public IActionResult storyListingPage()

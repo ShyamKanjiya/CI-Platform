@@ -15,14 +15,7 @@
     
     <div class="container-fluid">
         <main role="main">
-             @{
-                Html.RenderPartial("_headerPartialView");
-            }
             @RenderBody()
-            @{
-                 Html.RenderPartial("_footerPartialView");
-            }
-
         </main>
     </div>
 

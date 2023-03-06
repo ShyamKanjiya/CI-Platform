@@ -23,7 +23,7 @@ builder.Services.AddSession(option =>
     option.Cookie.IsEssential = true;
 });
 
-builder.Services.AddSession();
+
 
 var app = builder.Build();
 
