@@ -70,7 +70,7 @@
                     <ul class="navbar-nav d-flex">
                         <li class="nav-item dropdown">
                             <a asp-action="login" asp-controller="Home" class="nav-link profile-link-part">
-                                <span>Login</span>
+                                <span>Login</span>  
                             </a>
                         </li>
                     </ul>
@@ -87,7 +87,7 @@
 
             <div class="col-10 col-md-5 py-2">
                 <form class="d-flex" id="search-inp">
-                    <input class="form-control ms-0 me-2 border-0 bg-light" type="search" placeholder="Search mission..." id="search" aria-label="Search" onclick="searchMission()" >
+                    <input class="form-control ms-0 me-2 border-0 bg-light" type="search" placeholder="Search mission..." id="searchtab" aria-label="Search">
                 </form>
             </div>
 
@@ -114,14 +114,12 @@
                                     <img src="~/images/drop-down.png" style="margin-left:5px" />
                                 </a>
                                 <ul class="dropdown-menu scrollable-menu" aria-labelledby="navbarScrollingDropdown">
-                                    <li>
-                                        @foreach (var item in Model.Countries)
-                                        {
-                                            <a class="dropdown-item checkbox" href="#" >
-                                                @item.Name
-                                            </a>
-                                        }
-                                    </li>
+                                    @foreach (var item in Model.Countries)
+                                    {
+                                        <li class="dropdown-item">
+                                            <input type="checkbox" id="" value=@item.Name class="checkbox">@item.Name
+                                        </li>
+                                    }
                                 </ul>
                             </li>
                         </ul>
@@ -190,27 +188,5 @@
             </div>
         </div>
     </div>
+
 </header>
-
-<script>
-    window.addEventListener("load", () => {
-        // (A) GET HTML ELEMENTS
-        var filter = document.getElementById("search"), // search box
-            list = document.querySelectorAll(".card"); // all cards
-
-        // (B) ATTACH KEY UP LISTENER TO SEARCH BOX
-        filter.onkeyup = () => {
-            // (B1) GET CURRENT SEARCH TERM
-            let search = filter.value.toLowerCase();
-
-            // (B2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
-            for (let i of list) {
-                let a = i.getElementsByClassName("card-body")[0]
-                console.log(a)
-                let item = a.innerHTML.toLowerCase();
-                if (item.indexOf(search) == -1) { i.hidden = true; }
-                else { i.hidden = false; }
-            }
-        };
-    });
-</script>
