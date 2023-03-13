@@ -21,7 +21,7 @@
 </head>
 <body>
 
-    
+
 
     <div>
         <main role="main">
@@ -35,13 +35,52 @@
         </main>
     </div>
 
-    
+
 
     <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/platfromLandingPage.js"></script>
+    <script>
+        let missionToSearch = "";
+        let sortVal = "";
+        let missionCount;
+        
+        $(document).ready(function () {
+            
+            loadMissions();
+            console.log('jzdfhjgas')
+        });
+
+        $("#searchtab").on("keyup", function (e) {
+            missionToSearch = $("#searchtab").val().toLowerCase();
+            loadMissions();
+        });
+
+        /*$('#sort-div').on("change", function () {
+        sortVal = $('#sort-div').val();
+        loadMissions();
+        console.log(sortVal);
+        });*/
+
+        function loadMissions() {
+            $.ajax({
+                url: "/Pages/bringMissionsToGridView",
+                method: "GET",
+                dataType: "html",
+                data: { "sortBy": sortVal, "missionToSearch": missionToSearch },
+                success: function (data) {
+                    $('#mission-list').html("");
+                    $('#mission-list').html(data);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    </script>
+
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

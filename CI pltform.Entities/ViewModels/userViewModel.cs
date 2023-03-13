@@ -24,5 +24,8 @@ namespace CI_platform.Entities.ViewModels
         public IEnumerable<GoalMission> GoalMissions { get; set; }
 
         public int MissionCount { get; set; }
+
+        public int totalrecord { get; set; }
+        public int currentPage { get; set; }
     }
 }

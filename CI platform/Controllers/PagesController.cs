@@ -4,8 +4,11 @@ using CI_pltform.Entities.ViewModels;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Reflection;
+using System.Xml.Schema;
 
 namespace CI_platform.Controllers
 {
@@ -14,7 +17,7 @@ namespace CI_platform.Controllers
         private readonly ILogger<PagesController> _logger;
         private readonly CIDbContext _dbContext;
 
-        public PagesController(ILogger<PagesController> logger, CIDbContext dbContext)
+        public PagesController(ILogger<PagesController> logger, CIDbContext dbContext, int pageindex = 1, int pageSize = 9)
         {
             _logger = logger;
             _dbContext = dbContext;
@@ -23,7 +26,94 @@ namespace CI_platform.Controllers
 
         //---------------------- CARD VIEW --------------------------//
         [HttpGet]
-        public IActionResult platformLandingPage()
+        public IActionResult platformLandingPage(int pageindex = 1, int pageSize = 9)
+        {
+            var viewModel = new userMissionModel
+            {
+                Countries = _dbContext.Countries.ToList(),
+                Cities = _dbContext.Cities.ToList(),
+                MissionThemes = _dbContext.MissionThemes.ToList(),
+                Skills = _dbContext.Skills.ToList(),
+                totalrecord = _dbContext.Missions.Count(),
+                currentPage = pageindex
+            };
+
+            return View(viewModel);
+        }
+
+
+        public IActionResult bringMissionsToGridView(string sortBy, string missionToSearch, int pageindex = 1, int pageSize = 9)
+        {
+            sortBy = String.IsNullOrEmpty(sortBy) ? "Newest" : sortBy;
+
+            List<Mission> missions = _dbContext.Missions
+                .Include(m => m.GoalMissions)
+                .Include(m => m.MissionApplications)
+                .Include(m => m.MissionMedia)
+                .Include(m => m.FavoriteMissions)
+                .Include(m => m.MissionTheme)
+                .Include(m => m.City)
+                .Include(m => m.Country)
+                .ToList();
+            List<userMissionModel> missionVmList = new();
+
+            if (missionToSearch != null)
+            {
+                missions = missions.Where(m => m.Title.ToLower().Contains(missionToSearch)).ToList();
+
+                foreach (var currMisssion in missions)
+                {
+                    missionVmList.Add(convertDataModelToMissionModel(currMisssion));
+                }
+                missionVmList = missionVmList.Skip((pageindex - 1) * pageSize).Take(pageSize).ToList();
+                return PartialView("_cardView", missionVmList);
+
+
+            }
+
+            /*switch (sortBy)
+            {
+                case "Newest":
+                    viewModel.Missions = viewModel.Missions.OrderByDescending(mission => mission.CreatedAt).ToList();
+                    break;
+                case "Oldest":
+                    viewModel.Missions = viewModel.Missions.OrderBy(mission => mission.CreatedAt).ToList();
+                    break;
+                default:
+                    viewModel.Missions = viewModel.Missions.OrderBy(mission => mission.CreatedAt).ToList();
+                    break;
+            }*/
+
+
+            foreach (var currMisssion in missions)
+            {
+                missionVmList.Add(convertDataModelToMissionModel(currMisssion));
+            }
+            missionVmList = missionVmList.Skip((pageindex - 1) * pageSize).Take(pageSize).ToList();
+            return PartialView("_cardView", missionVmList);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        public IActionResult noMissionFound()
+        {
+            return View();
+        }
+
+        public IActionResult volunteeringMissionPage()
         {
             var viewModel = new userViewModel
             {
@@ -35,56 +125,35 @@ namespace CI_platform.Controllers
                 Skills = _dbContext.Skills.ToList()
             };
 
-            // Combine the MissionMedia and GoalMissions tables
-            var missionsFromMedia = from mm in _dbContext.MissionMedia
-                                    join m in _dbContext.Missions on mm.MissionId equals m.MissionId
-                                    select m;
-
-            var combinedMissions = viewModel.Missions.Union(viewModel.GoalMissions.Select(gm => gm.Mission)).Union(missionsFromMedia).ToList();
-
-            int missionCount = 0;
-            foreach (var mission in combinedMissions)
-            {
-                _dbContext.Entry(mission).Reference(c => c.City).Load();
-                _dbContext.Entry(mission).Reference(t => t.MissionTheme).Load();
-                missionCount++;
-            }
-
-            viewModel.Missions = combinedMissions;
-            viewModel.MissionCount = missionCount;
-
-            //const int pageSize = 9;
-            //if(pg < 1)
-            //    pg = 1;
-
-            //int recsCount = obj.Missions.Count();
-
-            //var pager = new userPagerModel(recsCount, pg, pageSize);
-
-            //int recSkip = (pg - 1) * pageSize;
-
-            //var data = obj.Missions.Skip(recSkip).Take(pager.PageSize).ToList();
-
-            //this.ViewBag.Pager = pager;
-
             return View(viewModel);
-        }
-
-        
-       
-        public IActionResult noMissionFound()
-        {
-            return View();
-        }
-
-        public IActionResult volunteeringMissionPage()
-        {
-            return View();
         }
 
         public IActionResult storyListingPage()
         {
             return View();
+        }
+
+        public userMissionModel convertDataModelToMissionModel(Mission mission)
+        {
+            GoalMission mg = new();
+            if (mission.GoalMissions.Count() > 0)
+            {
+                mg = mission?.GoalMissions.Where(X => X.MissionId == mission.MissionId).First();
+            }
+            userMissionModel missionModel = new userMissionModel();
+            missionModel.MissionId = mission.MissionId;
+            missionModel.CityId = mission.CityId;
+            missionModel.City = mission.City;
+            missionModel.ThemeId = mission.MissionThemeId;
+            missionModel.Theme = mission.MissionTheme;
+            missionModel.Title = mission.Title;
+            missionModel.ShortDescription = mission.ShortDescription;
+            missionModel.StartDate = mission.StartDate.ToString().Remove(10);
+            missionModel.EndDate = mission.EndDate.ToString().Remove(10);
+            missionModel.OrganizationName = mission.OrganizationName;
+            missionModel.MissionType = mission.MissionType;
+            missionModel.GoalMission = mg;
+            return missionModel;
         }
     }
 }

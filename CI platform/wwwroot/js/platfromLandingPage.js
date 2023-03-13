@@ -62,10 +62,10 @@ function addElement(current, value) {
         console.log(current);
         elementToBeRemoved.remove();
 
-        current.checked = false;s
+        current.checked = false; s
     })
 
-    
+
 
 
     // let crossButton = '&times;'
@@ -83,3 +83,9 @@ function removeElement(value) {
     filtersSection.removeChild(elementToBeRemoved);
 
 }
+
+
+//--------------------------------------------------------------------------//
+
+
+

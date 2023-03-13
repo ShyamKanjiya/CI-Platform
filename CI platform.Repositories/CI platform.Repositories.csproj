@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="cloudscribe.Web.Pagination" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.3">
       <PrivateAssets>all</PrivateAssets>
@@ -23,6 +24,10 @@
   <ItemGroup>
     <Folder Include="interface\" />
     <Folder Include="repository\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\CI pltform.Entities\CI platform.Entities.csproj" />
   </ItemGroup>
 
 </Project>
