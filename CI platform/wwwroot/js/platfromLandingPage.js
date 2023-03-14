@@ -62,7 +62,7 @@ function addElement(current, value) {
         console.log(current);
         elementToBeRemoved.remove();
 
-        current.checked = false; s
+        current.checked = false; 
     })
 
 

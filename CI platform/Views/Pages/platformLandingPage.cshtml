@@ -1,11 +1,9 @@
 ﻿@*
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
-@{
 
-}
 
-@model CI_platform.Entities.ViewModels.userMissionModel
+@model userViewModel
 
 <!doctype html>
 <html lang="en">
@@ -27,86 +25,15 @@
     <!-- grid and list view -->
     <div class="container py-md-5 py-3" style="display:block;" id="full">
         @*<!-- mission heading and icons end -->*@
-        <div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar">
-            <div id="missionBarLeft">
-                <p class="mb-0 h2">Explore <strong id="TotalCount">@Model.totalrecord</strong> Missions</p>
-            </div>
-            <ul class="d-flex align-items-center ms-auto nav d-none d-md-flex" id="missionBarRight">
-                <li class="nav-item dropdown">
-                    <a class="pe-3 py-1 me-3 d-flex justify-content-between align-items-center ps-3 border text-decoration-none" href="#"
-                       id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
-                       style="width: 150px; display: block;">
-                        <span style="color:black">Sort By</span>
-                        <img src="~/images/drop-down.png" />
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                        <li><a class="dropdown-item" href="#">Newest</a></li>
-                        <li><a class="dropdown-item" href="#">Oldest</a></li>
-                    </ul>
-                </li>
-                <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
-                    <img src="/images/grid.png" alt="" height="25">
-                </button>
-                <button class="mx-4 d-flex align-items-center justify-content-center border-0 btn-list" id="listView">
-                    <img src="/images/list.png" alt="" height="18">
-                </button>
-            </ul>
-        </div>
+
 
         <!-- mission heading and icons end -->
         <!-- missions gridview and listview start -->
         <div id="mission-list">
-            
         </div>
 
-        <div class="d-flex justify-content-center">
-            <cs-pager cs-paging-pagenumber=@Model.currentPage
-                      cs-paging-totalitems=@Model.totalrecord
-                      cs-paging-pagesize="9"
-                      cs-pagenumber-param="pageIndex"
-                      asp-controller="Page"
-                      asp-action="pltformLndingPage"
-                      cs-pager-li-current-class="page-item active"
-                      cs-pager-li-other-class="page-item"
-                      cs-pager-li-non-active-class="page-item disabled"
-                      cs-pager-link-current-class="page-link"
-                      cs-pager-link-other-class="page-link">
-            </cs-pager>
-        </div>
-        <!-- Pagination -->
-        @*<div>
-        <ul class="pagination justify-content-center mt-5" id="pagination">
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">&laquo;</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">&lsaquo;</a>
-        </li>
-        <li class="page-item active mx-2">
-        <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">4</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">5</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">&rsaquo;</a>
-        </li>
-        <li class="page-item mx-2">
-        <a class="page-link" href="#">&raquo;</a>
-        </li>
-        </ul>
-        </div>*@
     </div>
 
-
+    
 </body>
 </html>

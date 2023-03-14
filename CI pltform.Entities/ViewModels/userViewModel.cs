@@ -15,17 +15,12 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<MissionTheme> MissionThemes { get; set; }
 
-        public IEnumerable<MissionMedium> MissionMedias { get; set; }
+        public IEnumerable<MissionMedium> MissionMediaas { get; set; }
 
         public IEnumerable<Skill> Skills { get; set; }
 
         public IEnumerable<Mission> Missions { get; set; }  
 
         public IEnumerable<GoalMission> GoalMissions { get; set; }
-
-        public int MissionCount { get; set; }
-
-        public int totalrecord { get; set; }
-        public int currentPage { get; set; }
     }
 }

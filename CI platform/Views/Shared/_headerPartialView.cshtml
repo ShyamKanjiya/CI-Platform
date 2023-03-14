@@ -1,5 +1,5 @@
 ﻿@using System.Security.Claims;
-@model CI_platform.Entities.ViewModels.userMissionModel;
+@model CI_platform.Entities.ViewModels.userViewModel;
 @{
     var identity = User.Identity as ClaimsIdentity;
     var name = identity?.FindFirst(ClaimTypes.Name)?.Value;

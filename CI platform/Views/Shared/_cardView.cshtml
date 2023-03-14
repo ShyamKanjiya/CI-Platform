@@ -1,13 +1,51 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model userViewModel
+
 @{
+    var totalMissions = ViewBag.missionCount;
 }
-@model List<CI_platform.Entities.ViewModels.userMissionModel>
+
+@{
+    userPager pager = new userPager();
+
+    int pageNo = 0;
+
+    if (ViewBag.userPager != null)
+    {
+        pager = ViewBag.userPager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar">
+    <div id="missionBarLeft">
+        <p class="mb-0 h2">Explore <strong id="TotalCount">@totalMissions</strong> Missions</p>
+    </div>
+    <ul class="d-flex align-items-center ms-auto nav d-none d-md-flex" id="missionBarRight">
+        <li class="nav-item dropdown">
+            <a class="pe-3 py-1 me-3 d-flex justify-content-between align-items-center ps-3 border text-decoration-none" href="#"
+               id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"
+               style="width: 150px; display: block;">
+                <span style="color:black">Sort By</span>
+                <img src="~/images/drop-down.png" />
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown" id="sort-div">
+                <li><a class="dropdown-item">Newest</a></li>
+                <li><a class="dropdown-item">Oldest</a></li>
+            </ul>
+        </li>
+        <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
+            <img src="/images/grid.png" alt="" height="25">
+        </button>
+        <button class="mx-4 d-flex align-items-center justify-content-center border-0 btn-list" id="listView">
+            <img src="/images/list.png" alt="" height="18">
+        </button>
+    </ul>
+</div>
+
 
 <div class="container grid-container">
     <div class="row">
-        @foreach (var item in Model)
+        @foreach (var item in Model.Missions)
         {
             <!-- mission card with time base -->
             <div class="col-12 col-md-6 col-lg-4 mission">
@@ -27,7 +65,7 @@
                             <img src="/images/user.png" alt="">
                         </button>
                         <div>
-                            <p class="d-inline px-4" id="missionTheme">@item.Theme.Title</p>
+                            <p class="d-inline px-4" id="missionTheme">@item.MissionTheme.Title</p>
                         </div>
                     </div>
                     <div class="card-body p-0 mt-2">
@@ -51,7 +89,7 @@
 
                             <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
                                 <div class="border text-center px-2" id="missionPeriod">
-                                    <small>From @item.StartDate until @item.EndDate</small>
+                                    <small>From @item.StartDate.Value.ToShortDateString() until @item.EndDate.Value.ToShortDateString()</small>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center px-4 py-3">
                                     <div class="d-flex align-items-center">
@@ -76,7 +114,7 @@
                             <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
                                 <div class="border text-center px-2" id="missionPeriod">
                                     <small>
-                                        @item?.GoalMission.GoalObjectiveText
+                                        @Model.GoalMissions.Where(x => x.MissionId == item.MissionId).Select(x => x.GoalObjectiveText).FirstOrDefault()
                                     </small>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center px-4 py-3">
@@ -111,4 +149,60 @@
             </div>
         }
     </div>
+</div>
+
+
+<!-- Pagination -->
+<div class="container-fluid">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-center mt-5 px-5" id="pagination">
+
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=1)"> &laquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@(pager.CurrentPage - 1))"> &lsaquo; </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link disabled" > &laquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link disabled" > &lsaquo; </a>
+                </li>
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link @(pge == pager.CurrentPage ? "active" : "")" onclick="loadMissions(pg=@pge)"> @pge </a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@(pager.CurrentPage + 1)) "> &rsaquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@pager.TotalPages)"> &raquo; </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &rsaquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &raquo; </a>
+                </li>
+            }
+
+        </ul>
+    }
 </div>

@@ -4,7 +4,6 @@
 *@
 @{
 }
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,8 +19,6 @@
     <link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
 </head>
 <body>
-
-
 
     <div>
         <main role="main">
@@ -42,15 +39,14 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/platfromLandingPage.js"></script>
+
     <script>
         let missionToSearch = "";
         let sortVal = "";
         let missionCount;
-        
+
         $(document).ready(function () {
-            
             loadMissions();
-            console.log('jzdfhjgas')
         });
 
         $("#searchtab").on("keyup", function (e) {
@@ -58,21 +54,22 @@
             loadMissions();
         });
 
-        /*$('#sort-div').on("change", function () {
-        sortVal = $('#sort-div').val();
-        loadMissions();
-        console.log(sortVal);
-        });*/
-
-        function loadMissions() {
+        function loadMissions(pg) {
             $.ajax({
+
                 url: "/Pages/bringMissionsToGridView",
                 method: "GET",
                 dataType: "html",
-                data: { "sortBy": sortVal, "missionToSearch": missionToSearch },
+                data: { "sortBy": sortVal, "missionToSearch": missionToSearch, "pg": pg},
                 success: function (data) {
                     $('#mission-list').html("");
                     $('#mission-list').html(data);
+
+                    $('#sort-div').on("click", function () {
+                        sortval = $('#sort-div').val();
+                        loadmissions();
+                        console.log(sortval);
+                    });
                 },
                 error: function (error) {
                     console.log(error);
