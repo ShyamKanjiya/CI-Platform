@@ -102,10 +102,11 @@
 #mission-img {
     object-fit: cover;
     height: 100%;
+    
 }
 
 .list-view #mission-img{
-    width: 25vw;
+    width: 30vw;
 }
 
 .card-btn {

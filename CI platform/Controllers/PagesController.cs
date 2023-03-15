@@ -38,10 +38,9 @@ namespace CI_platform.Controllers
             return View(viewModel);
         }
 
-
-        public IActionResult bringMissionsToGridView(string sortBy, string missionToSearch, int pg = 1)
+        [HttpPost]
+        public IActionResult bringMissionsToGridView(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1 )
         {
-            sortBy = String.IsNullOrEmpty(sortBy) ? "Newest" : sortBy;
 
             userViewModel userView = new userViewModel
             {
@@ -54,14 +53,18 @@ namespace CI_platform.Controllers
             };
 
             List<Mission> missions = _dbContext.Missions.ToList();
+            
+            if(country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0)
+            {
+                missions = filterMission(missions, country, cities, theme, skill);
+            }
+                
+            missions = sortMission(sortBy, missions);
 
             if (missionToSearch != null)
             {
                 missions = missions.Where(m => m.Title.ToLower().Contains(missionToSearch)).ToList();
             }
-
-
-            missions = sortMission(sortBy, missions);
 
             const int pageSize = 3;
             if (pg < 1)
@@ -81,8 +84,14 @@ namespace CI_platform.Controllers
 
             ViewBag.missionCount = recsCount;
 
-            return PartialView("_cardView", userView);
-
+            if (recsCount == 0)
+            {
+                return RedirectToAction("noMissionFound","Pages");
+            }
+            else
+            {
+                return PartialView("_cardView", userView);
+            }
         }
 
         public List<Mission> sortMission(string sortBy, List<Mission> missions)
@@ -90,18 +99,43 @@ namespace CI_platform.Controllers
             switch (sortBy)
             {
                 case "Newest":
-                    return missions.OrderByDescending(m => m.StartDate).ToList();
+                    return missions.OrderBy(m => m.StartDate).ToList();
 
                 case "Oldest":
-                    return missions.OrderBy(m => m.StartDate).ToList();
+                    return missions.OrderByDescending(m => m.StartDate).ToList();
+
+                case "AZ":
+                    return missions.OrderBy(m => m.Title).ToList();
+
+                case "ZA":
+                    return missions.OrderByDescending(m => m.Title).ToList();
 
                 default:
-                    return missions.OrderBy(m => m.StartDate).ToList();
+                    return missions.ToList();
             }
         }
 
 
-
+        public List<Mission> filterMission(List<Mission> missions,string[] country, string[] cities, string[] theme, string[] skill)
+        {
+            if (country.Length > 0)
+            {
+                missions = missions.Where(s => country.Contains(s.Country.Name)).ToList();
+            }
+            if (cities.Length > 0)
+            {
+                missions = missions.Where(s => cities.Contains(s.City.Name)).ToList();
+            }
+            if (theme.Length > 0)
+            {
+                missions = missions.Where(s => theme.Contains(s.MissionTheme.Title)).ToList();
+            }
+           /* if (skill.Length > 0)
+            {
+                missions = missions.Where(s => skill.Contains(s.)).ToList();
+            }*/
+            return missions.ToList();
+        }
 
 
 

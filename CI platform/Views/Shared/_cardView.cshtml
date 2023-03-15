@@ -28,9 +28,11 @@
                 <span style="color:black">Sort By</span>
                 <img src="~/images/drop-down.png" />
             </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown" id="sort-div">
-                <li><a class="dropdown-item">Newest</a></li>
-                <li><a class="dropdown-item">Oldest</a></li>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'Newest')">Newest</a></li>
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'Oldest')">Oldest</a></li>
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'AZ')">A to Z</a></li>
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'ZA')">Z to A</a></li>
             </ul>
         </li>
         <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
@@ -42,13 +44,12 @@
     </ul>
 </div>
 
-
 <div class="container grid-container">
     <div class="row">
         @foreach (var item in Model.Missions)
         {
             <!-- mission card with time base -->
-            <div class="col-12 col-md-6 col-lg-4 mission">
+            <div class="col-12 col-md-6 col-lg-4 mission d-flex align-items-stretch justify-content-center">
                 <div class="card">
                     <div style="position: relative;">
                         <img class="card-img-top" id="mission-img"
@@ -170,10 +171,10 @@
             else
             {
                 <li class="page-item mx-2">
-                    <a class="page-link disabled" > &laquo; </a>
+                    <a class="page-link disabled"> &laquo; </a>
                 </li>
                 <li class="page-item mx-2">
-                    <a class="page-link disabled" > &lsaquo; </a>
+                    <a class="page-link disabled"> &lsaquo; </a>
                 </li>
             }
 
@@ -206,3 +207,23 @@
         </ul>
     }
 </div>
+
+<script>
+    if (localStorage.getItem('hp') === 'list') {
+        showList();
+    }
+    else {
+        gridList();
+    }
+
+    function showList() {
+        localStorage.setItem('hp', 'list');
+        var $gridCont = $(".grid-container");
+        $gridCont.addClass("list-view");
+    }
+    function gridList() {
+        localStorage.setItem('hp', 'grid');
+        var $gridCont = $(".grid-container");
+        $gridCont.removeClass("list-view");
+    }
+</script>
