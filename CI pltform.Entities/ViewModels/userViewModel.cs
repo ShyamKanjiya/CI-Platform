@@ -15,7 +15,7 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<MissionTheme> MissionThemes { get; set; }
 
-        public IEnumerable<MissionMedium> MissionMediaas { get; set; }
+        public IEnumerable<MissionMedium> MissionMedias { get; set; }
 
         public IEnumerable<Skill> Skills { get; set; }
 

@@ -168,15 +168,6 @@
     width: 20px;
 }
 
-.footer1 {
-    position: relative;
-    display: flex;
-    bottom: 0;
-    height: 8vh;
-    width:100vw;
-    align-items: center;
-}
-
 @media (max-width: 767px) {
     .searchByFilter {
         border: none;

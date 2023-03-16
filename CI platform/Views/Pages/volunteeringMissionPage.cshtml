@@ -1,8 +1,4 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
+﻿@model userVolunteerMission;
 
 @{
     ViewData["Title"] = "volunteeringMissionPage";
@@ -26,7 +22,7 @@
                 </div>
 
                 <div class="mySlides">
-                    <img src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                    <img src="~/images/img1.png" style="width:100%">
                 </div>
 
                 <div class="mySlides">
@@ -50,7 +46,6 @@
                 <!-- Thumbnail images -->
                 <div class="row mt-4 position-relative " style="height:10%">
                     <div class="column mx-auto">
-                        @*<a class="prev" onclick="plusSlides(-1)">&#10094;</a>*@
                         <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
                     </div>
                     <div class="column mx-auto">
@@ -67,7 +62,7 @@
                     </div>
                     <div class="column mx-auto">
                         <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
-                        @*<a class="next" onclick="plusSlides(1)">&#10095;</a>*@
+                        
                     </div>
                 </div>
             </div>
@@ -78,7 +73,7 @@
 
             <div class="col-lg-6 col-md-12 w-100">
                 <div class="card-body p-0">
-                    <h1 class="pe-3">CSR initiative stands for Coffee & Farmer Equity</h1>
+                    <h1 class="pe-3">@Model.MissionDetail.Title</h1>
 
                     <p class="pe-3 mt-3" style="font-size: 1.3rem">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam.</p>
 
@@ -160,10 +155,20 @@
                         </div>
                     </div>
                     <div>
-                        <a href="#" class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-4 applyNowBtn">
-                            <p class="mb-0 pe-4 text-warning">Apply</p>
-                            <img src="/images/right-arrow.png" alt="">
-                        </a>
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" asp-action="volunteeringMissionPage" asp-controller="Pages" style="border-radius:50px;">
+                                <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                <img src="/images/right-arrow.png" alt="">
+                            </a>
+                        }
+                        else
+                        {
+                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" asp-action="Login" asp-controller="Home" style="border-radius:50px;">
+                                <p class="mb-0 pe-4 text-warning h6">Login to Apply</p>
+                                <img src="/images/right-arrow.png" alt="">
+                            </a>
+                        }
                     </div>
                 </div>
             </div>

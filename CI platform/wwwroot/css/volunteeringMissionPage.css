@@ -12,17 +12,25 @@
     display: none;
 }
 
-/* Add a pointer when hovering over the thumbnail images */
+/*/ prevent streching for slider images /*/
+.slider-images {
+    object-fit: cover;
+}
+
+/*/ Add a pointer when hovering over the thumbnail images /*/
 .cursor {
     cursor: pointer;
 }
 
-/* Next & previous buttons */
+/*/ Next & previous buttons /*/
 /*.prev,
 .next {
     cursor: pointer;
-    position: fixed;
+    position: absolute;
+    top: 40%;
+    width: auto;
     padding: 16px;
+    margin-top: -50px;
     color: white;
     font-weight: bold;
     font-size: 20px;
@@ -31,36 +39,30 @@
     -webkit-user-select: none;
 }*/
 
-/* Position the "next button" to the right */
+/*/ Position the "next button" to the right /*/
 /*.next {
-    right: 10px;
+    margin-right: 16px;
+    right: 0;
     border-radius: 3px 0 0 3px;
 }*/
 
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-/* Six columns side by side */
+/*/ Six columns side by side /*/
 .column {
+    padding: 0 5px;
     float: left;
     width: 16.66%;
 }
 
-/* Add a transparency effect for thumnbail images */
+/*/ Add a transparency effect for thumnbail images /*/
 .demo {
-    height: 100%;
-    object-fit: cover;
     opacity: 0.6;
-    margin: auto 0;
+    object-fit: cover;
 }
 
-    .active,
-    .demo:hover {
-        opacity: 1;
-    }
+.active,
+.demo:hover {
+    opacity: 1;
+}
 
 
 .container {

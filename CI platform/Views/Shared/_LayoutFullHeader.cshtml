@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     @await RenderSectionAsync("CssValue", required: false)
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />
+    @*<link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />*@
     <link rel="stylesheet" href="~/css/plateformLandingPage.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/storyLandingPage.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
@@ -34,64 +34,13 @@
 
 
 
-    <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
+    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/platfromLandingPage.js"></script>
-
-    <script>
-        let missionToSearch = "";
-        let sortVal = "";
-        let missionCount;
-        let country;
-
-        $(document).ready(function () {
-            loadMissions();
-        });
-
-        $("#searchtab").on("keyup", function (e) {
-            missionToSearch = $("#searchtab").val().toLowerCase();
-            loadMissions();
-        });
-
-        function loadMissions(pg, sortVal) {
-            var country = [];
-            $('#dropDownCountry').find("input:checked").each(function (i, ob) {
-                country.push($(ob).val());
-            });
-
-            var cities = [];
-            $('#dropDownCity').find("input:checked").each(function (i, ob) {
-                cities.push($(ob).val());
-            });
-
-            var theme = [];
-            $('#dropDownTheme').find("input:checked").each(function (i, ob) {
-                theme.push($(ob).val());
-            });
-
-            //var skill = "";
-            //$("input[name='skill']:checked").each(function () {
-            //    skill += $(this).val() + ",";
-            //});
-
-            $.ajax({
-
-                url: "/Pages/bringMissionsToGridView",
-                method: "POST",
-                dataType: "html",
-                data: { 'sortBy': sortVal, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme },
-                success: function (data) {
-                    $('#mission-list').html("");
-                    $('#mission-list').html(data);
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-    </script>
+    <script src="~/js/volunteeringMissionPage.js"></script>
+    <script src="~/js/cardView.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

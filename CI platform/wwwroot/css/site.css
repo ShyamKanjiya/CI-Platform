@@ -17,3 +17,11 @@ html {
     padding: 0;
     margin: 0;
 }
+
+.footer1 {
+    position: relative;
+    display: flex;
+    bottom: 0;
+    height: 8vh;
+    align-items: center;
+}

@@ -33,6 +33,8 @@
                 <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'Oldest')">Oldest</a></li>
                 <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'AZ')">A to Z</a></li>
                 <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'ZA')">Z to A</a></li>
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'GOAL')">By Goal</a></li>
+                <li><a class="dropdown-item sort-div" onclick="loadMissions(1,'TIME')">By Time</a></li>
             </ul>
         </li>
         <button class="ms-5 d-flex align-items-center justify-content-center border-0 btn-grid" id="gridView">
@@ -139,11 +141,20 @@
                             </div>
                         }
                         <div>
-                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages"
-                           id="applyNowBtn">
-                                <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                <img src="/images/right-arrow.png" alt="">
-                            </a>
+                            @if(User.Identity.IsAuthenticated)
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
+                            else
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-4 text-warning h6">Explore</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>

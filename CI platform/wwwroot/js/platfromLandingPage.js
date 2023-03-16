@@ -113,7 +113,6 @@ for (var i = 0; i < cbs.length; i++) {
         else {
             $("input[type=checkbox][value='" + this.value + "']").prop('checked', false);
             removeElement(this.value);
-            loadMissions(pg = 1);
         }
     });
 }

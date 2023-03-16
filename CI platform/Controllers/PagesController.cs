@@ -58,13 +58,13 @@ namespace CI_platform.Controllers
             {
                 missions = filterMission(missions, country, cities, theme, skill);
             }
-                
-            missions = sortMission(sortBy, missions);
 
             if (missionToSearch != null)
             {
-                missions = missions.Where(m => m.Title.ToLower().Contains(missionToSearch)).ToList();
+                missions = missions.Where(m => m.Title.ToLower().Contains(missionToSearch.ToLower())).ToList();
             }
+
+            missions = sortMission(sortBy, missions);
 
             const int pageSize = 3;
             if (pg < 1)
@@ -110,6 +110,12 @@ namespace CI_platform.Controllers
                 case "ZA":
                     return missions.OrderByDescending(m => m.Title).ToList();
 
+                case "GOAL":
+                    return missions.Where(m => m.MissionType.Equals("GOAL")).ToList();
+
+                case "TIME":
+                    return missions.Where(m => m.MissionType.Equals("TIME")).ToList();
+
                 default:
                     return missions.ToList();
             }
@@ -152,19 +158,19 @@ namespace CI_platform.Controllers
             return View();
         }
 
-        public IActionResult volunteeringMissionPage()
+        public IActionResult volunteeringMissionPage(int id)
         {
-            var viewModel = new userViewModel
+            /*userVolunteerMission viewModel = new()
             {
-                Missions = _dbContext.Missions.ToList(),
-                GoalMissions = _dbContext.GoalMissions.ToList(),
-                Countries = _dbContext.Countries.ToList(),
-                Cities = _dbContext.Cities.ToList(),
-                MissionThemes = _dbContext.MissionThemes.ToList(),
-                Skills = _dbContext.Skills.ToList()
-            };
+                MissionDetail = _dbContext.Missions.Where(m => m.MissionId == id).FirstOrDefault(),
+                City = _dbContext.Cities.ToList(),
 
-            return View(viewModel);
+            };
+*/
+                          
+                       
+
+            return View();
         }
 
         public IActionResult storyListingPage()
