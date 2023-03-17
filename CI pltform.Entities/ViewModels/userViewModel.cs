@@ -22,5 +22,9 @@ namespace CI_platform.Entities.ViewModels
         public IEnumerable<Mission> Missions { get; set; }  
 
         public IEnumerable<GoalMission> GoalMissions { get; set; }
+
+        public IEnumerable<FavoriteMission> FavoriteMissions { get; set; }
+
+        public IEnumerable<User> users { get; set; }    
     }
 }

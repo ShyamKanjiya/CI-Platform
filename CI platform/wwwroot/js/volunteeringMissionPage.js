@@ -15,7 +15,6 @@ function showSlides(n) {
     let i;
     let slides = document.getElementsByClassName("mySlides");
     let dots = document.getElementsByClassName("demo");
-    let captionText = document.getElementById("caption");
     if (n > slides.length) { slideIndex = 1 }
     if (n < 1) { slideIndex = slides.length }
     for (i = 0; i < slides.length; i++) {
@@ -25,6 +24,26 @@ function showSlides(n) {
         dots[i].className = dots[i].className.replace(" active", "");
     }
     slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
-    captionText.innerHTML = dots[slideIndex - 1].alt;
+    dots[slideIndex - 1].className += " active";  
+}
+
+
+//---------------------------------------------------------------------------------------//
+
+function LoginFirst() {
+    alert('Please Login first')
+}
+
+function AddToFavourite(missionId,emailID) {
+    $.ajax({
+        url: "/Pages/AddToFavourite",
+        method: "POST",
+        data: { 'eissionId': missionId, "emailID": emailID },
+        success: function (data) {
+            location.reload()
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
 }

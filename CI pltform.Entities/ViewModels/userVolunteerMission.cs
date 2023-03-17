@@ -10,19 +10,28 @@ namespace CI_platform.Entities.ViewModels
     public class userVolunteerMission
     {
         public Mission MissionDetail { get; set; }
-        
-        public IEnumerable<GoalMission> Goalmissions { get; set; }
-
-        public IEnumerable<Mission> Relatedmissions { get; set; }
-
-        public IEnumerable<User> Volunteeres { get; set; }
-
-        public IEnumerable<GoalMission> GoalMissions { get; set; }
-
-        public IEnumerable<City> Cities { get; set; }
 
         public IEnumerable<Country> Countries { get; set; }
 
+        public City Cities { get; set; }
+
+        public MissionTheme MissionThemes { get; set; }
+
+        public IEnumerable<MissionMedium> MissionMedias { get; set; }
+
+        public IEnumerable<Skill> Skills { get; set; }
+
+        public IEnumerable<Mission> RelatedMissions { get; set; }
+
+        public IEnumerable<GoalMission> Goal { get; set; }
+
+        public GoalMission GoalMissions { get; set; }
+
+        public IEnumerable<User> Volunteeres { get; set; }
+
+        public IEnumerable<FavoriteMission> favoriteMissions { get; set; }
+
+        public IEnumerable<User> users { get; set; }
 
         public int Missionrate { get; set; }
 

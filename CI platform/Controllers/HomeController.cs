@@ -86,6 +86,7 @@ namespace CI_platform.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme);
                 identity.AddClaim(new Claim(ClaimTypes.Name, status.FirstName));
                 identity.AddClaim(new Claim(ClaimTypes.Surname, status.LastName));
+                identity.AddClaim(new Claim(ClaimTypes.Email, status.Email));
                 var principle = new ClaimsPrincipal(identity);
                 HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principle);
                 HttpContext.Session.SetString("Email", status.Email);

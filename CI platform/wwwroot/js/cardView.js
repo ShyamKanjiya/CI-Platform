@@ -3,6 +3,7 @@ let sortBy = "";
 
 
 $(document).ready(function () {
+    console.log("hahahahahaha");
     loadMissions();
 });
 
