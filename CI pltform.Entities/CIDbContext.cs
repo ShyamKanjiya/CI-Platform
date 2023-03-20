@@ -202,14 +202,17 @@ public partial class CIDbContext : DbContext
             entity.ToTable("comment");
 
             entity.Property(e => e.CommentId).HasColumnName("comment_id");
+            entity.Property(e => e.CommentText)
+                .HasColumnType("text")
+                .HasColumnName("comment");
             entity.Property(e => e.ApprovalStatus)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasDefaultValueSql("('PENDING')")
                 .HasColumnName("approval_status");
             entity.Property(e => e.CreatedAt)
-                .IsRowVersion()
-                .IsConcurrencyToken()
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.DeletedAt)
                 .HasColumnType("datetime")

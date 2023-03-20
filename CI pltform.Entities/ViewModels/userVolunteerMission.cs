@@ -13,9 +13,9 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<Country> Countries { get; set; }
 
-        public City Cities { get; set; }
+        public IEnumerable<City> Cities { get; set; }
 
-        public MissionTheme MissionThemes { get; set; }
+        public IEnumerable<MissionTheme> MissionThemes { get; set; }
 
         public IEnumerable<MissionMedium> MissionMedias { get; set; }
 
@@ -31,7 +31,9 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<FavoriteMission> favoriteMissions { get; set; }
 
-        public IEnumerable<User> users { get; set; }
+        public User userDetails { get; set; }
+
+        public IEnumerable<Comment> commentList { get; set; }    
 
         public int Missionrate { get; set; }
 

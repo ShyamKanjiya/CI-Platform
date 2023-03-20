@@ -16,6 +16,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - CI_platform</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     @await RenderSectionAsync("CssValue", required: false)
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />
@@ -120,8 +121,9 @@
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/js/platfromLandingPage.js"></script>
-    <script src="~/js/volunteeringMissionPage.js"></script>
     <script src="~/js/cardView.js"></script>
+    <script src="~/js/volunteeringMissionPage.js"></script>
+
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

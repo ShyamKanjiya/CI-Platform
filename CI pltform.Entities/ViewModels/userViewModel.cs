@@ -25,6 +25,8 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<FavoriteMission> FavoriteMissions { get; set; }
 
-        public IEnumerable<User> users { get; set; }    
+        public User userDetails { get; set; }
+
+        public Mission MissionDetail { get; set; }
     }
 }

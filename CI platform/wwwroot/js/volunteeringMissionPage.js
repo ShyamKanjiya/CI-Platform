@@ -34,16 +34,59 @@ function LoginFirst() {
     alert('Please Login first')
 }
 
-function AddToFavourite(missionId,emailID) {
+function AddToFavourite(missionId) {
+    console.log(missionId)
     $.ajax({
+
         url: "/Pages/AddToFavourite",
         method: "POST",
-        data: { 'eissionId': missionId, "emailID": emailID },
+        data: { 'missionId': missionId },
         success: function (data) {
             location.reload()
         },
         error: function (error) {
             console.log(error);
         }
+    });
+}
+
+//----------------------------------------------------------------------------------------//
+
+function AddComment(missionId) {
+    var comment_area = $("#comment_area").val();
+    
+    $.ajax({
+
+        url: "/Pages/AddComment",
+        method: "POST",
+        data: { 'missionId': missionId, "comment_area": comment_area },
+        success: function (data) {
+            location.reload()
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+//----------------------------------------------------------------------------------------//
+
+function sendMail(missionId) {
+
+    var recUsersList = [];
+    $('.modal-body input[type="checkbox"]:checked').each(function () {
+        recUsersList.push($(this).attr("id"));
+    });
+    console.log(recUsersList);
+    $.ajax({
+        type: 'POST',
+        url: '/Pages/RecommandToCoworkers',
+        data: { "missionId": missionId, "userIds": recUsersList },
+        success: function () {
+            alert("Mission Recommended successfully!");
+        },
+        error: function () {
+            console.log('error');
+        },
     });
 }

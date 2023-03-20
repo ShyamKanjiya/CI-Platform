@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using System.Net.Mail;
+using System.Net;
 using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -27,6 +29,8 @@ namespace CI_platform.Controllers
 
 
         //---------------------- CARD VIEW --------------------------//
+
+        #region Card View
         [HttpGet]
         public IActionResult platformLandingPage()
         {
@@ -41,8 +45,9 @@ namespace CI_platform.Controllers
         }
 
         [HttpPost]
-        public IActionResult bringMissionsToGridView(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1 )
+        public IActionResult bringMissionsToGridView(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
         {
+
 
             userViewModel userView = new userViewModel
             {
@@ -52,12 +57,13 @@ namespace CI_platform.Controllers
                 Cities = _dbContext.Cities.ToList(),
                 MissionThemes = _dbContext.MissionThemes.ToList(),
                 Skills = _dbContext.Skills.ToList(),
-                users = _dbContext.Users.ToList()
+                userDetails = GetThisUser(),
+                FavoriteMissions = _dbContext.FavoriteMissions.ToList(),
             };
 
             List<Mission> missions = _dbContext.Missions.ToList();
-            
-            if(country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0)
+
+            if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0)
             {
                 missions = filterMission(missions, country, cities, theme, skill);
             }
@@ -89,7 +95,7 @@ namespace CI_platform.Controllers
 
             if (recsCount == 0)
             {
-                return RedirectToAction("noMissionFound","Pages");
+                return RedirectToAction("noMissionFound", "Pages");
             }
             else
             {
@@ -125,7 +131,7 @@ namespace CI_platform.Controllers
         }
 
 
-        public List<Mission> filterMission(List<Mission> missions,string[] country, string[] cities, string[] theme, string[] skill)
+        public List<Mission> filterMission(List<Mission> missions, string[] country, string[] cities, string[] theme, string[] skill)
         {
             if (country.Length > 0)
             {
@@ -139,88 +145,92 @@ namespace CI_platform.Controllers
             {
                 missions = missions.Where(s => theme.Contains(s.MissionTheme.Title)).ToList();
             }
-           /* if (skill.Length > 0)
-            {
-                missions = missions.Where(s => skill.Contains(s.)).ToList();
-            }*/
+            /* if (skill.Length > 0)
+             {
+                 missions = missions.Where(s => skill.Contains(s.)).ToList();
+             }*/
             return missions.ToList();
         }
 
 
+        #endregion
 
+        //---------------------- No Mission Found --------------------------//
 
-
-
-
-
-
-
-
+        #region No Mission Found
         public IActionResult noMissionFound()
         {
             return View();
         }
 
+        #endregion
+
+        //---------------------- Volunteering Mission Page --------------------------//
+
         #region Volunteering Mission Page
+
         public IActionResult volunteeringMissionPage(int id)
         {
             var missionDetail = _dbContext.Missions.Where(m => m.MissionId == id).FirstOrDefault();
+            var user = GetThisUser();
+
+            var thismission = _dbContext.Missions.Where(m => m.MissionId.Equals(id)).FirstOrDefault();
+            var relatedmissions = _dbContext.Missions.Where(s => s.MissionId != id && (s.CityId == thismission.CityId || s.CountryId == thismission.CountryId || s.MissionThemeId == thismission.MissionThemeId)).Take(3).ToList();
+
+            var cities = _dbContext.Cities.ToList();
+            var countries = _dbContext.Countries.ToList();
+            var missionTheme = _dbContext.MissionThemes.ToList();
+            var goalMission = _dbContext.GoalMissions.Where(m => m.MissionId == id).FirstOrDefault();
+            var goal = _dbContext.GoalMissions.ToList();
+            var favouriteMission = _dbContext.FavoriteMissions.ToList();
+            var commentList = _dbContext.Comments.Where(m => m.MissionId == id).ToList();
+
 
             userVolunteerMission viewModel = new()
             {
                 MissionDetail = missionDetail,
-                Cities = _dbContext.Cities.Where(c => c.CityId == missionDetail.CityId).FirstOrDefault(),
-                MissionThemes = _dbContext.MissionThemes.Where(m => m.MissionThemeId == missionDetail.MissionThemeId).FirstOrDefault(),
-                GoalMissions = _dbContext.GoalMissions.Where(m => m.MissionId == id).FirstOrDefault(),
-                RelatedMissions = RelatedMissions(id),
-                Goal = _dbContext.GoalMissions.ToList(),
-                users = _dbContext.Users.ToList()
+                Cities = cities,
+                Countries = countries,
+                MissionThemes = missionTheme,
+                GoalMissions = goalMission,
+                RelatedMissions = relatedmissions,
+                Goal = goal,
+                userDetails = user,
+                favoriteMissions = favouriteMission,
+                commentList = commentList,
             };
+
+            if (user != null)
+            {
+                viewModel.Volunteeres = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
+            }
+            else
+            {
+                viewModel.Volunteeres = _dbContext.Users.ToList();
+            }
 
             return View(viewModel);
         }
 
-
-        public IEnumerable<Mission> RelatedMissions(int id)
+        public User GetThisUser()
         {
-            
-            var relatedmissions = new List<Mission>();
-            var thismission = _dbContext.Missions.Where(m => m.MissionId.Equals(id)).FirstOrDefault();
-            var relatedmissions_by_city = _dbContext.Missions.Where(m => m.MissionId != thismission.MissionId && m.CityId == thismission.CityId).Take(3).ToList();
-            var relatedmissions_by_country = _dbContext.Missions.Where(m => m.MissionId != thismission.MissionId && m.CountryId == thismission.CountryId).Take(3).ToList();
-            var relatedmissions_by_theme = _dbContext.Missions.Where(m => m.MissionId != thismission.MissionId && m.MissionThemeId == thismission.MissionThemeId).Take(3).ToList();
+            var identity = User.Identity as ClaimsIdentity;
+            var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
 
-            if (relatedmissions_by_city.Count() > 0)
-            {
-                relatedmissions = relatedmissions_by_city;
-            }
-            else if (relatedmissions_by_country.Count() > 0)
-            {
-                relatedmissions = relatedmissions_by_country;
-            }
-            else
-            {
-                relatedmissions = relatedmissions_by_theme;
-            }
-
-            foreach (var mission in relatedmissions)
-            {
-                _dbContext.Entry(mission).Reference(c => c.City).Load();
-                _dbContext.Entry(mission).Reference(t => t.MissionTheme).Load();
-            }
-            return relatedmissions;
+            var user = _dbContext.Users.Where(m => m.Email == email).FirstOrDefault();
+            return user;
         }
-/*
-        public void FavouriteMission(long missionId,string? emailId)
+
+        public void AddToFavourite(int missionId)
         {
-            var user = _dbContext.Users.Where(m => m.Email.Equals(emailId)).Select(m => m.UserId).FirstOrDefault();
-            var FavMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user)).FirstOrDefault();
+            var user = GetThisUser();
+            var FavMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId).FirstOrDefault();
 
             if (FavMission == null)
             {
                 var favoriteMission = new FavoriteMission()
                 {
-                    UserId = user,
+                    UserId = user.UserId,
                     MissionId = missionId
                 };
 
@@ -233,8 +243,71 @@ namespace CI_platform.Controllers
                 _dbContext.SaveChanges();
             }
         }
-*/
+
+        public void AddComment(int missionId, string? comment_area)
+        {
+            var user = GetThisUser();
+            Comment obj = new()
+            {
+                CommentText = comment_area,
+                UserId = user.UserId,
+                MissionId = (long)missionId,
+            };
+            _dbContext.Comments.Add(obj);
+            _dbContext.SaveChanges();
+
+        }
+
+
+        public void RecommandToCoworkers(int[]? userIds, long missionId)
+        {
+            var thisUser = GetThisUser();
+            if (userIds != null)
+            {
+                foreach (var id in userIds)
+                {
+                    var inviteLink = Url.Action("volunteeringMissionPage", "Home", new { id = missionId }, Request.Scheme);
+                    var user = _dbContext.Users.Where(m => m.UserId == id).FirstOrDefault();
+
+                    
+                    MissionInvite obj = new()
+                    {
+                        MissionId = missionId,
+                        ToUserId = user.UserId,
+                        FromUserId = thisUser.UserId
+                    };
+                    _dbContext.Add(obj);
+                    _dbContext.SaveChanges();
+
+                    
+
+                    var fromAddress = new MailAddress("kanjiyashyam15@gmail.com", "Shyam Kanjiya");
+                    var toAddress = new MailAddress(user.Email);
+                    var subject = "Mission Invite";
+                    var body = $"Hi,<br /><br /> you are invited by your friend to enroll to the mission at CIPlatform.<br /><br />Click the following link to get the details of mission,<br /><br /><a href='{inviteLink}'>{inviteLink}</a>";
+
+
+                    var message = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = true
+                    };
+
+                    var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+                    {
+                        UseDefaultCredentials = false,
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "fbxinllsiaplwthg"),
+                        EnableSsl = true
+                    };
+                    smtpClient.Send(message);
+                }
+            }
+        }
+
         #endregion Volunteering Mission Page
+
+        //---------------------- Story Listing Page --------------------------//
 
         public IActionResult storyListingPage()
         {

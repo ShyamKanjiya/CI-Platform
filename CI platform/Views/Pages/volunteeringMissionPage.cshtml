@@ -79,11 +79,11 @@
 
                     <div class="border-top border-bottom mt-5" id="missionInfo" style="position: relative;">
                         <div class="text-center border mb-2 w-50" id="missionPeriod">
-                            @if(@Model.MissionDetail.MissionType == "TIME")
+                            @if (@Model.MissionDetail.MissionType == "TIME")
                             {
                                 <p class="my-1" style="font-size : 1rem">From @Model.MissionDetail.StartDate.Value.ToShortDateString() until @Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
                             }
-                            else if(@Model.MissionDetail.MissionType == "GOAL")
+                            else if (@Model.MissionDetail.MissionType == "GOAL")
                             {
                                 <p class="my-0" style="font-size : 1rem">@Model.GoalMissions.GoalObjectiveText</p>
                             }
@@ -111,18 +111,72 @@
                     <div class="container mx-auto row mt-4 mb-4">
                         <div class="col-12 col-sm-6 mb-3">
                             <div class="d-flex">
-                                <a href="#" class="btn d-flex align-items-center justify-content-center mx-auto addRecommand">
-                                    <img class="me-2" src="/images/heart1.png" alt="">
-                                    <small class="mb-0 pe-4 h6">Add to Favourite</small>
-                                </a>
+                                @if (Model.userDetails != null)
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="AddToFavourite(@Model.MissionDetail.MissionId)">
+                                        @if (Model.favoriteMissions.Where(m => m.MissionId == Model.MissionDetail.MissionId && m.UserId == Model.userDetails.UserId).Count() == 1)
+                                        {
+                                            <i class="bi bi-heart-fill text-danger pe-2"></i>
+                                            <small class="mb-0 pe-4 h6">Remove from Favourite</small>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-heart pe-2"></i>
+                                            <small class="mb-0 pe-4 h6">Add to Favourite</small>
+                                        }
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="LoginFirst()">
+                                        <i class="bi bi-heart pe-2"></i>
+                                        <small class="mb-0 pe-4 h6 ">Add to Favourite</small>
+                                    </a>
+                                }
+
                             </div>
                         </div>
+
                         <div class="col-12 col-sm-6 mb-2">
                             <div class="d-flex">
-                                <a href="#" class="btn d-flex align-items-center justify-content-center mx-auto addRecommand">
-                                    <img class="me-2" src="/images/add1.png" alt="">
-                                    <small class="mb-0 pe-4 h6">Recommend to a Co-worker</small>
-                                </a>
+                                @if (Model.userDetails != null)
+                                {
+                                    <a class="d-flex align-items-center justify-content-center mx-auto text-decoration-none text-black addRecommand" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <img class="me-2" src="/images/add1.png" alt="">
+                                        <small class="mb-0 h6">Recommend to Co-Workers</small>
+                                    </a>
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    @foreach (var item in Model.Volunteeres)
+                                                    {
+                                                        <li class="form-check my-4 user-list">
+                                                            <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
+                                                            <img class="rec-user-img me-2" src="@item.Avatar" alt="">
+                                                            <label class="form-check-label" for="">@item.FirstName @item.LastName</label>
+                                                        </li>
+                                                    }
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    <button type="button" class="btn btn-warning" onclick="sendMail(@Model.MissionDetail.MissionId)">Send Mail</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="LoginFirst()">
+                                        <img class="me-2" src="/images/add1.png" alt="">
+                                        <small class="mb-0 pe-4 h6 ">Recommand to Co-Workers</small>
+                                    </a>
+                                }
                             </div>
                         </div>
                     </div>
@@ -147,7 +201,7 @@
                             <div class="border py-2 middle-block mx-2">
                                 <img class="mb-4" src="/images/web.png" alt="">
                                 <small class="d-flex pt-3">Theme</small>
-                                <p class="mb-0">@Model.MissionThemes.Title</p>
+                                <p class="mb-0">@Model.MissionDetail.MissionTheme.Title</p>
                             </div>
                             <div class="border py-2 middle-block mx-2">
                                 <img class="mb-4" src="/images/calender.png" alt="">
@@ -185,7 +239,7 @@
     <!--Middle PART-->
     <div class="row middle">
 
-       <!--Tab part-->
+        <!--Tab part-->
         <div class="container col-lg-7 px-3 data" id="tabs">
             <div class="row">
                 <div class="col-xs-12 ">
@@ -201,16 +255,17 @@
                         <!--Mission section-->
                         <div class="tab-pane fade show active" id="nav-mission" role="tabpanel" aria-labelledby="nav-home-tab">
                             <h3 class="pb-2">Introduction</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <p>@Model.MissionDetail.Description</p>
+                            @*<p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                             </p>
                             <h3 class="pb-2">Challenge</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                            </p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                            </p>*@
                             <h3 class="pb-2">Documents</h3>
                             <button class="py-2 px-3 doc_button"><img src="~/images/pdf.png" class="pe-2">loren-ipusem.pdf</button>
                             <button class="py-2 px-3 doc_button"><img src="~/images/doc.png" class="pe-2">at_vero_eos_accusamus.doc</button>
@@ -220,184 +275,59 @@
                         <!--Organization section-->
                         <div class="tab-pane fade" id="nav-organization" role="tabpanel" aria-labelledby="nav-profile-tab">
                             <h3 class="pb-2">Introduction</h3>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            <p>@Model.MissionDetail.OrganizationDetail</p>
+                            @* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
                             </p>
                             <h3 class="pb-2">Challenge</h3>
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                            </p>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                            Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                            </p>*@
                         </div>
 
                         <!--Comments section-->
                         <div class="tab-pane fade" id="nav-comments" role="tabpanel" aria-labelledby="nav-contact-tab">
                             <div class="col-12">
-                                <form class="mt-4">
-                                    <textarea class="form-control" name="" id="" cols="30" rows="4" placeholder="Enter your comments.."></textarea>
-                                </form>
+                                @if (User.Identity.IsAuthenticated)
+                                {
+                                    <form class="mt-4">
+                                        <textarea class="form-control" name="" id="comment_area" cols="30" rows="4" placeholder="Enter your comments.."></textarea>
+                                    </form>
 
-                                <button class="btn btn-outline-danger rounded-pill m-3 ms-0 ">Post comments</button>
-
-                                <div class="container w-100  border bg-light" style="overflow: auto;">
-                                    <div style="height: 26rem;" class="row">
-                                        <div class="col-12 bg-white mt-3 mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 bg-white mb-3 pt-2">
-                                            <div class="container-fluid">
-                                                <div class="row">
-                                                    <div class="col-auto my-auto">
-                                                        <img class="rounded-circle" src="images/volunteer1.png" alt="" height="50" width="50">
-                                                    </div>
-                                                    <div class="col">
-                                                        <p class="mb-1">Margaret Walsh</p>
-                                                        <small class="d-block">Monday, October 21,2019, 4:57 PM</small>
-                                                        <p>Nice mission great opportunity for peoples</p>
+                                    <button class="btn btn-outline-danger rounded-pill m-3 ms-0 " onclick="AddComment(@Model.MissionDetail.MissionId)">Post comments</button>
+                                }
+                                @foreach (var item in Model.commentList)
+                                {
+                                    DateTime dt = @item.CreatedAt;
+                                    <div class="container w-100  border bg-light" style="overflow: auto;">
+                                        <div style="height: 26rem;" class="row">
+                                            <div class="col-12 bg-white mt-3 mb-3 pt-2">
+                                                <div class="container-fluid">
+                                                    <div class="row">
+                                                        <div class="col-auto my-auto">
+                                                            <img class="rounded-circle" src="@item.User.Avatar" alt="" height="50" width="50">
+                                                        </div>
+                                                        <div class="col">
+                                                            <p class="mb-1">@item.User.FirstName @item.User.LastName</p>
+                                                            <small class="d-block">@dt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
+                                                            <p>@item.CommentText</p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-        
-
-
-
-
-
-
-
-
-
-
-
 
         <!--info and volunteers-->
         <div class="container col-lg-5 info">
@@ -417,13 +347,21 @@
                 </div>
                 <div class="d-flex pt-3">
                     <p class="pe-4 mb-4">Ratting</p>
-                    <span class="mb-4">
-                        <img src="~/images/selected-star.png" />
-                        <img src="~/images/selected-star.png" />
-                        <img src="~/images/selected-star.png" />
-                        <img src="~/images/selected-star.png" />
-                        <img src="~/images/selected-star.png" />
-                        <span>(by 125 volunteers)</span>
+                    <span class="col-8 ">
+                        @for (int i = 0; i < Model.Missionrate; i++)
+                        {
+                            <span id="ratings d-flex">
+                                <img src="~/CI Platform Assets/selected-star.png" />
+                            </span>
+                        }
+                        @for (int i = Model.Missionrate; i < 5; i++)
+                        {
+                            <span id="ratings d-flex">
+                                <img src="~/CI Platform Assets/star-empty.png" />
+                            </span>
+                        }
+                        <br>
+                        <small>(by @Model.RatedVolunteeres Volunteers)</small>
                     </span>
                 </div>
             </div>
@@ -646,3 +584,4 @@
         }
     </div>
 </div>
+
