@@ -251,3 +251,16 @@
     color: #ffff;
     background-color: #F88634
 }
+
+
+/*image style color-profile recommended user*/
+.user-list {
+    display: flex;
+    align-items: center;
+}
+
+.rec-user-img {
+    width: 50px;
+    height: 50px;
+    border-radius: 30%;
+}

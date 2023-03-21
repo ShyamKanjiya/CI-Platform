@@ -90,3 +90,34 @@ function sendMail(missionId) {
         },
     });
 }
+
+//----------------------------------------------------------------------------------------//
+
+
+function changeRating(starNum, missionId) {
+    var star = document.getElementById('span-' + starNum);
+    console.log(star);
+
+    var isStarSelected = star.getAttribute('src').endsWith("star-fill.png");
+    var rating = 1;
+    for (var i = 1; i <= 5; i++) {
+        if (i <= starNum) {
+            $("#span-" + i).attr("src", "/images/star-fill.png");
+            rating = i;
+        } else {
+            $("#span-" + i).attr("src", "/images/star-empty.png");
+        }
+    }
+
+    $.ajax({
+        url: "/Pages/UpdateAndAddRate",
+        type: "POST",
+        data: {
+            'missionid': missionId, 'rating': rating
+        },
+        success: function (result) {
+            console.log(rating);
+            console.log("rating is updated succesfully");
+        }
+    });
+}

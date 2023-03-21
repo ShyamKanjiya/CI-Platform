@@ -179,3 +179,4 @@ function removeElement(value) {
     filtersSection.removeChild(elementToBeRemoved);
     loadMissions(pg = 1);
 }
+

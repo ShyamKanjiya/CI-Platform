@@ -42,7 +42,7 @@
                                     @foreach (var item in Model.Countries)
                                     {
                                         <li class="dropdown-item">
-                                            <input type="checkbox" id="" value="@item.Name" class="checkbox">  @item.Name
+                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-countryId ="@item.CountryId">  @item.Name
                                         </li>
                                     }
                                 </ul>
@@ -62,7 +62,7 @@
                                     @foreach (var item in Model.Cities)
                                     {
                                         <li class="dropdown-item">
-                                            <input type="checkbox" id="" value="@item.Name" class="checkbox">  @item.Name
+                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-pId ="@item.CountryId">  @item.Name
                                         </li>
                                     }
                                 </ul>

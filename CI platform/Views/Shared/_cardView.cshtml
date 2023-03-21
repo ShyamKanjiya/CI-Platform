@@ -17,6 +17,10 @@
     }
 }
 
+<div style="width:100%;padding-bottom:56%;position:relative;display:none; margin-left:10%; margin-bottom:2%;" id="divLoader">
+    <img src="~/images/loader-new.gif" width="80%" height="100%" style="position:absolute" allowFullScreen>
+</div>
+
 <div class="d-flex justify-content-between align-items-center container-fluid mb-4" id="missionBar">
     <div id="missionBarLeft">
         <p class="mb-0 h2">Explore <strong id="TotalCount">@totalMissions</strong> Missions</p>
@@ -83,9 +87,43 @@
                             </button>
                         }
 
-                        <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend">
-                            <img src="/images/user.png" alt="">
-                        </button>
+                        @if (Model.userDetails != null)
+                        {
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                <img src="~/images/user.png" alt="">
+                            </button>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-scrollable">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @foreach (var items in Model.Volunteers)
+                                            {
+                                                <li class="form-check my-4 user-list">
+                                                    <input class="form-check-input checkbox mx-4" type="checkbox" value="@items.UserId" id="@items.UserId">
+                                                    <img class="rec-user-img me-2" src="@items.Avatar" alt="">
+                                                    <label class="form-check-label" for="">@items.FirstName @items.LastName</label>
+                                                </li>
+                                            }
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-warning" onclick="sendMail(@item.MissionId)">Send Mail</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <button class="bg-dark bg-opacity-50 border-0 card-btn" id="shareToFriend" onclick="LoginFirst();">
+                                <img src="/images/user.png" alt="">
+                            </button>
+                        }
+
                         <div>
                             <p class="d-inline px-4" id="missionTheme">@item.MissionTheme.Title</p>
                         </div>
@@ -98,11 +136,31 @@
                                 <p>@item.OrganizationName</p>
                             </div>
                             <div>
-                                <img class="rating-star" src="/images/selected-star.png" alt="">
-                                <img class="rating-star" src="/images/selected-star.png" alt="">
-                                <img class="rating-star" src="/images/selected-star.png" alt="">
-                                <img class="rating-star" src="/images/star-empty.png" alt="">
-                                <img class="rating-star" src="/images/star-empty.png" alt="">
+                                @try
+                                {
+                                @for (int i = 0; i < (int)@item.MissionRatings.Average(m => m.Rating); i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-fill.png" />
+                                    </span>
+                                }
+                                @for (int i = (int)@item.MissionRatings.Average(m => m.Rating); i < 5; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-empty.png" />
+                                    </span>
+                                }
+
+                                }
+                                catch
+                                {
+                                @for (int i = 0; i < 5; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-empty.png" />
+                                    </span>
+                                }
+                                }
                             </div>
                         </div>
 
@@ -160,7 +218,7 @@
                             </div>
                         }
                         <div>
-                            @if(User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated)
                             {
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
                                     <p class="mb-0 pe-4 text-warning h6">Apply</p>

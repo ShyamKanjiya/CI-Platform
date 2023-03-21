@@ -34,6 +34,7 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult platformLandingPage()
         {
+
             userViewModel viewModel = new userViewModel
             {
                 Countries = _dbContext.Countries.ToList(),
@@ -41,13 +42,15 @@ namespace CI_platform.Controllers
                 MissionThemes = _dbContext.MissionThemes.ToList(),
                 Skills = _dbContext.Skills.ToList()
             };
+
             return View(viewModel);
         }
+
 
         [HttpPost]
         public IActionResult bringMissionsToGridView(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
         {
-
+            var user = GetThisUser();
 
             userViewModel userView = new userViewModel
             {
@@ -92,6 +95,29 @@ namespace CI_platform.Controllers
             userView.Missions = missions;
 
             ViewBag.missionCount = recsCount;
+
+            if (user != null)
+            {
+                userView.Volunteers = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
+            }
+            else
+            {
+                userView.Volunteers = _dbContext.Users.ToList();
+            }
+
+            foreach (var mission in userView.Missions)
+            {
+                try
+                {
+                    userView.RateMission = _dbContext.MissionRatings.Where(r => r.MissionId == mission.MissionId).ToList();
+
+                }
+                catch
+                {
+                    userView.RateMission = null;
+                }
+
+            }
 
             if (recsCount == 0)
             {
@@ -176,6 +202,7 @@ namespace CI_platform.Controllers
 
             var thismission = _dbContext.Missions.Where(m => m.MissionId.Equals(id)).FirstOrDefault();
             var relatedmissions = _dbContext.Missions.Where(s => s.MissionId != id && (s.CityId == thismission.CityId || s.CountryId == thismission.CountryId || s.MissionThemeId == thismission.MissionThemeId)).Take(3).ToList();
+            var missionRatings = GetMissionRatings(id);
 
             var cities = _dbContext.Cities.ToList();
             var countries = _dbContext.Countries.ToList();
@@ -202,12 +229,28 @@ namespace CI_platform.Controllers
 
             if (user != null)
             {
-                viewModel.Volunteeres = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
+                viewModel.Volunteers = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
             }
             else
             {
-                viewModel.Volunteeres = _dbContext.Users.ToList();
+                viewModel.Volunteers = _dbContext.Users.ToList();
             }
+
+            if (viewModel.userDetails != null)
+            {
+                viewModel.RateMission = _dbContext.MissionRatings.Where(m => m.UserId == viewModel.userDetails.UserId && m.MissionId == id).FirstOrDefault();
+            }
+
+            try
+            {
+                viewModel.RatedVolunteeres = missionRatings.Count();
+                viewModel.Missionrate = (int)missionRatings.Average(m => m.Rating);
+            }
+            catch
+            {
+                viewModel.RatedVolunteeres = 0;
+                viewModel.Missionrate = 0;
+            };
 
             return View(viewModel);
         }
@@ -252,12 +295,12 @@ namespace CI_platform.Controllers
                 CommentText = comment_area,
                 UserId = user.UserId,
                 MissionId = (long)missionId,
+                CreatedAt = DateTime.UtcNow
             };
             _dbContext.Comments.Add(obj);
             _dbContext.SaveChanges();
 
         }
-
 
         public void RecommandToCoworkers(int[]? userIds, long missionId)
         {
@@ -269,7 +312,7 @@ namespace CI_platform.Controllers
                     var inviteLink = Url.Action("volunteeringMissionPage", "Home", new { id = missionId }, Request.Scheme);
                     var user = _dbContext.Users.Where(m => m.UserId == id).FirstOrDefault();
 
-                    
+
                     MissionInvite obj = new()
                     {
                         MissionId = missionId,
@@ -279,7 +322,7 @@ namespace CI_platform.Controllers
                     _dbContext.Add(obj);
                     _dbContext.SaveChanges();
 
-                    
+
 
                     var fromAddress = new MailAddress("kanjiyashyam15@gmail.com", "Shyam Kanjiya");
                     var toAddress = new MailAddress(user.Email);
@@ -297,12 +340,57 @@ namespace CI_platform.Controllers
                     var smtpClient = new SmtpClient("smtp.gmail.com", 587)
                     {
                         UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "fbxinllsiaplwthg"),
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "mbxfpwtiaztubcng"),
                         EnableSsl = true
                     };
                     smtpClient.Send(message);
                 }
             }
+        }
+
+        public IEnumerable<MissionRating> GetMissionRatings(int id)
+        {
+            var missionratings = new List<MissionRating>();
+            if (id != 0)
+            {
+                missionratings = _dbContext.MissionRatings.Where(m => m.MissionId == id).ToList();
+            }
+
+            return missionratings;
+        }
+
+        public MissionRating UpdateAndAddRate(int missionid, int rating)
+        {
+            var user = GetThisUser();
+            var mission_rating = _dbContext.MissionRatings.Include(m => m.Mission).Include(m => m.User).ToList();
+            var rate_update = mission_rating.SingleOrDefault(m => m.User.UserId == user.UserId && m.Mission.MissionId == missionid);
+
+            //Update Rating
+            if (rate_update != null)
+            {
+                rate_update.UpdatedAt = DateTime.Now;
+                rate_update.Rating = rating;
+                _dbContext.Update(rate_update);
+                _dbContext.SaveChanges();
+
+            }
+
+            //Add Rating for the first time user
+            if (rate_update == null)
+            {
+                var userId = _dbContext.Users.Where(u => u.UserId == user.UserId).Select(u => u.UserId).FirstOrDefault();
+                var missionrating = new MissionRating
+                {
+                    MissionId = missionid,
+                    UserId = userId,
+                    Rating = rating,
+                };
+
+                _dbContext.Add(missionrating);
+                _dbContext.SaveChanges();
+            }
+
+            return rate_update;
         }
 
         #endregion Volunteering Mission Page

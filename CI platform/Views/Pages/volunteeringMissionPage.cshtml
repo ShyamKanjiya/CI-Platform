@@ -7,6 +7,7 @@
 }
 
 
+<!-- Upper Section -->
 <div class="container">
 
     <!--Top PART-->
@@ -153,7 +154,7 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    @foreach (var item in Model.Volunteeres)
+                                                    @foreach (var item in Model.Volunteers)
                                                     {
                                                         <li class="form-check my-4 user-list">
                                                             <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
@@ -183,11 +184,55 @@
 
                     <div class="border-top mt-3 w-100 text-center d-flex">
                         <div class="translate-middle-y bg-white mx-content mx-auto">
-                            <img src="~/images/star-empty.png" alt="">
-                            <img src="~/images/star-empty.png" alt="">
-                            <img src="~/images/star-empty.png" alt="">
-                            <img src="~/images/star-empty.png" alt="">
-                            <img src="~/images/star-empty.png" alt="">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (@Model.Missionrate != 0)
+                                {
+                                    var userrate = @Model.RateMission.Rating;
+
+                                    for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= userrate)
+                                        {
+                                            <span>
+                                                <img src="~/images/star-fill.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span>
+                                                <img src="~/images/star-empty.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                            </span>
+                                        }
+
+                                    }
+
+                                }
+                                else
+                                {
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span>
+                                            <img src="~/images/star-empty.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                        </span>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < Model.Missionrate; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-fill.png" />
+                                    </span>
+                                }
+                                @for (int i = Model.Missionrate; i < 5; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-empty.png" />
+                                    </span>
+                                }
+                            }
                         </div>
                     </div>
 
@@ -236,7 +281,7 @@
         </div>
     </div>
 
-    <!--Middle PART-->
+    <!-- Middle PART -->
     <div class="row middle">
 
         <!--Tab part-->
@@ -300,12 +345,14 @@
 
                                     <button class="btn btn-outline-danger rounded-pill m-3 ms-0 " onclick="AddComment(@Model.MissionDetail.MissionId)">Post comments</button>
                                 }
-                                @foreach (var item in Model.commentList)
-                                {
-                                    DateTime dt = @item.CreatedAt;
-                                    <div class="container w-100  border bg-light" style="overflow: auto;">
-                                        <div style="height: 26rem;" class="row">
-                                            <div class="col-12 bg-white mt-3 mb-3 pt-2">
+
+
+                                <div class="container w-100  border bg-light" style="overflow: auto;">
+                                    <div style="height: auto;" class="row">
+                                        @foreach (var item in Model.commentList)
+                                        {
+                                            DateTime dt = @item.CreatedAt;
+                                            <div class="col-12 bg-white my-3 pt-2">
                                                 <div class="container-fluid">
                                                     <div class="row">
                                                         <div class="col-auto my-auto">
@@ -317,11 +364,12 @@
                                                             <p>@item.CommentText</p>
                                                         </div>
                                                     </div>
+
                                                 </div>
                                             </div>
-                                        </div>
+                                        }
                                     </div>
-                                }
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -351,16 +399,15 @@
                         @for (int i = 0; i < Model.Missionrate; i++)
                         {
                             <span id="ratings d-flex">
-                                <img src="~/CI Platform Assets/selected-star.png" />
+                                <img src="~/images/star-fill.png" />
                             </span>
                         }
                         @for (int i = Model.Missionrate; i < 5; i++)
                         {
                             <span id="ratings d-flex">
-                                <img src="~/CI Platform Assets/star-empty.png" />
+                                <img src="~/images/star-empty.png" />
                             </span>
                         }
-                        <br>
                         <small>(by @Model.RatedVolunteeres Volunteers)</small>
                     </span>
                 </div>
@@ -468,6 +515,7 @@
 <hr class="w-100" style="margin-top: 5rem;">
 
 
+<!-- Related Missions -->
 <div class="container">
     <div class="row">
         @foreach (var item in Model.RelatedMissions)

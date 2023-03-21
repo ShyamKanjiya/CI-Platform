@@ -25,15 +25,17 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<GoalMission> Goal { get; set; }
 
-        public GoalMission GoalMissions { get; set; }
-
-        public IEnumerable<User> Volunteeres { get; set; }
+        public IEnumerable<User> Volunteers { get; set; }
 
         public IEnumerable<FavoriteMission> favoriteMissions { get; set; }
 
+        public IEnumerable<Comment> commentList { get; set; }
+
+        public GoalMission GoalMissions { get; set; }
+
         public User userDetails { get; set; }
 
-        public IEnumerable<Comment> commentList { get; set; }    
+        public MissionRating RateMission { get; set; }
 
         public int Missionrate { get; set; }
 

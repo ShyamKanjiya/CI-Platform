@@ -3,7 +3,6 @@ let sortBy = "";
 
 
 $(document).ready(function () {
-    console.log("hahahahahaha");
     loadMissions();
 });
 
@@ -14,6 +13,7 @@ $("#searchtab").on("keyup", function (e) {
 
 function loadMissions(pg, sortVal) {
     var country = [];
+    console.log(country);
     $('#dropDownCountry').find("input:checked").each(function (i, ob) {
         country.push($(ob).val());
     });
@@ -37,6 +37,7 @@ function loadMissions(pg, sortVal) {
         sortBy = sortVal;
     }
 
+    $("#divLoader").show();
     $.ajax({
 
         url: "/Pages/bringMissionsToGridView",
@@ -44,11 +45,17 @@ function loadMissions(pg, sortVal) {
         dataType: "html",
         data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme },
         success: function (data) {
+            $("#divLoader").hide();
             $('#mission-list').html("");
             $('#mission-list').html(data);
         },
         error: function (error) {
+            $("#divLoader").hide();
             console.log(error);
         }
     });
 }
+
+//--------------------------------------------------------------------------------------------------------//
+
+ 

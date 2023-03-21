@@ -6,7 +6,9 @@ namespace CI_platform.Entities.DataModels;
 public partial class Comment
 {
     public long CommentId { get; set; }
+
     public string CommentText { get; set; }
+
     public long UserId { get; set; }
 
     public long MissionId { get; set; }
