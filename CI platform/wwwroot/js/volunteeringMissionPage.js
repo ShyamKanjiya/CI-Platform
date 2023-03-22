@@ -52,16 +52,18 @@ function AddToFavourite(missionId) {
 
 //----------------------------------------------------------------------------------------//
 
-function AddComment(missionId) {
+function AddComment(missionId) { 
     var comment_area = $("#comment_area").val();
     
     $.ajax({
-
         url: "/Pages/AddComment",
         method: "POST",
+        dataType: "html",
         data: { 'missionId': missionId, "comment_area": comment_area },
         success: function (data) {
-            location.reload()
+            console.log(data);
+            var s = $.parseHTML(data).find("#nav-comments").html(); 
+            $("#nav-comments").html(s); 
         },
         error: function (error) {
             console.log(error);
@@ -119,5 +121,21 @@ function changeRating(starNum, missionId) {
             console.log(rating);
             console.log("rating is updated succesfully");
         }
+    });
+}
+
+//----------------------------------------------------------------------------------------//
+
+function applyMission(missionId) {
+    $.ajax({
+        type: 'POST',
+        url: '/Pages/applyMission',
+        data: { "missionId": missionId},
+        success: function () {
+            alert("Mission Applied!");
+        },
+        error: function () {
+            console.log('error');
+        },
     });
 }

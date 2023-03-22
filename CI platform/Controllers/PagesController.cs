@@ -48,7 +48,7 @@ namespace CI_platform.Controllers
 
 
         [HttpPost]
-        public IActionResult bringMissionsToGridView(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
+        public IActionResult bringMissions(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
         {
             var user = GetThisUser();
 
@@ -211,6 +211,8 @@ namespace CI_platform.Controllers
             var goal = _dbContext.GoalMissions.ToList();
             var favouriteMission = _dbContext.FavoriteMissions.ToList();
             var commentList = _dbContext.Comments.Where(m => m.MissionId == id).ToList();
+            var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
+            var missionDocuments = _dbContext.MissionDocuments.Where(m => m.MissionId == id).ToList();
 
 
             userVolunteerMission viewModel = new()
@@ -225,11 +227,14 @@ namespace CI_platform.Controllers
                 userDetails = user,
                 favoriteMissions = favouriteMission,
                 commentList = commentList,
+                MissionApp = missionApp,
+                MissionDocuments = missionDocuments,
             };
 
             if (user != null)
             {
                 viewModel.Volunteers = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
+                viewModel.MissionApplications = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.UserId == user.UserId).FirstOrDefault();
             }
             else
             {
@@ -287,7 +292,7 @@ namespace CI_platform.Controllers
             }
         }
 
-        public void AddComment(int missionId, string? comment_area)
+        public IActionResult AddComment(int missionId, string? comment_area)
         {
             var user = GetThisUser();
             Comment obj = new()
@@ -299,6 +304,8 @@ namespace CI_platform.Controllers
             };
             _dbContext.Comments.Add(obj);
             _dbContext.SaveChanges();
+
+            return View(obj);
 
         }
 
@@ -393,14 +400,63 @@ namespace CI_platform.Controllers
             return rate_update;
         }
 
+        public void applyMission(int missionId)
+        {
+            var thisUser = GetThisUser();
+
+            MissionApplication obj = new()
+            {
+                MissionId = missionId,
+                UserId = thisUser.UserId,
+                AppliedAt = DateTime.Now
+            };
+            _dbContext.MissionApplications.Add(obj);
+            _dbContext.SaveChanges();
+        }
+
         #endregion Volunteering Mission Page
 
         //---------------------- Story Listing Page --------------------------//
+
+        #region Story Listing Page
 
         public IActionResult storyListingPage()
         {
             return View();
         }
 
+        public IActionResult bringStories(int pg)
+        {
+            List<Story> stories = _dbContext.Stories.ToList();
+
+            userStoryListModel userStory = new userStoryListModel
+            {
+                Stories = _dbContext.Stories.ToList(),
+                Missions = _dbContext.Missions.ToList(),
+                Users = _dbContext.Users.ToList(),
+            };
+
+            const int pageSize = 3;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = stories.Count();
+
+            var pager = new userPager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            stories = stories.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.userPager = pager;
+
+            userStory.Stories = stories;
+
+            ViewBag.missionCount = recsCount;
+
+            return PartialView("_StoryCardView");
+        }
+
+        #endregion
     }
 }

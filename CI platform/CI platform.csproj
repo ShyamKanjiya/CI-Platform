@@ -26,4 +26,8 @@
     <ProjectReference Include="..\CI pltform.Entities\CI platform.Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\Documents\" />
+  </ItemGroup>
+
 </Project>

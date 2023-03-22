@@ -1,4 +1,4 @@
-﻿.image-overlay {
+.image-overlay {
     background-color: rgba(0,0,0,0.6);
     padding: 5% 15%;
 }
@@ -6,7 +6,7 @@
 .top-img-part {
     height: 350px;
     width: 100%;
-    background: url('~/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png') no-repeat;
+    background: url('/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png') no-repeat;
     background-position-y: 40%;
     background-size: cover;
 }

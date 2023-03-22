@@ -12,8 +12,8 @@
 
     <!--Top PART-->
     <div class="row mt-5">
-        <!-- Container for the image gallery -->
 
+        <!-- Container for the image gallery -->
         <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
             <div class="col-lg-6 col-md-12 w-100 px-3">
 
@@ -263,10 +263,35 @@
                     <div>
                         @if (User.Identity.IsAuthenticated)
                         {
-                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" asp-action="volunteeringMissionPage" asp-controller="Pages" style="border-radius:50px;">
-                                <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                <img src="/images/right-arrow.png" alt="">
-                            </a>
+                            if (Model.MissionApplications != null)
+                            {
+                                if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
+                                    </a>
+                                }
+                                else if (Model.MissionApplications.ApprovalStatus == "PENDING")
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
                         }
                         else
                         {
@@ -312,9 +337,38 @@
                             Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
                             </p>*@
                             <h3 class="pb-2">Documents</h3>
-                            <button class="py-2 px-3 doc_button"><img src="~/images/pdf.png" class="pe-2">loren-ipusem.pdf</button>
-                            <button class="py-2 px-3 doc_button"><img src="~/images/doc.png" class="pe-2">at_vero_eos_accusamus.doc</button>
-                            <button class="py-2 px-3 doc_button"><img src="~/images/xlsx.png" class="pe-2">important_doc.xlsx</button>
+                            <div class="d-flex me-5">
+                                @foreach (var documents in Model.MissionDocuments)
+                                {
+                                    if (documents.MissionId == Model.MissionDetail.MissionId)
+                                    {
+                                        if (documents.DocumentType == "DOC")
+                                        {
+                                            <div class="d-flex me-5 mt-2 me-3">
+                                                <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <img src="~/images/doc.png" alt="like" target="pdf-frame" /> @documents.DocumentName
+                                                </a>
+                                            </div>
+                                        }
+                                        else if (documents.DocumentType == "PDF")
+                                        {
+                                            <div class="d-flex mt-2 me-3">
+                                                <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <img src="~/images/pdf.png" alt="like" target="pdf-frame" /> @documents.DocumentName
+                                                </a>
+                                            </div>
+                                        }
+                                        else if (documents.DocumentType == "EXCEL")
+                                        {
+                                            <div class="d-flex mt-2 me-3">
+                                                <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <img src="~/images/xlsx.png" alt="like" target="pdf-frame" /> @documents.DocumentName
+                                                </a>
+                                            </div>
+                                        }
+                                    }
+                                }
+                            </div>
                         </div>
 
                         <!--Organization section-->
@@ -347,7 +401,7 @@
                                 }
 
 
-                                <div class="container w-100  border bg-light" style="overflow: auto;">
+                                <div class="container w-100  border bg-light" style="overflow-y: scroll; max-height: 46vh; height: fit-content;">
                                     <div style="height: auto;" class="row">
                                         @foreach (var item in Model.commentList)
                                         {
@@ -420,75 +474,17 @@
                     <h3 class="pb-3 mb-0" style="border-bottom:2px solid black; width:fit-content">Recent Volunteers</h3>
                 </div>
 
-                <div class="d-flex align-items-center justify-content-center my-3">
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer1.png" class="rounded-circle" height="70" width="70" />
+                <div class="row align-items-center justify-content-center my-3 ">
+                    @foreach (var volunteer in @Model.MissionApp)
+                    {
+                        <div class="col-md-4 col-sm-6">
+                            <div class="d-flex justify-content-center">
+                                <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+                            </div>
+                            <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
                         </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Andrew J</p>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer2.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Charles Vigue</p>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer3.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Kathryn R</p>
-                    </div>
+                    }
                 </div>
-
-                <div class="d-flex align-items-center justify-content-center my-3">
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer4.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Estella Fowles</p>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer5.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Rose Lewis</p>
-                    </div>
-
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer6.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Raymond P</p>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-center justify-content-center my-3">
-                    <div class="col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer7.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Travis Steen</p>
-                    </div>
-
-                    <div class="col-lg-4 col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer8.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Sarah Santillan</p>
-                    </div>
-
-                    <div class="col-lg-4 col-4">
-                        <div class="d-flex justify-content-center">
-                            <img src="~/images/volunteer9.png" class="rounded-circle" height="70" width="70" />
-                        </div>
-                        <p class="d-flex justify-content-center" style="font-size: 13px">Linda Richards</p>
-                    </div>
-                </div>
-
             </div>
 
             <!--Bottom of Recent volunteer-->
@@ -499,7 +495,7 @@
                     </div>
                 </button>
                 <div>
-                    <span>1 - 9 of 25 Recent Volunteers</span>
+                    <span>@Model.MissionApp.Count() Recent Volunteers</span>
                 </div>
                 <button>
                     <div class="next">

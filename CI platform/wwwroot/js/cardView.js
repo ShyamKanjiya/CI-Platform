@@ -33,14 +33,14 @@ function loadMissions(pg, sortVal) {
     //    skill += $(this).val() + ",";
     //});
 
-    if (sortVal != null) {
+    if (sortVal != null) { 
         sortBy = sortVal;
     }
 
     $("#divLoader").show();
     $.ajax({
 
-        url: "/Pages/bringMissionsToGridView",
+        url: "/Pages/bringMissions",
         method: "POST",
         dataType: "html",
         data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme },

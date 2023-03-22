@@ -21,7 +21,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/plateformLandingPage.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/storyLandingPage.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/storyListingPage.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
 </head>
 <body>
@@ -43,7 +43,7 @@
                     </div>
                     <div class="offcanvas-body" id="offcanvas-body" style="margin-left:3vw;">
                         <ul class="navbar-nav nav-item">
-                            <a class="nav-link" aria-current="page" href="#">Stories</a>
+                            <a class="nav-link" aria-current="page" asp-controller="Pages" asp-action="storyListingPage">Stories</a>
                         </ul>
                         <ul class="navbar-nav nav-item dropdown">
                             <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
@@ -123,6 +123,7 @@
     <script src="~/js/platfromLandingPage.js"></script>
     <script src="~/js/cardView.js"></script>
     <script src="~/js/volunteeringMissionPage.js"></script>
+    <script src="~/js/StoryListingPage.js"></script>
 
 
     @await RenderSectionAsync("Scripts", required: false)

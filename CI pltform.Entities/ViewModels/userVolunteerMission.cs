@@ -31,11 +31,17 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<Comment> commentList { get; set; }
 
+        public IEnumerable<MissionApplication> MissionApp { get; set; }
+
         public GoalMission GoalMissions { get; set; }
 
         public User userDetails { get; set; }
 
         public MissionRating RateMission { get; set; }
+
+        public MissionApplication MissionApplications { get; set; }
+
+        public IEnumerable<MissionDocument> MissionDocuments { get; set; }
 
         public int Missionrate { get; set; }
 

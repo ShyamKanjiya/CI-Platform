@@ -1,0 +1,104 @@
+﻿@model userStoryListModel
+
+@{
+    userPager pager = new userPager();
+
+    int pageNo = 0;
+
+    if (ViewBag.userPager != null)
+    {
+        pager = ViewBag.userPager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+
+<!-- Story List -->
+<div class="col-12 col-md-6 col-lg-4">
+    <div class="card pb-3">
+        <div style="position: relative;" class="card-image-part">
+            <img class="card-img-top" id="mission-img"
+                 src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity.png"
+                 alt="Card image caption">
+            <div class="hidden-overlay-button-area">
+                <a class="hidden-overlay-button text-decoration-none px-4 py-1" asp-action="view-story" asp-controller="" style="width:max-content">View Details<span class="ps-2">⟶</span></a>
+            </div>
+
+            <div>
+                <p class="d-inline px-2" id="missionTheme">CSR-initiative</p>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <h5 class="card-title mt-3 px-3">Top 10 User and Customer Engagement Stretagies for 2019</h5>
+            <p class="card-text px-3" style="font-size:.875em">
+                Some quick example text to build on the card title and make up the
+                bulk
+                of the
+                card's content.
+            </p>
+            <div class="d-flex justify-content-between px-3">
+                <div>
+                    <img src="~/images/volunteer3.png" class="volunteer-img" />
+                    <small>Travis Steem</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Pagination -->
+<div class="container-fluid">
+    @if (pager.TotalPages > 0)
+    {
+        <ul class="pagination justify-content-center mt-5 px-5" id="pagination">
+
+            @if (pager.CurrentPage > 1)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=1)"> &laquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@(pager.CurrentPage - 1))"> &lsaquo; </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &laquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &lsaquo; </a>
+                </li>
+            }
+
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link @(pge == pager.CurrentPage ? "active" : "")" onclick="loadMissions(pg=@pge)"> @pge </a>
+                </li>
+            }
+
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@(pager.CurrentPage + 1)) "> &rsaquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link" onclick="loadMissions(pg=@pager.TotalPages)"> &raquo; </a>
+                </li>
+            }
+            else
+            {
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &rsaquo; </a>
+                </li>
+                <li class="page-item mx-2">
+                    <a class="page-link disabled"> &raquo; </a>
+                </li>
+            }
+
+        </ul>
+    }
+</div>
