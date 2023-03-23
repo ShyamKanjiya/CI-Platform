@@ -46,7 +46,6 @@ namespace CI_platform.Controllers
             return View(viewModel);
         }
 
-
         [HttpPost]
         public IActionResult bringMissions(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
         {
@@ -156,7 +155,6 @@ namespace CI_platform.Controllers
             }
         }
 
-
         public List<Mission> filterMission(List<Mission> missions, string[] country, string[] cities, string[] theme, string[] skill)
         {
             if (country.Length > 0)
@@ -210,7 +208,7 @@ namespace CI_platform.Controllers
             var goalMission = _dbContext.GoalMissions.Where(m => m.MissionId == id).FirstOrDefault();
             var goal = _dbContext.GoalMissions.ToList();
             var favouriteMission = _dbContext.FavoriteMissions.ToList();
-            var commentList = _dbContext.Comments.Where(m => m.MissionId == id).ToList();
+            var commentList = _dbContext.Comments.Where(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt).ToList();
             var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
             var missionDocuments = _dbContext.MissionDocuments.Where(m => m.MissionId == id).ToList();
 
@@ -269,7 +267,7 @@ namespace CI_platform.Controllers
             return user;
         }
 
-        public void AddToFavourite(int missionId)
+        public IActionResult AddToFavourite(int missionId)
         {
             var user = GetThisUser();
             var FavMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId).FirstOrDefault();
@@ -290,6 +288,8 @@ namespace CI_platform.Controllers
                 _dbContext.Remove(FavMission);
                 _dbContext.SaveChanges();
             }
+
+            return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
         public IActionResult AddComment(int missionId, string? comment_area)
@@ -305,8 +305,7 @@ namespace CI_platform.Controllers
             _dbContext.Comments.Add(obj);
             _dbContext.SaveChanges();
 
-            return View(obj);
-
+            return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
         public void RecommandToCoworkers(int[]? userIds, long missionId)
@@ -362,15 +361,14 @@ namespace CI_platform.Controllers
             {
                 missionratings = _dbContext.MissionRatings.Where(m => m.MissionId == id).ToList();
             }
-
             return missionratings;
         }
 
-        public MissionRating UpdateAndAddRate(int missionid, int rating)
+        public IActionResult UpdateAndAddRate(int missionId, int rating)
         {
             var user = GetThisUser();
             var mission_rating = _dbContext.MissionRatings.Include(m => m.Mission).Include(m => m.User).ToList();
-            var rate_update = mission_rating.SingleOrDefault(m => m.User.UserId == user.UserId && m.Mission.MissionId == missionid);
+            var rate_update = mission_rating.SingleOrDefault(m => m.User.UserId == user.UserId && m.Mission.MissionId == missionId);
 
             //Update Rating
             if (rate_update != null)
@@ -388,7 +386,7 @@ namespace CI_platform.Controllers
                 var userId = _dbContext.Users.Where(u => u.UserId == user.UserId).Select(u => u.UserId).FirstOrDefault();
                 var missionrating = new MissionRating
                 {
-                    MissionId = missionid,
+                    MissionId = missionId,
                     UserId = userId,
                     Rating = rating,
                 };
@@ -397,7 +395,7 @@ namespace CI_platform.Controllers
                 _dbContext.SaveChanges();
             }
 
-            return rate_update;
+            return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
         public void applyMission(int missionId)
@@ -414,6 +412,37 @@ namespace CI_platform.Controllers
             _dbContext.SaveChanges();
         }
 
+        public IActionResult volunteerPage(int pg, int id)
+        {
+            var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
+
+
+            userVolunteerMission viewModel = new()
+            {
+                Volunteers = _dbContext.Users.ToList(),
+                MissionApp = missionApp,
+                MissionDetail = _dbContext.Missions.Where(m => m.MissionId == id).FirstOrDefault()
+            };
+
+            const int pageSize = 9;
+            if (pg < 1)
+                pg = 1;
+
+            int recsCount = missionApp.Count();
+
+            var pager = new userPager(recsCount, pg, pageSize);
+
+            int recSkip = (pg - 1) * pageSize;
+
+            missionApp = missionApp.Skip(recSkip).Take(pager.PageSize).ToList();
+
+            this.ViewBag.userPager = pager;
+
+            viewModel.MissionApp = missionApp;
+
+            return PartialView("_VolunteerList", viewModel);
+        }
+
         #endregion Volunteering Mission Page
 
         //---------------------- Story Listing Page --------------------------//
@@ -425,7 +454,7 @@ namespace CI_platform.Controllers
             return View();
         }
 
-        public IActionResult bringStories(int pg)
+        public IActionResult bringStories(int pg = 1)
         {
             List<Story> stories = _dbContext.Stories.ToList();
 
@@ -434,6 +463,7 @@ namespace CI_platform.Controllers
                 Stories = _dbContext.Stories.ToList(),
                 Missions = _dbContext.Missions.ToList(),
                 Users = _dbContext.Users.ToList(),
+                MissionThemes = _dbContext.MissionThemes.ToList()
             };
 
             const int pageSize = 3;
@@ -454,7 +484,7 @@ namespace CI_platform.Controllers
 
             ViewBag.missionCount = recsCount;
 
-            return PartialView("_StoryCardView");
+            return PartialView("_StoryCardView", userStory);
         }
 
         #endregion

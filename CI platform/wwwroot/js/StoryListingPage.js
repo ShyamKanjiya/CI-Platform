@@ -2,12 +2,12 @@
     loadStory();
 });
 
-function loadStory() {
+function loadStory(pg) {
     $.ajax({
         url: "/Pages/bringStories",
         method: "POST",
         dataType: "html",
-        data: {  },
+        data: { 'pg': pg },
         success: function (data) {
             $('#story-list').html("");
             $('#story-list').html(data);

@@ -20,7 +20,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
-<body style ="overflow-x : hidden;">
+<body style="overflow-x : hidden;">
     @{
         Html.RenderPartial("_headerPartialView");
     }
@@ -28,8 +28,11 @@
     <!-- grid and list view -->
     <div class="container py-md-5 py-3" style="display:block;" id="full">
         @*<!-- mission heading and icons end -->*@
-
-
+        <center class="d-none" id="divLoader">
+            <div class="spinner-border text-warning" style="width: 10rem; height: 10rem; margin-top:15%;" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </center>
         <!-- mission heading and icons end -->
         <!-- missions gridview and listview start -->
         <div id="mission-list">

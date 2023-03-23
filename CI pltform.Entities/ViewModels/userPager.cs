@@ -21,7 +21,7 @@ namespace CI_platform.Entities.ViewModels
 
         }
 
-        public userPager(int totalItems, int page, int pageSize = 3)
+        public userPager(int totalItems, int page, int pageSize)
         {
             int totalPages = (int)Math.Ceiling((decimal)totalItems / (decimal)pageSize);
             int currentPage = page;

@@ -1,0 +1,86 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model userVolunteerMission
+
+@{
+    userPager pager = new userPager();
+
+    int pageNo = 0;
+
+    if (ViewBag.userPager != null)
+    {
+        pager = ViewBag.userPager;
+        pageNo = pager.CurrentPage;
+    }
+}
+
+<!--Recent volunteer-->
+<div class="col-12 border pt-3 px-4 mt-3">
+
+    <div class="border-bottom">
+        <h3 class="pb-3 mb-0" style="border-bottom:2px solid black; width:fit-content">Recent Volunteers</h3>
+    </div>
+
+    <div class="row align-items-center justify-content-center my-3">
+        @foreach (var volunteer in @Model.MissionApp)
+        {
+            <div class="col-md-4 col-sm-6">
+                <div class="d-flex justify-content-center">
+                    <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+                </div>
+                <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
+            </div>
+        }
+    </div>
+</div>
+
+
+
+<!-- Pagination -->
+<!--Bottom of Recent volunteer-->
+<div class="pagging d-flex justify-content-between align-items-center border-1 border-top-0">
+    @if (pager.TotalPages > 0)
+    {
+        @if (pager.CurrentPage > 1)
+        {
+            <button onclick="loadVolunteers(pg=@(pager.CurrentPage - 1),@Model.MissionDetail.MissionId)">
+                <div class="prev">
+                    <img src="~/images/left.png">
+                </div>
+            </button>
+        }
+        else
+        {
+            <button>
+                <div class="prev disabled">
+                    <img src="~/images/left.png">
+                </div>
+            </button>
+        }
+
+        <div>
+            <span>@pager.TotalItems Recent Volunteers (@pager.CurrentPage out of @pager.TotalPages)</span>
+        </div>
+
+        @if (pager.CurrentPage < pager.TotalPages)
+        {
+            <button onclick="loadVolunteers(pg=@(pager.CurrentPage + 1),@Model.MissionDetail.MissionId)">
+                <div class="next">
+                    <img src="~/images/right-arrow1.png">
+                </div>
+            </button>
+        }
+        else
+        {
+            <button>
+                <div class="next disabled">
+                    <img src="~/images/right-arrow1.png">
+                </div>
+            </button>
+        }
+    }
+</div>

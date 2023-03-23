@@ -37,7 +37,9 @@ function loadMissions(pg, sortVal) {
         sortBy = sortVal;
     }
 
-    $("#divLoader").show();
+    $("#divLoader").attr('style', 'height:100vh');
+    $("#divLoader").removeClass('d-none');
+
     $.ajax({
 
         url: "/Pages/bringMissions",
@@ -45,12 +47,12 @@ function loadMissions(pg, sortVal) {
         dataType: "html",
         data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme },
         success: function (data) {
-            $("#divLoader").hide();
+            $("#divLoader").addClass("d-none");
             $('#mission-list').html("");
             $('#mission-list').html(data);
         },
         error: function (error) {
-            $("#divLoader").hide();
+            $("#divLoader").addClass("d-none");
             console.log(error);
         }
     });

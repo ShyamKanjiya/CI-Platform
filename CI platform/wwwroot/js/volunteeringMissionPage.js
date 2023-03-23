@@ -28,6 +28,7 @@ function showSlides(n) {
 }
 
 
+
 //---------------------------------------------------------------------------------------//
 
 function LoginFirst() {
@@ -42,7 +43,8 @@ function AddToFavourite(missionId) {
         method: "POST",
         data: { 'missionId': missionId },
         success: function (data) {
-            location.reload()
+            var newm = $($.parseHTML(data)).find("#favouriteBtn").html();
+            $("#favouriteBtn").html(newm);
         },
         error: function (error) {
             console.log(error);
@@ -61,9 +63,12 @@ function AddComment(missionId) {
         dataType: "html",
         data: { 'missionId': missionId, "comment_area": comment_area },
         success: function (data) {
+            var newm = $($.parseHTML(data)).find("#commentForLoad").html();
+            $("#commentForLoad").html(newm);
+            $('#comment_area').val('');
+
             console.log(data);
-            var s = $.parseHTML(data).find("#nav-comments").html(); 
-            $("#nav-comments").html(s); 
+
         },
         error: function (error) {
             console.log(error);
@@ -115,9 +120,11 @@ function changeRating(starNum, missionId) {
         url: "/Pages/UpdateAndAddRate",
         type: "POST",
         data: {
-            'missionid': missionId, 'rating': rating
+            'missionId': missionId, 'rating': rating
         },
-        success: function (result) {
+        success: function (data) {
+            var newm = $($.parseHTML(data)).find("#avg-rating-part").html();
+            $("#avg-rating-part").html(newm);
             console.log(rating);
             console.log("rating is updated succesfully");
         }
@@ -133,6 +140,32 @@ function applyMission(missionId) {
         data: { "missionId": missionId},
         success: function () {
             alert("Mission Applied!");
+        },
+        error: function () {
+            console.log('error');
+        },
+    });
+}
+
+//----------------------------------------------------------------------------------------//
+
+function pendingRating(x) {
+    if (x == 0)
+        alert("You're approval request is being pending!!!");
+    else
+        alert("You've not applied for this mission yet!!!");
+}
+
+//----------------------------------------------------------------------------------------//
+
+function loadVolunteers(pg, mid) {
+    $.ajax({
+        type: 'GET',
+        url: '/Pages/volunteerPage',
+        data: { "pg": pg, 'id': mid },
+        success: function (data) {
+            $('#changeVolunteer').html("");
+            $('#changeVolunteer').html(data);
         },
         error: function () {
             console.log('error');
