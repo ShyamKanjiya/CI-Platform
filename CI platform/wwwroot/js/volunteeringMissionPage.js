@@ -32,19 +32,21 @@ function showSlides(n) {
 //---------------------------------------------------------------------------------------//
 
 function LoginFirst() {
-    alert('Please Login first')
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'You are not Logged-in!!! Login First...',
+    })
 }
 
 function AddToFavourite(missionId) {
     console.log(missionId)
     $.ajax({
-
         url: "/Pages/AddToFavourite",
         method: "POST",
         data: { 'missionId': missionId },
         success: function (data) {
-            var newm = $($.parseHTML(data)).find("#favouriteBtn").html();
-            $("#favouriteBtn").html(newm);
+            location.reload();
         },
         error: function (error) {
             console.log(error);
@@ -66,9 +68,6 @@ function AddComment(missionId) {
             var newm = $($.parseHTML(data)).find("#commentForLoad").html();
             $("#commentForLoad").html(newm);
             $('#comment_area').val('');
-
-            console.log(data);
-
         },
         error: function (error) {
             console.log(error);
@@ -78,28 +77,47 @@ function AddComment(missionId) {
 
 //----------------------------------------------------------------------------------------//
 
+function Alert(text) {
+    Swal.fre({
+        icon: 'eror',
+        text: text,
+        timer: 1500
+        })
+}
+
 function sendMail(missionId) {
 
     var recUsersList = [];
     $('.modal-body input[type="checkbox"]:checked').each(function () {
         recUsersList.push($(this).attr("id"));
     });
+
+    $('#divLoader').removeClass('d-none');
+    $('#modal-content').addClass('d-none');
     console.log(recUsersList);
-    $.ajax({
-        type: 'POST',
-        url: '/Pages/RecommandToCoworkers',
-        data: { "missionId": missionId, "userIds": recUsersList },
-        success: function () {
-            alert("Mission Recommended successfully!");
-        },
-        error: function () {
-            console.log('error');
-        },
-    });
+    if (recUsersList.length > 0) {
+        $.ajax({
+            type: 'POST',
+            url: '/Pages/RecommandToCoworkers',
+            data: { "missionId": missionId, "userIds": recUsersList },
+            success: function () {
+                Alert('Mission Recommended Successfully!');
+                $("#divLoader").addClass("d-none");
+                $('#modal-content').removeClass('d-none');
+            },
+            error: function () {
+                console.log('error');
+            },
+        });
+    }
+    else {
+        Alert('Please select atleast one user!');
+        $("#divLoader").addClass("d-none");
+        $('#modal-content').removeClass('d-none');
+    }
 }
 
 //----------------------------------------------------------------------------------------//
-
 
 function changeRating(starNum, missionId) {
     var star = document.getElementById('span-' + starNum);
@@ -138,8 +156,13 @@ function applyMission(missionId) {
         type: 'POST',
         url: '/Pages/applyMission',
         data: { "missionId": missionId},
-        success: function () {
-            alert("Mission Applied!");
+        success: function (data) {
+            var newm = $($.parseHTML(data)).find("#apply").html();
+            $("#apply").html(newm);
+            /*Swal.fire({
+                title: 'Succes',
+                text: 'You have succesfully applied for mission',
+            })*/
         },
         error: function () {
             console.log('error');
@@ -151,9 +174,21 @@ function applyMission(missionId) {
 
 function pendingRating(x) {
     if (x == 0)
-        alert("You're approval request is being pending!!!");
+    {
+        Swal.fire({
+            icon: 'error',
+            title: 'Pending',
+            text: 'You are approval request is being pending!!!'
+        })
+    }
     else
-        alert("You've not applied for this mission yet!!!");
+    {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'You have not applied for this mission yet!!!'
+        })
+    }    
 }
 
 //----------------------------------------------------------------------------------------//

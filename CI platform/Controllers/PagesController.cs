@@ -61,6 +61,7 @@ namespace CI_platform.Controllers
                 Skills = _dbContext.Skills.ToList(),
                 userDetails = GetThisUser(),
                 FavoriteMissions = _dbContext.FavoriteMissions.ToList(),
+                MissionApplications = _dbContext.MissionApplications.ToList(),
             };
 
             List<Mission> missions = _dbContext.Missions.ToList();
@@ -267,12 +268,12 @@ namespace CI_platform.Controllers
             return user;
         }
 
-        public IActionResult AddToFavourite(int missionId)
+        public void AddToFavourite(int missionId)
         {
             var user = GetThisUser();
-            var FavMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId).FirstOrDefault();
+            var favMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId).FirstOrDefault();
 
-            if (FavMission == null)
+            if (favMission == null)
             {
                 var favoriteMission = new FavoriteMission()
                 {
@@ -285,11 +286,9 @@ namespace CI_platform.Controllers
             }
             else
             {
-                _dbContext.Remove(FavMission);
+                _dbContext.Remove(favMission);
                 _dbContext.SaveChanges();
             }
-
-            return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
         public IActionResult AddComment(int missionId, string? comment_area)
@@ -398,18 +397,31 @@ namespace CI_platform.Controllers
             return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
-        public void applyMission(int missionId)
+        public IActionResult applyMission(int missionId)
         {
             var thisUser = GetThisUser();
-
-            MissionApplication obj = new()
+            var status = _dbContext.MissionApplications.Where(m => m.MissionId == missionId && m.UserId == thisUser.UserId).FirstOrDefault();
+            if (status.ApprovalStatus == "DECLINE")
             {
-                MissionId = missionId,
-                UserId = thisUser.UserId,
-                AppliedAt = DateTime.Now
-            };
-            _dbContext.MissionApplications.Add(obj);
-            _dbContext.SaveChanges();
+                status.ApprovalStatus = "PENDING";
+                status.AppliedAt = DateTime.Now;
+                status.UpdatedAt = DateTime.Now;
+                _dbContext.Update(status);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                MissionApplication obj = new()
+                {
+                    MissionId = missionId,
+                    UserId = thisUser.UserId,
+                    AppliedAt = DateTime.Now
+                };
+                _dbContext.MissionApplications.Add(obj);
+                _dbContext.SaveChanges();
+            }
+
+            return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
 
         public IActionResult volunteerPage(int pg, int id)
@@ -485,6 +497,17 @@ namespace CI_platform.Controllers
             ViewBag.missionCount = recsCount;
 
             return PartialView("_StoryCardView", userStory);
+        }
+
+        #endregion
+
+        //---------------------- Story Add Page --------------------------//
+
+        #region Story Add Page
+
+        public IActionResult StoryAddPage() 
+        { 
+            return View(); 
         }
 
         #endregion

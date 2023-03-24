@@ -3,6 +3,7 @@
 
 @{
     var totalMissions = ViewBag.missionCount;
+    var systemDate = DateTime.Now;
 }
 
 @{
@@ -57,8 +58,42 @@
             <div class="col-12 col-md-6 col-lg-4 mission d-flex align-items-stretch justify-content-center">
                 <div class="card">
                     <div style="position: relative;">
-                        <img class="card-img-top" id="mission-img"
-                         src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                        @{
+                            var thisMissApp = Model?.MissionApplications?.Where(m => m.UserId == Model?.userDetails?.UserId && m.MissionId == item.MissionId).FirstOrDefault();
+                        }
+                        @if (@thisMissApp != null)
+                        {
+                            @if (thisMissApp?.ApprovalStatus == "APPROVE" && item.EndDate > systemDate )
+                            {
+                                <div class="d-flex bg-success px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
+                                    <small class="mb-0 me-2 text-white">Approved</small>
+                                    <i class="bi bi-patch-check text-white"></i>
+                                </div>
+                            }
+                            else if (thisMissApp?.ApprovalStatus == "PENDING" && item.EndDate > systemDate)
+                            {
+                                <div class="d-flex bg-primary px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
+                                    <small class="mb-0 me-2 text-white">Pending Approval</small>
+                                    <i class="bi bi-patch-exclamation text-white"></i>
+                                </div>
+                            }
+                            else if (item.EndDate < systemDate)
+                            {
+                                <div class="d-flex bg-warning px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
+                                    <small class="mb-0 me-2 text-white">Closed</small>
+                                    <i class="bi bi-patch-exclamation text-white"></i>
+                                </div>
+                            }
+                        }
+                        else if(item.EndDate < systemDate)
+                        {
+                            <div class="d-flex bg-warning px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
+                                <small class="mb-0 me-2 text-white">Closed</small>
+                                <i class="bi bi-patch-exclamation text-white"></i>
+                            </div>
+                        }
+
+                        <img class="card-img-top" id="mission-img" src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
                         <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
                          id="location" style="width: 7rem">
                             <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">
@@ -136,28 +171,28 @@
                             <div>
                                 @try
                                 {
-                                @for (int i = 0; i < (int)@item.MissionRatings.Average(m => m.Rating); i++)
-                                {
-                                    <span id="ratings d-flex">
-                                        <img src="~/images/star-fill.png" />
-                                    </span>
-                                }
-                                @for (int i = (int)@item.MissionRatings.Average(m => m.Rating); i < 5; i++)
-                                {
-                                    <span id="ratings d-flex">
-                                        <img src="~/images/star-empty.png" />
-                                    </span>
-                                }
+                                    @for (int i = 0; i < (int)@item.MissionRatings.Average(m => m.Rating); i++)
+                                    {
+                                        <span id="ratings d-flex">
+                                            <img src="~/images/star-fill.png" />
+                                        </span>
+                                    }
+                                    @for (int i = (int)@item.MissionRatings.Average(m => m.Rating); i < 5; i++)
+                                    {
+                                        <span id="ratings d-flex">
+                                            <img src="~/images/star-empty.png" />
+                                        </span>
+                                    }
 
                                 }
                                 catch
                                 {
-                                @for (int i = 0; i < 5; i++)
-                                {
-                                    <span id="ratings d-flex">
-                                        <img src="~/images/star-empty.png" />
-                                    </span>
-                                }
+                                    @for (int i = 0; i < 5; i++)
+                                    {
+                                        <span id="ratings d-flex">
+                                            <img src="~/images/star-empty.png" />
+                                        </span>
+                                    }
                                 }
                             </div>
                         </div>

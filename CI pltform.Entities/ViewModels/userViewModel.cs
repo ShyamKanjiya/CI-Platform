@@ -32,5 +32,7 @@ namespace CI_platform.Entities.ViewModels
         public Mission MissionDetail { get; set; }
 
         public IEnumerable<MissionRating> RateMission { get; set; }
+
+        public IEnumerable<MissionApplication> MissionApplications { get; set; }   
     }
 }

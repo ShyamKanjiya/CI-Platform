@@ -26,15 +26,23 @@
     </div>
 
     <div class="row align-items-center justify-content-center my-3">
-        @foreach (var volunteer in @Model.MissionApp)
+        @if(@Model.MissionApp != null)
         {
-            <div class="col-md-4 col-sm-6">
-                <div class="d-flex justify-content-center">
-                    <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+            @foreach (var volunteer in @Model.MissionApp)
+            {
+                <div class="col-md-4 col-sm-6">
+                    <div class="d-flex justify-content-center">
+                        <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+                    </div>
+                    <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
                 </div>
-                <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
-            </div>
+            }
         }
+        else
+        {
+            <H6>No Recent Volunteers</H6>
+        }
+
     </div>
 </div>
 

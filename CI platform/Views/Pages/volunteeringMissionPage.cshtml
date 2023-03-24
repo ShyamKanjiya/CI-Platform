@@ -88,7 +88,7 @@
                                 }
                                 else if (@Model.MissionDetail.MissionType == "GOAL")
                                 {
-                                    <p class="my-0" style="font-size : 1rem">@Model.GoalMissions.GoalObjectiveText</p>
+                                    <p class="my-1" style="font-size : 1rem">@Model.GoalMissions.GoalObjectiveText</p>
                                 }
                             </div>
                             <div class="d-flex mt-2 pb-4 justify-content-around align-items-center py-3">
@@ -151,24 +151,30 @@
                                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog modal-dialog-scrollable">
                                                 <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <div id="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            @foreach (var item in Model.Volunteers)
+                                                            {
+                                                                <li class="form-check my-4 user-list">
+                                                                    <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
+                                                                    <img class="rec-user-img me-2" src="@item.Avatar" alt="">
+                                                                    <label class="form-check-label" for="">@item.FirstName @item.LastName</label>
+                                                                </li>
+                                                            }
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-warning" onclick="sendMail(@Model.MissionDetail.MissionId)">Send Mail</button>
+                                                        </div>
                                                     </div>
-                                                    <div class="modal-body">
-                                                        @foreach (var item in Model.Volunteers)
-                                                        {
-                                                            <li class="form-check my-4 user-list">
-                                                                <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
-                                                                <img class="rec-user-img me-2" src="@item.Avatar" alt="">
-                                                                <label class="form-check-label" for="">@item.FirstName @item.LastName</label>
-                                                            </li>
-                                                        }
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-warning" onclick="sendMail(@Model.MissionDetail.MissionId)">Send Mail</button>
-                                                    </div>
+                                                    <center class="d-none" id="divLoader">
+                                                        <div class="spinner-border text-warning" style="width: 10rem; height: 10rem; margin-top:15%;" role="status"></div>
+                                                        <div class="text-warning mt-5" style="font-weight : 200; margin-bottom : 15%">Processing!</div>
+                                                    </center>
                                                 </div>
                                             </div>
                                         </div>
@@ -284,26 +290,26 @@
                                 </div>
                             </div>
                         </div>
-                        <div>
+                        <div id="apply">
                             @if (User.Identity.IsAuthenticated)
                             {
                                 if (Model.MissionApplications != null)
                                 {
                                     if (Model.MissionApplications.ApprovalStatus == "APPROVE")
                                     {
-                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" style="border-radius:50px;">
+                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
                                             <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
                                         </a>
                                     }
                                     else if (Model.MissionApplications.ApprovalStatus == "PENDING")
                                     {
-                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" style="border-radius:50px;">
+                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
                                             <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
                                         </a>
                                     }
                                     else
                                     {
-                                        <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                        <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
                                             <p class="mb-0 pe-4 text-warning h6">Apply</p>
                                             <img src="/images/right-arrow.png" alt="">
                                         </a>
@@ -311,15 +317,16 @@
                                 }
                                 else
                                 {
-                                    <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                    <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
                                         <p class="mb-0 pe-4 text-warning h6">Apply</p>
                                         <img src="/images/right-arrow.png" alt="">
                                     </a>
                                 }
                             }
+                            
                             else
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3" asp-action="Login" asp-controller="Home" style="border-radius:50px;">
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " asp-action="Login" asp-controller="Home" style="border-radius:50px;">
                                     <p class="mb-0 pe-4 text-warning h6">Login to Apply</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
@@ -361,7 +368,7 @@
                                 Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
                                 </p>*@
                                 <h3 class="pb-2">Documents</h3>
-                                <div class="d-flex me-5">
+                                <div class="d-flex me-5" id="documentSmall">
                                     @foreach (var documents in Model.MissionDocuments)
                                     {
                                         if (documents.MissionId == Model.MissionDetail.MissionId)
@@ -418,7 +425,7 @@
                                     @if (User.Identity.IsAuthenticated && Model.MissionApplications != null && Model.MissionApplications.ApprovalStatus == "APPROVE")
                                     {
                                         <form class="mt-4">
-                                            <textarea class="form-control" name="" id="comment_area" cols="30" rows="4" placeholder="Enter your comments.."></textarea>
+                                            <textarea class="form-control" name="" id="comment_area" cols="30" rows="4" placeholder="Enter your comments.." maxlength="600"></textarea>
                                         </form>
 
                                         <button class="btn btn-outline-danger rounded-pill m-3 ms-0 " onclick="AddComment(@Model.MissionDetail.MissionId)">Post comments</button>
@@ -427,25 +434,32 @@
 
                                     <div class="container w-100  border bg-light" style="overflow-y: scroll; max-height: 46vh; height: fit-content;">
                                         <div style="height: auto;" class="row" id="commentForLoad">
-                                            @foreach (var item in Model.commentList)
+                                            @if(@Model.commentList != null)
                                             {
-                                                DateTime dt = @item.CreatedAt;
-                                                <div class="col-12 bg-white my-3 pt-2">
-                                                    <div class="container-fluid">
-                                                        <div class="row">
-                                                            <div class="col-auto my-auto">
-                                                                <img class="rounded-circle" src="@item.User.Avatar" alt="" height="50" width="50">
-                                                            </div>
-                                                            <div class="col">
-                                                                <p class="mb-1">@item.User.FirstName @item.User.LastName</p>
-                                                                <small class="d-block">@dt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
-                                                                <p>@item.CommentText</p>
+                                                @foreach (var item in Model.commentList)
+                                                {
+                                                    DateTime dt = @item.CreatedAt;
+                                                    <div class="col-12 bg-white my-3 pt-2">
+                                                        <div class="container-fluid">
+                                                            <div class="row">
+                                                                <div class="col-auto my-auto">
+                                                                    <img class="rounded-circle" src="@item.User.Avatar" alt="" height="50" width="50">
+                                                                </div>
+                                                                <div class="col">
+                                                                    <p class="mb-1">@item.User.FirstName @item.User.LastName</p>
+                                                                    <small class="d-block">@dt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
+                                                                    <p>@item.CommentText</p>
+                                                                </div>
                                                             </div>
                                                         </div>
-
                                                     </div>
-                                                </div>
+                                                }
                                             }
+                                            else
+                                            {
+                                                <h3>No Comments Yet</h3>
+                                            }
+                                            
                                         </div>
                                     </div>
                                 </div>

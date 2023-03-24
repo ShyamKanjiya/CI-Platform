@@ -216,3 +216,9 @@
     height: 50px;
     border-radius: 30%;
 }
+
+@media (max-width: 561px) {
+    #documentSmall {
+        display: block;
+    }
+}
