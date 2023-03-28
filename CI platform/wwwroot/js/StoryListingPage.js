@@ -4,7 +4,7 @@
 
 function loadStory(pg) {
     $.ajax({
-        url: "/Pages/bringStories",
+        url: "/Story/bringStories",
         method: "POST",
         dataType: "html",
         data: { 'pg': pg },

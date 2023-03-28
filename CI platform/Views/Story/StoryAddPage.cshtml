@@ -1,4 +1,9 @@
-﻿<style>
+﻿<link rel="stylesheet" href="https://www.tiny.cloud/css/codepen.min.css" />
+<style>
+    body {
+        padding: 0px;
+    }
+
     form {
         padding-top: 0;
     }
@@ -57,8 +62,9 @@
             color: #fff;
         }
 </style>
-<link rel="stylesheet" href="https://www.tiny.cloud/css/codepen.min.css" />
-<div class="container px-4 px-sm-2 mb-5">
+
+
+<div class="container px-4 px-sm-2 mb-5" style="max-width:87%">
     @*heading*@
     <h1 class="my-4">Share your story</h1>
 
@@ -67,7 +73,7 @@
         <div class="row">
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="missionDropDownList">Select Mission</label>
-                <select class="form-select select" id="missionDropDownList">
+                <select @*asp-for="Mission"*@ class="form-select select" id="missionDropDownList">
                     <option>1</option>
                     <option>2</option>
                     <option>3</option>
@@ -77,65 +83,55 @@
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="exampleInputEmail1">My Story Title</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input type="text" @*asp-for="Email"*@ class="form-control" placeholder="Enter Story Title">
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="exampleInputEmail1">Date</label>
-                <input type="date" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <input type="date" @*asp-for="publishDate"*@ class="form-control" placeholder="Enter Date">
             </div>
             <div class="col-12 my-4" id="textarea">
                 <label class="mb-1" for="myStory">My Story</label>
-                <textarea class="w-100" style="min-height: 300px" id="myStory"></textarea>
+                <textarea class="w-100" @*asp-for="storyDescription"*@ style="min-height: 300px" id="myStory"></textarea>
             </div>
             <div class="col-12">
-                <label class="mb-1" for="exampleInputEmail1">Enter Viedo URL</label>
-                <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email">
+                <label class="mb-1" for="exampleInputEmail1">Enter Video URL</label>
+                <input type="text" class="form-control mb-4" placeholder="Enter Video URL">
+            </div>
+        </div>
+
+        <div class="uploadphoto">
+            <div>
+                <label for="uploadphoto">Upload your photos</label>
+            </div>
+            <div>
+                <div id="drop-zone" class="my-1">
+                    <span class="drop-text">
+                        <div>
+                            <i class="bi bi-plus fs-1"></i>
+                        </div>
+                        <div class="text-secondary">
+                            Drag & Drop picture and video Here
+                        </div>
+                    </span>
+                    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display: none;">
+                </div>
+                <div id="image-preview" class="mt-2"></div>
             </div>
         </div>
     </form>
 
-    <div class="url">
-        <div>
-            <label for="videourl">Enter Video Url</label>
-        </div>
-        <div>
-            <input type="url" class="form-control">
-        </div>
-    </div>
-
-    <div class="uploadphoto">
-        <div>
-            <label for="uploadphoto">Upload your photos</label>
-        </div>
-        <div>
-            <div id="drop-zone">
-                <span class="drop-text">
-                    <div>
-                        <i class="bi bi-plus fs-1"></i>
-                    </div>
-                    <div class="text-secondary">
-                        Drag & Drop picture and video Here
-                    </div>
-                </span>
-                <input type="file" id="file-input" multiple accept="image/*,video/*" style="display: none;">
-            </div>
-            <div id="image-preview"></div>
-        </div>
-    </div>
+    
     <br>
-    <div class="row buttons">
-        <div class="col-4">
-            <button class="btn apply-btn">
-                cancel
-            </button>
-        </div>
-        <div class="col-8">
-            <button class="btn mx-3 apply-btn float-right">
-                Submit
-            </button>
-            <button class="btn apply-btn float-right">
-                Save
-            </button>
+
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12 col-sm-6">
+                <button class="btn border rounded-pill px-4 mt-2">Cancel</button>
+            </div>
+            <div class="col-12 col-sm-6 text-sm-end">
+                <button class="btn border-warning text-warning rounded-pill px-4 mt-2">Save</button>
+                <button class="btn border-warning text-warning rounded-pill px-4 mt-2">Submit</button>
+            </div>
         </div>
     </div>
 </div>

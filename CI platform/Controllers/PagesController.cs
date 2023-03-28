@@ -457,59 +457,6 @@ namespace CI_platform.Controllers
 
         #endregion Volunteering Mission Page
 
-        //---------------------- Story Listing Page --------------------------//
-
-        #region Story Listing Page
-
-        public IActionResult storyListingPage()
-        {
-            return View();
-        }
-
-        public IActionResult bringStories(int pg = 1)
-        {
-            List<Story> stories = _dbContext.Stories.ToList();
-
-            userStoryListModel userStory = new userStoryListModel
-            {
-                Stories = _dbContext.Stories.ToList(),
-                Missions = _dbContext.Missions.ToList(),
-                Users = _dbContext.Users.ToList(),
-                MissionThemes = _dbContext.MissionThemes.ToList()
-            };
-
-            const int pageSize = 3;
-            if (pg < 1)
-                pg = 1;
-
-            int recsCount = stories.Count();
-
-            var pager = new userPager(recsCount, pg, pageSize);
-
-            int recSkip = (pg - 1) * pageSize;
-
-            stories = stories.Skip(recSkip).Take(pager.PageSize).ToList();
-
-            this.ViewBag.userPager = pager;
-
-            userStory.Stories = stories;
-
-            ViewBag.missionCount = recsCount;
-
-            return PartialView("_StoryCardView", userStory);
-        }
-
-        #endregion
-
-        //---------------------- Story Add Page --------------------------//
-
-        #region Story Add Page
-
-        public IActionResult StoryAddPage() 
-        { 
-            return View(); 
-        }
-
-        #endregion
+        
     }
 }
