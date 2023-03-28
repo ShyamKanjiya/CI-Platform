@@ -95,18 +95,30 @@
                                 <div class="d-flex justify-content-center align-items-center " style="width:max-content">
                                     <img class="me-2" height="30" src="/images/Seats-left.png" alt="">
                                     <div>
-                                        <p class="mb-0" style="font-size:1.3rem">10</p>
+                                        <p class="mb-0" style="font-size:1.3rem">@Model.MissionDetail.Seats</p>
                                         <small>Seats Left</small>
                                     </div>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <img class="me-2" height="25" src="~/images/achieved.png" alt="">
-                                    <div>
-                                        <div class="progress" style="min-width:100px; width: 10vw; height: 15px;">
-                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                    @if (@Model.MissionDetail.MissionType == "TIME")
+                                    {
+                                        <img class="me-2" height="25" src="~/images/deadline.png" alt="">
+                                        <div>
+                                            <p class="mb-0" style="font-size:1.3rem">@Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
+                                            <small>Registration Deadline</small>
+                                        </div>   
+                                    }
+                                    else if (@Model.MissionDetail.MissionType == "GOAL")
+                                    {
+                                        int percentComplete = (int)Math.Round((double)(100 * Model.GoalMissions.GoalValue) / Model.GoalMissions.TotalValue);
+                                        <img class="me-2" height="25" src="~/images/achieved.png" alt="">
+                                        <div>
+                                            <div class="progress" style="min-width:100px; width: 10vw; height: 15px;">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                            <small><span>@Model.GoalMissions.GoalValue</span> achieved</small>
                                         </div>
-                                        <small><span>8000</span> achieved</small>
-                                    </div>
+                                    }
                                 </div>
                             </div>
                         </div>
@@ -281,7 +293,14 @@
                                 <div class="border py-2 middle-block mx-2">
                                     <img class="mb-4" src="/images/calender.png" alt="">
                                     <small class="d-flex ">Data</small>
-                                    <p class="mb-0">Ongoing Opportunity</p>
+                                    @if (@DateTime.Now < @Model.MissionDetail.EndDate)
+                                    {
+                                        <p class="mb-0">Ongoing Opportunity</p>
+                                    }
+                                    else
+                                    {
+                                        <p class="mb-0">From @Model.MissionDetail.StartDate.Value.ToShortDateString() to @Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
+                                    }
                                 </div>
                                 <div class="border py-2 middle-block mx-2">
                                     <img class="mb-4" src="/images/organization.png" alt="">
@@ -295,7 +314,13 @@
                             {
                                 if (Model.MissionApplications != null)
                                 {
-                                    if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                    if (@Model.MissionDetail.EndDate < DateTime.Now)
+                                    {
+                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                            <p class="mb-0 pe-4 text-warning h6">MIssion Closed</p>
+                                        </a>
+                                    }
+                                    else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
                                     {
                                         <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
                                             <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
@@ -323,7 +348,7 @@
                                     </a>
                                 }
                             }
-                            
+
                             else
                             {
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " asp-action="Login" asp-controller="Home" style="border-radius:50px;">
@@ -434,7 +459,7 @@
 
                                     <div class="container w-100  border bg-light" style="overflow-y: scroll; max-height: 46vh; height: fit-content;">
                                         <div style="height: auto;" class="row" id="commentForLoad">
-                                            @if(@Model.commentList != null)
+                                            @if (@Model.commentList != null)
                                             {
                                                 @foreach (var item in Model.commentList)
                                                 {
@@ -459,7 +484,7 @@
                                             {
                                                 <h3>No Comments Yet</h3>
                                             }
-                                            
+
                                         </div>
                                     </div>
                                 </div>
@@ -513,8 +538,9 @@
 
     </div>
 
-    <hr class="w-100" style="margin-top: 5rem;">
+    <hr class="w-100 mb-4" style="margin-top: 5rem;">
 
+    <H1 class="d-flex justify-content-center my-5">Related Missions</H1>
 
     <!-- Related Missions -->
     <div class="container">

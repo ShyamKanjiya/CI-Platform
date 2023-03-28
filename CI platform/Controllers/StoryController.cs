@@ -9,11 +9,13 @@ namespace CI_platform.Controllers
     {
         private readonly ILogger<StoryController> _logger;
         private readonly CIDbContext _dbContext;
+        private readonly IWebHostEnvironment _iweb;
 
-        public StoryController(ILogger<StoryController> logger, CIDbContext dbContext)
+        public StoryController(ILogger<StoryController> logger, CIDbContext dbContext, IWebHostEnvironment iweb)
         {
             _logger = logger;
             _dbContext = dbContext;
+            _iweb = iweb;
         }
 
         public User GetThisUser()
@@ -72,45 +74,79 @@ namespace CI_platform.Controllers
         //---------------------- Story Add Page --------------------------//
 
         #region Story Add Page
-
+        [HttpGet]
         public IActionResult StoryAddPage()
         {
-            return View();
+            User user = GetThisUser();
+            userAddStoryModel userAddStoryModel = new userAddStoryModel();
+
+            userAddStoryModel.Missions = _dbContext.Missions.ToList();
+
+            return View(userAddStoryModel);
         }
 
-        public IActionResult SaveStoryToDB(long missionId,string? storyTitle, string? storyDescription, DateTime? publishDate, string? url, string[]? storyImages, int status )
+        [HttpPost]
+        public IActionResult StoryAddPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files)
         {
-            User user = GetThisUser();
+            var user = GetThisUser();
+            var uid = user.UserId;
+            userAddStoryModel obj = new userAddStoryModel();
+            var userAppliedForThatMission = _dbContext.MissionApplications.Where(m => m.UserId == uid && m.MissionId == MissionId).FirstOrDefault();
 
-            Story story = new Story() 
+            ViewBag.mid = MissionId;
+            ViewBag.uid = uid;
+
+
+            if (userAppliedForThatMission == null)
             {
-                MissionId = missionId,
-                UserId = user.UserId,
-                Title = storyTitle,
-                Description = storyDescription,
-                PublishedAt = publishDate,
-            };
-
-
-
-            if(status == 0)
-            {
-                //for SAVE button
-                story.Status = "DRAFT";
-                _dbContext.Stories.Add(story);
-                _dbContext.SaveChanges();
+                obj.Result = "true";
+                return Json(new { notApplied = true });
             }
+
             else
             {
-                //for Submit button
-                story.Status = "PENDING";
-                _dbContext.Stories.Update(story);
+                obj.Result = "false";
+
+                Story story = new Story
+                {
+                    Title = storyTitle,
+                    Description = storyDesc,
+                    Status = "DRAFT",
+                    MissionId = MissionId,
+                    UserId = uid,
+                    PublishedAt = DateTime.Parse(storyDate)
+                };
+
+                _dbContext.Stories.Add(story);
                 _dbContext.SaveChanges();
+
+                var data = _dbContext.Stories.Where(m => m.UserId == uid && m.MissionId == MissionId).OrderBy(m => m.PublishedAt).LastOrDefault();
+
+                //uploading images into the database
+
+                foreach (IFormFile img in files)
+                {
+                    string imgExt = Path.GetExtension(img.FileName);
+                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                    {
+                        var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", img.FileName);
+                        var stream = new FileStream(imgSaveTo, FileMode.Create);
+                        img.CopyTo(stream);
+
+                        StoryMedium storyMedium = new StoryMedium();
+                        storyMedium.StoryId = data.StoryId;
+                        storyMedium.Type = imgExt;
+                        storyMedium.Path = imgSaveTo;
+
+                        _dbContext.StoryMedia.Add(storyMedium);
+                        _dbContext.SaveChanges();
+                    }
+                }
+                userAddStoryModel model = new userAddStoryModel();
+                model.Missions = _dbContext.Missions.ToList();
+                return View("StoryAddPage", model);
             }
-
-            return View();
         }
-
         #endregion
     }
 }

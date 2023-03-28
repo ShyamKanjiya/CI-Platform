@@ -1,0 +1,359 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+
+<div class="container">
+
+    <!--Top PART-->
+    <div class="row mt-5">
+
+        <!-- Container for the image gallery -->
+        <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
+            <div class="col-lg-6 col-md-12 w-100 px-3">
+
+                <!-- Full-width images with number text -->
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png" style="width:100%">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img11.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+
+
+                <!-- Thumbnail images -->
+                <div class="row mt-4 position-relative " style="height:10%">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img11.png" style="width:100%" onclick="currentSlide(4)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(5)">
+                    </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data for image -->
+        <div class="container-fluid col-lg-6 d-flex justify-content-center align-items-center" id="data">
+
+            <div class="col-lg-6 col-md-12 w-100">
+                <div class="card-body p-0">
+                    <h1 class="pe-3">@Model.MissionDetail.Title</h1>
+
+                    <p class="pe-3 mt-3" style="font-size: 1.3rem">@Model.MissionDetail.ShortDescription</p>
+
+                    <div class="border-top border-bottom mt-5" id="missionInfo" style="position: relative;">
+                        <div class="text-center border mb-2 w-50" id="missionPeriod">
+                            @if (@Model.MissionDetail.MissionType == "TIME")
+                            {
+                                <p class="my-1" style="font-size : 1rem">From @Model.MissionDetail.StartDate.Value.ToShortDateString() until @Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
+                            }
+                            else if (@Model.MissionDetail.MissionType == "GOAL")
+                            {
+                                <p class="my-1" style="font-size : 1rem">@Model.GoalMissions.GoalObjectiveText</p>
+                            }
+                        </div>
+                        <div class="d-flex mt-2 pb-4 justify-content-around align-items-center py-3">
+                            <div class="d-flex justify-content-center align-items-center " style="width:max-content">
+                                <img class="me-2" height="30" src="/images/Seats-left.png" alt="">
+                                <div>
+                                    <p class="mb-0" style="font-size:1.3rem">@Model.MissionDetail.Seats</p>
+                                    <small>Seats Left</small>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                @if (@Model.MissionDetail.MissionType == "TIME")
+                                {
+                                    <img class="me-2" height="25" src="~/images/deadline.png" alt="">
+                                    <div>
+                                        <p class="mb-0" style="font-size:1.3rem">@Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
+                                        <small>Registration Deadline</small>
+                                    </div>
+                                }
+                                else if (@Model.MissionDetail.MissionType == "GOAL")
+                                {
+                                    int percentComplete = (int)Math.Round((double)(100 * Model.GoalMissions.GoalValue) / Model.GoalMissions.TotalValue);
+                                    <img class="me-2" height="25" src="~/images/achieved.png" alt="">
+                                    <div>
+                                        <div class="progress" style="min-width:100px; width: 10vw; height: 15px;">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                        <small><span>@Model.GoalMissions.GoalValue</span> achieved</small>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container mx-auto row mt-4 mb-4">
+                        <div class="col-12 col-sm-6 mb-3">
+                            <div class="d-flex">
+                                @if (Model.userDetails != null)
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="AddToFavourite(@Model.MissionDetail.MissionId)" id="favouriteBtn">
+                                        @if (Model.favoriteMissions.Where(m => m.MissionId == Model.MissionDetail.MissionId && m.UserId == Model.userDetails.UserId).Count() == 1)
+                                        {
+                                            <i class="bi bi-heart-fill text-danger pe-2 "></i>
+                                            <small class="mb-0 pe-4 h6">Remove from Favourite</small>
+                                        }
+                                        else
+                                        {
+                                            <i class="bi bi-heart pe-2 "></i>
+                                            <small class="mb-0 pe-4 h6">Add to Favourite</small>
+                                        }
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="LoginFirst()" id="favouriteBtn">
+                                        <i class="bi bi-heart pe-2 "></i>
+                                        <small class="mb-0 pe-4 h6 ">Add to Favourite</small>
+                                    </a>
+                                }
+
+                            </div>
+                        </div>
+
+                        <div class="col-12 col-sm-6 mb-2">
+                            <div class="d-flex">
+                                @if (Model.userDetails != null)
+                                {
+                                    <a class="d-flex align-items-center justify-content-center mx-auto text-decoration-none text-black addRecommand" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <img class="me-2" src="/images/add1.png" alt="">
+                                        <small class="mb-0 h6">Recommend to Co-Workers</small>
+                                    </a>
+                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable">
+                                            <div class="modal-content">
+                                                <div id="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        @foreach (var item in Model.Volunteers)
+                                                        {
+                                                            <li class="form-check my-4 user-list">
+                                                                <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
+                                                                <img class="rec-user-img me-2" src="@item.Avatar" alt="">
+                                                                <label class="form-check-label" for="">@item.FirstName @item.LastName</label>
+                                                            </li>
+                                                        }
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-warning" onclick="sendMail(@Model.MissionDetail.MissionId)">Send Mail</button>
+                                                    </div>
+                                                </div>
+                                                <center class="d-none" id="divLoader">
+                                                    <div class="spinner-border text-warning" style="width: 10rem; height: 10rem; margin-top:15%;" role="status"></div>
+                                                    <div class="text-warning mt-5" style="font-weight : 200; margin-bottom : 15%">Processing!</div>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="LoginFirst()">
+                                        <img class="me-2" src="/images/add1.png" alt="">
+                                        <small class="mb-0 pe-4 h6 ">Recommand to Co-Workers</small>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="border-top mt-3 w-100 text-center d-flex">
+                        <div class="translate-middle-y bg-white mx-content mx-auto">
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (Model.MissionApplications != null && Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                {
+                                    if (@Model.Missionrate != 0)
+                                    {
+                                        var userrate = @Model.RateMission.Rating;
+
+                                        for (int i = 1; i <= 5; i++)
+                                        {
+                                            if (i <= userrate)
+                                            {
+                                                <span>
+                                                    <img src="~/images/star-fill.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    <img src="~/images/star-empty.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                                </span>
+                                            }
+
+                                        }
+
+                                    }
+
+                                    else
+                                    {
+                                        @for (int i = 1; i <= 5; i++)
+                                        {
+                                            <span>
+                                                <img src="~/images/star-empty.png" id="span-@i" onclick="changeRating(@i,@Model.MissionDetail.MissionId);" />
+                                            </span>
+                                        }
+                                    }
+                                }
+                                else if (Model.MissionApplications != null && Model.MissionApplications.ApprovalStatus == "PENDING")
+                                {
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span>
+                                            <img src="~/images/star-empty.png" id="span-@i" onclick="pendingRating(0);" />
+                                        </span>
+                                    }
+                                }
+                                else
+                                {
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <span>
+                                            <img src="~/images/star-empty.png" id="span-@i" onclick="pendingRating(1);" />
+                                        </span>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                @for (int i = 0; i < Model.Missionrate; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-fill.png" />
+                                    </span>
+                                }
+                                @for (int i = Model.Missionrate; i < 5; i++)
+                                {
+                                    <span id="ratings d-flex">
+                                        <img src="~/images/star-empty.png" />
+                                    </span>
+                                }
+                            }
+                        </div>
+                    </div>
+
+                    <div class="pt-4 px-0">
+                        <div class="row d-flex justify-content-center">
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/pin1.png" alt="">
+                                <small class="d-flex pt-3 ">City</small>
+                                <p class="mb-0">@Model.MissionDetail.City.Name</p>
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/web.png" alt="">
+                                <small class="d-flex pt-3">Theme</small>
+                                <p class="mb-0">@Model.MissionDetail.MissionTheme.Title</p>
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/calender.png" alt="">
+                                <small class="d-flex ">Data</small>
+                                @if (@DateTime.Now < @Model.MissionDetail.EndDate)
+                                {
+                                    <p class="mb-0">Ongoing Opportunity</p>
+                                }
+                                else
+                                {
+                                    <p class="mb-0">From @Model.MissionDetail.StartDate.Value.ToShortDateString() to @Model.MissionDetail.EndDate.Value.ToShortDateString()</p>
+                                }
+                            </div>
+                            <div class="border py-2 middle-block mx-2">
+                                <img class="mb-4" src="/images/organization.png" alt="">
+                                <small class="d-flex pt-3">Organization</small>
+                                <p class="mb-0">@Model.MissionDetail.OrganizationName</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="apply">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (Model.MissionApplications != null)
+                            {
+                                if (@Model.MissionDetail.EndDate < DateTime.Now)
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">MIssion Closed</p>
+                                    </a>
+                                }
+                                else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
+                                    </a>
+                                }
+                                else if (Model.MissionApplications.ApprovalStatus == "PENDING")
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                }
+                            }
+                            else
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
+                        }
+
+                        else
+                        {
+                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " asp-action="Login" asp-controller="Home" style="border-radius:50px;">
+                                <p class="mb-0 pe-4 text-warning h6">Login to Apply</p>
+                                <img src="/images/right-arrow.png" alt="">
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -311,6 +311,7 @@ public partial class CIDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("goal_objective_text");
             entity.Property(e => e.GoalValue).HasColumnName("goal_value");
+            entity.Property(e => e.TotalValue).HasColumnName("total_value");
             entity.Property(e => e.MissionId).HasColumnName("mission_id");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
@@ -366,7 +367,11 @@ public partial class CIDbContext : DbContext
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("start_date");
+            entity.Property(e => e.Deadline)
+                .HasColumnType("datetime")
+                .HasColumnName("deadline");
             entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Seats).HasColumnName("seats");
             entity.Property(e => e.Title)
                 .HasMaxLength(128)
                 .IsUnicode(false)

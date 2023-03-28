@@ -24,9 +24,13 @@ public partial class Mission
 
     public DateTime? EndDate { get; set; }
 
+    public DateTime? Deadline { get; set; }
+
     public string MissionType { get; set; } = null!;
 
     public int? Status { get; set; }
+
+    public int? Seats { get; set; }
 
     public string? OrganizationName { get; set; }
 

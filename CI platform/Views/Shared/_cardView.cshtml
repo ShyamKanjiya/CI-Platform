@@ -63,7 +63,7 @@
                         }
                         @if (@thisMissApp != null)
                         {
-                            @if (thisMissApp?.ApprovalStatus == "APPROVE" && item.EndDate > systemDate )
+                            @if (thisMissApp?.ApprovalStatus == "APPROVE" && item.EndDate > systemDate)
                             {
                                 <div class="d-flex bg-success px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
                                     <small class="mb-0 me-2 text-white">Approved</small>
@@ -85,7 +85,7 @@
                                 </div>
                             }
                         }
-                        else if(item.EndDate < systemDate)
+                        else if (item.EndDate < systemDate)
                         {
                             <div class="d-flex bg-warning px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
                                 <small class="mb-0 me-2 text-white">Closed</small>
@@ -208,15 +208,15 @@
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
                                         <div>
-                                            <p class="mb-0">10</p>
+                                            <p class="mb-0">@item.Seats</p>
                                             <small>Seats Left</small>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="25" src="/images/deadline.png" alt="">
                                         <div>
-                                            <p class="mb-0">10</p>
-                                            <small>Seats Left</small>
+                                            <p class="mb-0">@item.Deadline.Value.ToShortDateString()</p>
+                                            <small>Deadline</small>
                                         </div>
                                     </div>
                                 </div>
@@ -234,27 +234,39 @@
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
                                         <div>
-                                            <p class="mb-0">10</p>
+                                            <p class="mb-0">@item.Seats</p>
                                             <small>Seats Left</small>
                                         </div>
                                     </div>
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="25" src="~/images/achieved.png" alt="">
                                         <div>
-                                            <div class="progress" style="min-width:100px; width: 13vw; height: 15px;">
-                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 75%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
-                                            <small><span>8000</span> achieved</small>
+                                            @foreach (var goal in Model.GoalMissions.Where(x => x.MissionId == item.MissionId))
+                                            {
+                                                int percentComplete = (int)Math.Round((double)(100 * @goal.GoalValue) / @goal.TotalValue);
+                                                <div class="progress" style="min-width:100px; width: 11vw; height: 15px;">
+                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @percentComplete%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <small><span>@goal.GoalValue</span> achieved</small>
+                                            }
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         }
                         <div>
-                            @if (User.Identity.IsAuthenticated)
+                            @if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now)
                             {
+
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
                                     <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
+                            else if (User.Identity.IsAuthenticated && item.EndDate < DateTime.Now)
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-4 text-warning h6">Explore</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
