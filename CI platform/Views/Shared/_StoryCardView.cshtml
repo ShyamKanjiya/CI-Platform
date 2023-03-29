@@ -18,7 +18,14 @@
         <p class="text-light">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit,eiusmod tempor incididunt ut labore et dolore magna eprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
         </p>
-        <a class="btn btn-primary px-4" id="share-story-button" style="width:max-content" asp-action="StoryAddPage" asp-controller="Story">Share Your Story <span class="ps-2">⟶</span></a>
+        @if (User.Identity.IsAuthenticated)
+        {
+            <a class="btn btn-primary px-4" id="share-story-button" style="width:max-content" asp-action="StoryAddPage" asp-controller="Story">Share Your Story <span class="ps-2">⟶</span></a>
+        }
+        else
+        {
+            <a class="btn btn-primary px-4" id="share-story-button" style="width:max-content" asp-action="Login" asp-controller="Home">Login to share your story</a>
+        }
     </div>
 </div>
 
@@ -35,7 +42,7 @@
                          src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity.png"
                          alt="Card image caption">
                         <div class="hidden-overlay-button-area">
-                            <a class="hidden-overlay-button text-decoration-none px-4 py-1" style="width:max-content">View Details<span class="ps-2">⟶</span></a>
+                            <a class="hidden-overlay-button text-decoration-none px-4 py-1" style="width:max-content" asp-controller="Story" asp-action="VolunteeringStoryPage">View Details<span class="ps-2">⟶</span></a>
                         </div>
 
                         <div>

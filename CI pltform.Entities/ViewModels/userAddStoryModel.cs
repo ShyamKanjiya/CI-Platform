@@ -21,6 +21,8 @@ namespace CI_platform.Entities.ViewModels
 
         public Story Story { get; set; }
 
+        public List<StoryMedium> StoryMedium { get; set; }
+
         public User User { get; set; }
 
         public string Result { get; set; }

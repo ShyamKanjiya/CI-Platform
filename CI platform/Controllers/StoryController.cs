@@ -81,9 +81,22 @@ namespace CI_platform.Controllers
             userAddStoryModel userAddStoryModel = new userAddStoryModel();
 
             userAddStoryModel.Missions = _dbContext.Missions.ToList();
+            try
+            {
+                userAddStoryModel.MissionApplication = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+                userAddStoryModel.Story = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.Status == "DRAFT").FirstOrDefault();
+                userAddStoryModel.StoryMedium = _dbContext.StoryMedia.Where(m => m.StoryId == userAddStoryModel.Story.StoryId).ToList();
+            }
+            catch
+            {
+                
+            }
+
+
 
             return View(userAddStoryModel);
         }
+
 
         [HttpPost]
         public IActionResult StoryAddPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files)
@@ -91,22 +104,15 @@ namespace CI_platform.Controllers
             var user = GetThisUser();
             var uid = user.UserId;
             userAddStoryModel obj = new userAddStoryModel();
-            var userAppliedForThatMission = _dbContext.MissionApplications.Where(m => m.UserId == uid && m.MissionId == MissionId).FirstOrDefault();
 
             ViewBag.mid = MissionId;
             ViewBag.uid = uid;
 
+            var alreadyPostedStory = _dbContext.Stories.Where(m => m.MissionId == MissionId && m.UserId == uid).FirstOrDefault();
+            obj.Result = "false";
 
-            if (userAppliedForThatMission == null)
+            if (alreadyPostedStory == null)
             {
-                obj.Result = "true";
-                return Json(new { notApplied = true });
-            }
-
-            else
-            {
-                obj.Result = "false";
-
                 Story story = new Story
                 {
                     Title = storyTitle,
@@ -120,9 +126,7 @@ namespace CI_platform.Controllers
                 _dbContext.Stories.Add(story);
                 _dbContext.SaveChanges();
 
-                var data = _dbContext.Stories.Where(m => m.UserId == uid && m.MissionId == MissionId).OrderBy(m => m.PublishedAt).LastOrDefault();
-
-                //uploading images into the database
+                var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
 
                 foreach (IFormFile img in files)
                 {
@@ -142,11 +146,89 @@ namespace CI_platform.Controllers
                         _dbContext.SaveChanges();
                     }
                 }
-                userAddStoryModel model = new userAddStoryModel();
-                model.Missions = _dbContext.Missions.ToList();
-                return View("StoryAddPage", model);
+
             }
+            else if(alreadyPostedStory != null)
+            {
+                alreadyPostedStory.Title = storyTitle;
+                alreadyPostedStory.Description = storyDesc;
+                alreadyPostedStory.PublishedAt = DateTime.Parse(storyDate);
+
+                _dbContext.SaveChanges();
+
+                var imageCheck = _dbContext.StoryMedia.Where(m => m.StoryId == alreadyPostedStory.StoryId).ToList();
+                if (imageCheck != null)
+                {
+                    foreach (var img in imageCheck)
+                    {
+                        _dbContext.Remove(img);
+                        _dbContext.SaveChanges();
+                    }
+
+                    var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
+
+                    foreach (IFormFile img in files)
+                    {
+                        string imgExt = Path.GetExtension(img.FileName);
+                        if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                        {
+                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", img.FileName);
+                            var stream = new FileStream(imgSaveTo, FileMode.Create);
+                            img.CopyTo(stream);
+
+                            StoryMedium storyMedium = new StoryMedium();
+                            storyMedium.StoryId = data.StoryId;
+                            storyMedium.Type = imgExt;
+                            storyMedium.Path = imgSaveTo;
+
+                            _dbContext.StoryMedia.Add(storyMedium);
+                            _dbContext.SaveChanges();
+                        }
+                    }
+                }
+            }
+
+            userAddStoryModel model = new userAddStoryModel();
+            model.MissionApplication = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+            model.Missions = _dbContext.Missions.ToList();
+            return View("StoryAddPage", model);
+
         }
+
+
+        [HttpPost]
+        public IActionResult GetMissionDetails(long missionId)
+        {
+            var user = GetThisUser();
+
+            var query = (from st in _dbContext.Stories
+                         join md in _dbContext.StoryMedia
+                         on st.StoryId equals md.StoryId
+                         where st.MissionId == missionId
+                         orderby st.StoryId descending
+                         select new
+                         {
+                             st.Title,
+                             st.Description,
+                             st.PublishedAt,
+                             md.Path
+                         }).ToList();
+
+            return Json(query);
+
+        }
+
+        #endregion
+
+        //---------------------- Volunteering Story Page --------------------------//
+
+        #region Volunteering Story Page
+
+        public IActionResult VolunteeringStoryPage()
+        {
+            return View();
+        }
+
         #endregion
     }
 }

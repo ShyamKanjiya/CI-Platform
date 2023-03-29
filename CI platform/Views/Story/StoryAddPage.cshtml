@@ -1,69 +1,7 @@
 ﻿@model userAddStoryModel
 
-<link rel="stylesheet" href="https://www.tiny.cloud/css/codepen.min.css" />
-<style>
-    body {
-        padding: 0px;
-    }
-
-    form {
-        padding-top: 0;
-    }
-
-    #drop-zone {
-        width: 100%;
-        height: 200px;
-        border: 2px dashed #ccc;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        cursor: pointer;
-    }
-
-    .drop-text {
-        font-size: 18px;
-        color: #ccc;
-    }
-
-    #image-preview {
-        display: flex;
-        flex-wrap: wrap;
-    }
-
-    .image-container {
-        position: relative;
-        width: 100px;
-        height: 100px;
-        margin: 10px;
-    }
-
-    .image-preview {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .remove-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 20px;
-        height: 20px;
-        background-color: #fff;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-        .remove-image:hover {
-            background-color: #f00;
-            color: #fff;
-        }
-</style>
+<link rel="stylesheet" href="~/css/Codepen.css" />
+<link rel="stylesheet" href="~/css/StoryAddPage.css"/>
 
 
 <div class="container px-4 px-sm-2 mb-5" style="max-width:87%">
@@ -75,21 +13,21 @@
         <div class="row">
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="missionDropDownList">Select Mission</label>
-                <select class="form-select select" asp-for="MissionId" required>
+                <select class="form-select select" asp-for="MissionId"  onchange="GetDraftedStory();" required>
                     <option value="Select Mission">Select Mission</option>
-                    @foreach (var mission in Model.Missions)
+                    @foreach (var mission in Model.MissionApplication)
                     {
-                        <option value=@mission.MissionId>@mission.Title</option>
+                        <option value=@mission.MissionId >@mission.Mission.Title</option>
                     }
                 </select>
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="exampleInputEmail1">My Story Title</label>
-                <input type="text" name="storyTitle" class="form-control" placeholder="Enter Story Title">
+                <input type="text" id="story_title" name="storyTitle" class="form-control" placeholder="Enter Story Title">
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="story_date">Date</label>
-                <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-d")'>
+                <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
             </div>
             <div class="col-12 my-4" id="textarea">
                 <label class="mb-1" for="myStory">My Story</label>
@@ -101,7 +39,7 @@
             </div>
         </div>
 
-        <div class="uploadphoto">
+        <div class="uploadphoto mt-3">
             <div>
                 <label for="uploadphoto">Upload your photos</label>
             </div>
@@ -130,7 +68,7 @@
                 </div>
                 <div class="col-12 col-sm-6 text-sm-end">
                     <button class="btn border-warning text-warning rounded-pill px-4 mt-2" type="submit" id="saveStoryBtn">Save</button>
-                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2" id="submitStoryBtn">Submit</button>
+                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2 disabled" id="submitStoryBtn">Submit</button>
                 </div>
             </div>
         </div>
@@ -142,82 +80,5 @@
 
 <!-------------------------------------------------------------------------------------------->
 <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
-<script>
-    tinymce.init({
-        selector: 'textarea#myStory',
-        plugins: 'preview importcss autosave save directionality fullscreen pagebreak nonbreaking anchor lists wordcount help emoticons',
-        menubar: false,
-        statusbar: false,
-        toolbar: 'undo redo | bold italic strikethrough | alignleft aligncenter alignright alignjustify | superscript subscript removeformat',
-        autosave_ask_before_unload: true,
-        autosave_interval: "30s",
-        autosave_prefix: "{path}{query}-{id}-",
-        autosave_restore_when_empty: false,
-        autosave_retention: "2m",
-        content_css: '//https://www.tiny.cloud/css/codepen.min.css',
-        importcss_append: true,
-        height: 300,
-    });
-
-    const dropZone = document.getElementById("drop-zone");
-    const fileInput = document.getElementById("file-input");
-    const imagePreview = document.getElementById("image-preview");
-    const uploadedFiles = new Set();
-
-    dropZone.addEventListener("click", () => {
-        fileInput.click();
-    });
-
-    dropZone.addEventListener("dragover", (event) => {
-        event.preventDefault();
-        dropZone.classList.add("dragover");
-    });
-
-    dropZone.addEventListener("dragleave", () => {
-        dropZone.classList.remove("dragover");
-    });
-
-    dropZone.addEventListener("drop", (event) => {
-        event.preventDefault();
-        dropZone.classList.remove("dragover");
-        const files = event.dataTransfer.files;
-        handleFiles(files);
-    });
-
-    fileInput.addEventListener("change", () => {
-        const files = fileInput.files;
-        handleFiles(files);
-    });
-
-    function handleFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) continue;
-            if (uploadedFiles.has(file.name)) {
-                alert(`File "${file.name}" has already been uploaded.`);
-                continue;
-            }
-            uploadedFiles.add(file.name);
-            const image = document.createElement("img");
-            image.classList.add("image-preview");
-            const imageContainer = document.createElement("div");
-            imageContainer.classList.add("image-container");
-            const removeImage = document.createElement("div");
-            removeImage.innerHTML = "&#10006;";
-            removeImage.classList.add("remove-image");
-            removeImage.addEventListener("click", () => {
-                uploadedFiles.delete(file.name);
-                imageContainer.remove();
-            });
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => {
-                image.src = reader.result;
-                imageContainer.appendChild(image);
-                imageContainer.appendChild(removeImage);
-                imagePreview.appendChild(imageContainer);
-            };
-        }
-    }
-</script>
+<script src="~/js/StoryAddPage.js"></script>
 
