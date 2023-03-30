@@ -1,7 +1,9 @@
 ﻿using CI_platform.Entities.DataModels;
 using CI_platform.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+
 
 namespace CI_platform.Controllers
 {
@@ -81,9 +83,26 @@ namespace CI_platform.Controllers
             userAddStoryModel userAddStoryModel = new userAddStoryModel();
 
             userAddStoryModel.Missions = _dbContext.Missions.ToList();
+
+            List<MissionApplication> draftMissAppList = new List<MissionApplication>();
+            List<MissionApplication> usersAppMission = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+            foreach (var mission in usersAppMission)
+            {
+                var story = _dbContext.Stories.Where(m => m.MissionId == mission.MissionId && m.UserId == user.UserId).FirstOrDefault();
+                if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
+                {
+                    draftMissAppList.Add(mission);
+                }
+                else if (story == null)
+                {
+                    draftMissAppList.Add(mission);
+                }
+
+            }
+
             try
             {
-                userAddStoryModel.MissionApplication = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+                userAddStoryModel.MissionApplication = draftMissAppList;
                 userAddStoryModel.Story = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.Status == "DRAFT").FirstOrDefault();
                 userAddStoryModel.StoryMedium = _dbContext.StoryMedia.Where(m => m.StoryId == userAddStoryModel.Story.StoryId).ToList();
             }
@@ -91,8 +110,6 @@ namespace CI_platform.Controllers
             {
                 
             }
-
-
 
             return View(userAddStoryModel);
         }
@@ -105,10 +122,8 @@ namespace CI_platform.Controllers
             var uid = user.UserId;
             userAddStoryModel obj = new userAddStoryModel();
 
-            ViewBag.mid = MissionId;
-            ViewBag.uid = uid;
 
-            var alreadyPostedStory = _dbContext.Stories.Where(m => m.MissionId == MissionId && m.UserId == uid).FirstOrDefault();
+            var alreadyPostedStory = _dbContext.Stories.Where(m => m.MissionId == MissionId && m.UserId == uid && m.Status == "DRAFT").FirstOrDefault();
             obj.Result = "false";
 
             if (alreadyPostedStory == null)
@@ -148,6 +163,7 @@ namespace CI_platform.Controllers
                 }
 
             }
+
             else if(alreadyPostedStory != null)
             {
                 alreadyPostedStory.Title = storyTitle;
@@ -189,7 +205,24 @@ namespace CI_platform.Controllers
             }
 
             userAddStoryModel model = new userAddStoryModel();
-            model.MissionApplication = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+
+            List<MissionApplication> draftMissAppList = new List<MissionApplication>();
+            List<MissionApplication> usersAppMission = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+            foreach (var mission in usersAppMission)
+            {
+                var story = _dbContext.Stories.Where(m => m.MissionId == mission.MissionId && m.UserId == user.UserId).FirstOrDefault();
+                if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
+                {
+                    draftMissAppList.Add(mission);
+                }
+                else if (story == null)
+                {
+                    draftMissAppList.Add(mission);
+                }
+
+            }
+
+            model.MissionApplication = draftMissAppList;
             model.Missions = _dbContext.Missions.ToList();
             return View("StoryAddPage", model);
 
@@ -200,11 +233,11 @@ namespace CI_platform.Controllers
         public IActionResult GetMissionDetails(long missionId)
         {
             var user = GetThisUser();
-
+            
             var query = (from st in _dbContext.Stories
                          join md in _dbContext.StoryMedia
                          on st.StoryId equals md.StoryId
-                         where st.MissionId == missionId
+                         where st.MissionId == missionId && st.Status == "DRAFT"
                          orderby st.StoryId descending
                          select new
                          {
@@ -217,6 +250,7 @@ namespace CI_platform.Controllers
             return Json(query);
 
         }
+
 
         #endregion
 
