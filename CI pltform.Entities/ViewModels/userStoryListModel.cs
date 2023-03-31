@@ -18,5 +18,6 @@ namespace CI_platform.Entities.ViewModels
         public IEnumerable<MissionTheme> MissionThemes { get; set; }    
 
         public IEnumerable<MissionApplication> missionApplications { get; set; }
+
     }
 }

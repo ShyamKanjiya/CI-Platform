@@ -35,6 +35,7 @@
     <div class="row ">
         @foreach(var story in  Model.Stories)
         {
+            var Views = @story.Views + 1;
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card pb-3">
                     <div style="position: relative;" class="card-image-part">
@@ -42,7 +43,8 @@
                          src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity.png"
                          alt="Card image caption">
                         <div class="hidden-overlay-button-area">
-                            <a class="hidden-overlay-button text-decoration-none px-4 py-1" style="width:max-content" asp-controller="Story" asp-action="VolunteeringStoryPage">View Details<span class="ps-2">⟶</span></a>
+                             
+                            <a class="hidden-overlay-button text-decoration-none px-4 py-1" style="width:max-content" asp-controller="Story" asp-action="VolunteeringStoryPage" asp-route-storyId="@story.StoryId" asp-route-views="@Views">View Details<span class="ps-2">⟶</span></a>
                         </div>
 
                         <div>

@@ -689,6 +689,7 @@ public partial class CIDbContext : DbContext
             entity.ToTable("story");
 
             entity.Property(e => e.StoryId).HasColumnName("story_id");
+            entity.Property(e => e.Views).HasColumnName("views");
             entity.Property(e => e.CreatedAt)
                 .IsRowVersion()
                 .IsConcurrencyToken()

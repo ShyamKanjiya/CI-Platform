@@ -24,7 +24,7 @@ function AddToFavourite(missionId) {
 //----------------------------------------------------------------------------------------//
 
 function AddComment(missionId) { 
-    var comment_area = $("#Mission").val();
+    var comment_area = $("#comment_area").val();
     
     $.ajax({
         url: "/Pages/AddComment",
@@ -68,19 +68,51 @@ function sendMail(missionId) {
             url: '/Pages/RecommandToCoworkers',
             data: { "missionId": missionId, "userIds": recUsersList },
             success: function () {
-                Alert('Mission Recommended Successfully!');
                 $("#divLoader").addClass("d-none");
                 $('#modal-content').removeClass('d-none');
+                Swal.fire({
+                    title: 'Success!',
+                    html: 'Story sent succesfully.',
+                    timer: 2000,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                })
             },
             error: function () {
+                $("#divLoader").addClass("d-none");
                 console.log('error');
             },
         });
     }
     else {
-        Alert('Please select atleast one user!');
         $("#divLoader").addClass("d-none");
         $('#modal-content').removeClass('d-none');
+        alterForMail(0);
+        $('#divLoader').addClass('d-none');
+        $('#modal-content').removeClass('d-none');
+        Swal.fire({
+            title: 'Alert',
+            html: 'Select at least one user!',
+            timer: 3000,
+            didOpen: () => {
+                Swal.showLoading()
+                const b = Swal.getHtmlContainer().querySelector('b')
+                timerInterval = setInterval(() => {
+                    b.textContent = Swal.getTimerLeft()
+                }, 100)
+            },
+            willClose: () => {
+                clearInterval(timerInterval)
+            }
+        })
     }
 }
 

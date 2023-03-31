@@ -208,8 +208,9 @@ namespace CI_platform.Controllers
             var missionTheme = _dbContext.MissionThemes.ToList();
             var goalMission = _dbContext.GoalMissions.Where(m => m.MissionId == id).FirstOrDefault();
             var goal = _dbContext.GoalMissions.ToList();
-            var favouriteMission = _dbContext.FavoriteMissions.ToList();
-            var commentList = _dbContext.Comments.Where(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt).ToList();
+            List<FavoriteMission> favouriteMission = _dbContext.FavoriteMissions.ToList();
+
+            List<Comment> comments = _dbContext.Comments.Where(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt).ToList();
             var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
             var missionDocuments = _dbContext.MissionDocuments.Where(m => m.MissionId == id).ToList();
 
@@ -224,11 +225,12 @@ namespace CI_platform.Controllers
                 RelatedMissions = relatedmissions,
                 Goal = goal,
                 userDetails = user,
+                commentList = comments,
                 favoriteMissions = favouriteMission,
-                commentList = commentList,
                 MissionApp = missionApp,
                 MissionDocuments = missionDocuments,
             };
+
 
             if (user != null)
             {
@@ -249,6 +251,7 @@ namespace CI_platform.Controllers
             {
                 viewModel.RatedVolunteeres = missionRatings.Count();
                 viewModel.Missionrate = (int)missionRatings.Average(m => m.Rating);
+                
             }
             catch
             {

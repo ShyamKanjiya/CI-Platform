@@ -47,6 +47,7 @@ fileInput.addEventListener("change", () => {
 function handleFiles(files) {
     for (let i = 0; i < files.length; i++) {
         const file = files[i];
+        console.log(file.name);
         if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) continue;
         if (uploadedFiles.has(file.name)) {
             alert(`File "${file.name}" has already been uploaded.`);
@@ -66,12 +67,14 @@ function handleFiles(files) {
         });
         const reader = new FileReader();
         reader.readAsDataURL(file);
+        console.log(reader.result);
         reader.onload = () => {
             image.src = reader.result;
             imageContainer.appendChild(image);
             imageContainer.appendChild(removeImage);
             imagePreview.appendChild(imageContainer);
         };
+        console.log(reader.result);
     }
 }
 

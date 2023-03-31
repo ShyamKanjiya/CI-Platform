@@ -1,272 +1,160 @@
-﻿@model CI_Platform_web.Entities.ViewModels.userAddStoryModel
-<style>
+﻿@model userVolunteerStoryModel
 
+<link rel="stylesheet" href="~/css/VolunteeringStoryPage.css" asp-append-version="true" />
 
-
-    a {
-        cursor: pointer;
-    }
-
-    #story-views {
-        border: 1px solid #000;
-        border-radius: 15px;
-        padding: 0px 16px;
-    }
-
-    #open-mission {
-        color: #F88634;
-        border: 1px solid #F88634;
-        border-radius: 25px;
-        background: #fff;
-        width: 100%;
-    }
-
-        #open-mission:hover {
-            color: #fff;
-            border: 1px solid #fff;
-            border-radius: 25px;
-            background: #F88634;
-        }
-
-    #recommend-story {
-        border: 1px solid #757575;
-        border-radius: 25px;
-        background: #fff;
-        width: 100%;
-    }
-
-        #recommend-story:hover {
-            border: 1px solid #fff;
-            border-radius: 25px;
-            background: #757575;
-            color: #fff;
-        }
-
-    .story-title {
-        color: #414141;
-        font-size: 24px;
-        position: relative;
-    }
-
-        .story-title::before {
-            content: "";
-            height: 1px;
-            position: absolute;
-            display: block;
-            width: 130px;
-            top: auto;
-            bottom: 0;
-            background-color: #000;
-        }
-
-    #thumbnail-imgs {
-        overflow: hidden;
-        max-height: 6.8vh;
-    }
-</style>
-
-<link rel="stylesheet" href="~/css/mission-page.css" asp-append-version="true" />
 <div class="container">
-    <div class="row">
-        <div class="col-lg-6 mt-4">
-            <div class=" d-flex justify-content-center">
-                <!-- Container for the image gallery -->
-                <div class=" img-gallary" style="height:80%;">
 
-                    <!-- Full-width images with number text -->
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images"
-                             src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%;">
+    <!--Top PART-->
+    <div class="row mt-5">
+
+        <!-- Container for the image gallery -->
+        <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
+            <div class="col-lg-6 col-md-12 w-100 px-3">
+
+                <!-- Full-width images with number text -->
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png" style="width:100%">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img11.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/img1.png">
+                </div>
+
+                <div class="mySlides">
+                    <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                </div>
+
+
+
+                <!-- Thumbnail images -->
+                <div class="row mt-4 position-relative " style="height:10%">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
                     </div>
-
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images"
-                             src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png"
-                             style="width:100%;">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
                     </div>
-
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images" src="~/images/img1.png" style="width:100%;">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
                     </div>
-
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images" src="~/images/img11.png" style="width:100%;">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img11.png" style="width:100%" onclick="currentSlide(4)">
                     </div>
-
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images" src="~/images/img1.png" style="width:100%;">
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(5)">
                     </div>
+                    <div class="column mx-auto">
+                        <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
 
-                    <div class="mySlides h-100">
-                        <img class="h-100 slider-images" src="~/images/Plantation-and-Afforestation-programme.png"
-                             style="width:100%;">
-                    </div>
-
-
-                    <!-- Next and previous buttons -->
-                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
-
-
-                    <!-- Thumbnail images -->
-                    <div class="row mt-2 w-100 mx-auto" style="height: 15%">
-                        <div class="column">
-                            <img class="demo cursor h-100"
-                                 src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-5.png" style="width:100%"
-                                 onclick="currentSlide(1)" alt="">
-                        </div>
-                        <div class="column">
-                            <img class="demo cursor h-100"
-                                 src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-4.png" style="width:100%"
-                                 onclick="currentSlide(2)" alt="">
-                        </div>
-                        <div class="column">
-                            <img class="demo cursor h-100" src="~/images/img2.png" style="width:100%"
-                                 onclick="currentSlide(3)" alt="">
-                        </div>
-                        <div class="column">
-                            <img class="demo cursor h-100" src="~/images/img22.png" style="width:100%"
-                                 onclick="currentSlide(4)" alt="">
-                        </div>
-                        <div class="column">
-                            <img class="demo cursor h-100" src="~/images/image.png" style="width:100%"
-                                 onclick="currentSlide(5)" alt="">
-                        </div>
-                        <div class="column">
-                            <img class="demo cursor h-100" src="~/images/Plantation-and-Afforestation-programme-1.png"
-                                 style="width:100%" onclick="currentSlide(6)" alt="">
-                        </div>
                     </div>
                 </div>
             </div>
-            <!-- Full-width images with number text -->
-            @*{
-
-            foreach (var img in Model.StoryMedia)
-            {
-            <div class="mySlides">
-            @*<div class="numbertext">1 / 6</div>
-            <img src="@img.StoryPath.Substring(45)" width="100%" height="400px">
-            </div>
-            }
-
-
-            <!-- Thumbnail images -->
-            <div class="row position-relative" id="thumbnail-imgs">
-            @foreach (var img in Model.storyMedia)
-            {
-            <div class="column">
-            <img class="demo cursor" src="@img.StoryPath.Substring(45)" style="width:100%" onclick="currentSlide(1)" alt="The Woods">
-            </div>
-            }
-
-
-            <!-- Next and previous buttons -->
-            <a class="position-absolute prev" onclick="plusSlides(-1)">&#10094;</a>
-            <a class="position-absolute next" onclick="plusSlides(1)">&#10095;</a>
-
-
-            </div>
-            }*@
         </div>
 
-
-        <div class="col-lg-6 mt-4">
-            <div class="row border-bottom">
+        <!-- Data for image -->
+        <div class="container-fluid col-lg-6 d-flex justify-content-center align-items-center" id="data">
+            <div class="row">
                 <div id="owner-img">
-                    <img class="rounded-circle" src="@Model.UserOfStory.Avatar" alt="Image" />
+                    <img class="rounded-circle" src="@Model.UserOfStory.Avatar" />
                 </div>
 
                 <div class="owner-name--story-views d-flex justify-content-between align-items-center my-2 ms-2">
                     <span>@Model.UserOfStory.FirstName @Model.UserOfStory.LastName</span>
                     <span id="story-views">
                         <i class="bi bi-eye"></i>
-                        <span>12,000 Views</span>
+                        <span>@Model.StoryDetails.Views Views</span>
                     </span>
                 </div>
-            </div>
 
-            <div class="my-2 mx-1">
-                @Model.UserOfStory.WhyIVolunteer
-            </div>
+                <div class="my-2 mx-1">
+                    @Model.UserOfStory.WhyIVolunteer
+                </div>
 
-            <div class="row story-detail-buttons mt-3 d-flex align-items-center">
-
-
-                <div class="col-md-7 col-sm-12 my-2">
-                    <a class="btn" id="recommend-story" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-person-add"></i>&nbsp;Recommend to a co-worker</a>
-                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-scrollable">
-                            <div class="modal-content">
-                                <div id="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="exampleModalLabel">Recommend this Story</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body" style="max-height: 50%; height: 400px;">
-                                        @foreach (var item in Model.UserList)
-                                        {
-                                            if (item.UserId != Model.User.UserId && item.UserId != Model.UserOfStory.UserId)
+                <div class="row story-detail-buttons mt-3 d-flex align-items-center">
+                    <div class="col-md-7 col-sm-12 my-2">
+                        <a class="btn" id="recommend-story" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-person-add"></i>&nbsp;Recommend to a co-worker</a>
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                                <div class="modal-content">
+                                    <div id="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Recommend this Mission</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            @foreach (var item in Model.UserList)
                                             {
-                                                <div class="form-check my-4 user-list">
-                                                    <input class="form-check-input checkbox ms-2 me-4 mt-3" type="checkbox" id="@item.UserId">
-                                                    <img class="rec-user-img me-2" style="width:15%; height:15%; border-radius:50%;" src="@item.Avatar" alt="">
+                                                <li class="form-check my-4 user-list">
+                                                    <input class="form-check-input checkbox mx-4" type="checkbox" value="@item.UserId" id="@item.UserId">
+                                                    <img class="rec-user-img me-2" src="@item.Avatar" alt="">
                                                     <label class="form-check-label" for="">@item.FirstName @item.LastName</label>
-                                                </div>
+                                                </li>
                                             }
-                                        }
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-warning" onclick="recommendStory(@Model.StoryDetails.StoryId, @Model.StoryDetails.Views)">Send Mail</button>
+                                        </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-warning" onclick="recommendStory(@Model.StoryDetails.StoryId)">Send Mail</button>
-                                    </div>
+                                    <center class="d-none h-25" id="divLoader">
+                                        <div class="spinner-border text-warning" style="width: 10rem; height: 10rem; margin-top:15%;" role="status"></div>
+                                        <div class="text-warning mt-5" style="font-weight : 200; margin-bottom : 15%">Processing!</div>
+                                    </center>
                                 </div>
-                                <center class="d-none h-50" id="missionpageLoader">
-                                    <div class="spinner-border text-warning" style="width: 5rem; height: 5rem; margin-top:15%;" role="status">
-                                    </div>
-                                    <div class="text-warning mt-4" style="margin-bottom:15%; font-weight:200;">Sending Email...</div>
-                                </center>
                             </div>
                         </div>
                     </div>
+
+
+                    <div class="col-md-5 col-sm-12">
+                        <a class="btn" id="open-mission" asp-action="volunteeringMissionPage" asp-controller="Pages" asp-route-id="@Model.StoryDetails.MissionId">Open Mission&nbsp;<i class="bi bi-arrow-right"></i></a>
+                    </div>
+
                 </div>
-                <div class="col-md-5 col-sm-12">
-                    <a class="btn" id="open-mission" asp-action="MissionPage" asp-controller="Home" asp-route-id="@Model.StoryDetails.MissionId">Open Mission&nbsp;<i class="bi bi-arrow-right"></i></a>
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="story-title border-bottom mt-5">
-            <p>@Model.StoryDetails.Title</p>
-
-        </div>
-
-        <div class="story-desc">
-            <div class="mt-1">
-                @Html.Raw(@Model.StoryDetails.Description)
-            </div>
-
-
-            <div class="mt-2">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
-            </div>
-            <div class="mt-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
-            </div>
-
-            <div class="mt-3">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
             </div>
 
         </div>
-
 
     </div>
 
 
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/js/missionpagestyle.js" asp-append-version="true"></script>
+    <div class="story-title border-bottom mt-5">
+        <p>@Model.StoryDetails.Title</p>
+
+    </div>
+
+    <div class="story-desc">
+        <div class="mt-1">
+            @Html.Raw(@Model.StoryDetails.Description)
+        </div>
+
+
+        <div class="mt-2">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
+        </div>
+        <div class="mt-3">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
+        </div>
+
+        <div class="mt-3">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In pulvinar rutrum justo eu auctor. Interdum.
+        </div>
+    </div>
+
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+<script src="~/js/Carousel.js" asp-append-version="true"></script>
+<script src="~/js/VolunteeringStoryPage.js" asp-append-version="true"></script>

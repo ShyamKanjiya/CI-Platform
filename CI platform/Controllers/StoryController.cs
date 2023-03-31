@@ -2,6 +2,8 @@
 using CI_platform.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Mail;
+using System.Net;
 using System.Security.Claims;
 
 
@@ -108,7 +110,7 @@ namespace CI_platform.Controllers
             }
             catch
             {
-                
+
             }
 
             return View(userAddStoryModel);
@@ -161,10 +163,9 @@ namespace CI_platform.Controllers
                         _dbContext.SaveChanges();
                     }
                 }
-
             }
-
-            else if(alreadyPostedStory != null)
+ 
+            else if (alreadyPostedStory != null)
             {
                 alreadyPostedStory.Title = storyTitle;
                 alreadyPostedStory.Description = storyDesc;
@@ -232,8 +233,6 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult GetMissionDetails(long missionId)
         {
-            var user = GetThisUser();
-            
             var query = (from st in _dbContext.Stories
                          join md in _dbContext.StoryMedia
                          on st.StoryId equals md.StoryId
@@ -258,10 +257,77 @@ namespace CI_platform.Controllers
 
         #region Volunteering Story Page
 
-        public IActionResult VolunteeringStoryPage()
+        public IActionResult VolunteeringStoryPage(long storyId, int views)
         {
-            return View();
+            var storyForView = _dbContext.Stories.Where(m => m.StoryId == storyId).FirstOrDefault();
+
+            if(storyForView.Views < views)
+            {
+                storyForView.Views = views;
+                _dbContext.Update(storyForView);
+                _dbContext.SaveChanges();
+            }
+
+
+            User? user = GetThisUser();
+            User? FindingStoryCreator = _dbContext.Stories.Where(m => m.StoryId == storyId).Select(m => m.User).FirstOrDefault();
+            List<User> ListOfUsers = _dbContext.Users.ToList();
+            userVolunteerStoryModel userVolunteerStoryModel = new()
+            {
+                User = user,
+                UserList = ListOfUsers,
+                UserOfStory = FindingStoryCreator,
+                StoryDetails = _dbContext.Stories.Where(m => m.StoryId == storyId).FirstOrDefault(),
+                StoryMedia = _dbContext.StoryMedia.Where(m => m.StoryId == storyId).ToList()
+            };
+
+            return View(userVolunteerStoryModel);
         }
+
+        #region Recommanded To Co-worker
+
+        public void RecommandToCoworker(int[]? userIds, long sId, int totalViews)
+        {
+            var thisUser = GetThisUser();
+            Story thisStory = _dbContext.Stories.Find(sId);
+
+            if (userIds != null)
+            {
+                foreach (var id in userIds)
+                {
+                    var user = _dbContext.Users.Where(m => m.UserId == id).FirstOrDefault();
+                    StoryInvite obj = new()
+                    {
+                        StoryId = sId,
+                        ToUserId = user.UserId,
+                        FromUserId = thisUser.UserId
+                    };
+                    _dbContext.Add(obj);
+                    _dbContext.SaveChanges();
+
+                    var inviteLink = Url.Action("ViewStory", "Story", new { storyId = sId, views = totalViews }, Request.Scheme);
+                    var fromAddress = new MailAddress("kanjiyashyam15@gmail.com", "CI Platform");
+                    var toAddress = new MailAddress(user.Email);
+                    var subject = "Mission Invite";
+                    var body = $"Hello <b>{@user.FirstName} {@user.LastName}</b> ,<br /><br /> Your Colleague <b>{thisUser.FirstName} {thisUser.LastName}</b>sent you an intrested story <b><i>{thisStory.Title}</i></b><br /><br />Click the following link to read the story,<br /><br /><a href='{inviteLink}'>{inviteLink}</a><br /><br />Regards,<br/>";
+                    var msg = new MailMessage(fromAddress, toAddress)
+                    {
+                        Subject = subject,
+                        Body = body,
+                        IsBodyHtml = true
+                    };
+
+                    var smtpClient = new SmtpClient("smtp.gmail.com", 587)
+                    {
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "swbylrxevxoaubor"),
+                        EnableSsl = true,
+                    };
+                    smtpClient.Send(msg);
+                }
+            }
+        }
+
+        #endregion
 
         #endregion
     }

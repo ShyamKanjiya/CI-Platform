@@ -222,3 +222,8 @@
         display: block;
     }
 }
+
+.modal-body {
+    max-height: 50vh;
+    overflow-y: scroll;
+}
