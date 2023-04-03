@@ -106,6 +106,7 @@ function GetDraftedStory() {
 
                 $("#story_title").val(data[0].title);
                 var dt = data[0].publishedAt;
+                console.log(data[0].publishedAt);
                 dt = dt.split('T')[0];
                 $("#story_date").val(dt);
                 var txt = data[0].description;
