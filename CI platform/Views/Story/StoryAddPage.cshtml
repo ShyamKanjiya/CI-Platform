@@ -1,7 +1,9 @@
 ﻿@model userAddStoryModel
 
 <link rel="stylesheet" href="~/css/Codepen.css" />
-<link rel="stylesheet" href="~/css/StoryAddPage.css"/>
+<link rel="stylesheet" href="~/css/StoryAddPage.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+<link rel="stylesheet" href="~/css/ImageUploder.css" />
 
 
 <div class="container px-4 px-sm-2 mb-5" style="max-width:87%">
@@ -13,11 +15,11 @@
         <div class="row">
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="missionDropDownList">Select Mission</label>
-                <select class="form-select select" asp-for="MissionId"  onchange="GetDraftedStory();" required>
+                <select class="form-select select" asp-for="MissionId" onchange="GetDraftedStory();" required>
                     <option value="Select Mission">Select Mission</option>
                     @foreach (var mission in Model.MissionApplication)
                     {
-                        <option value=@mission.MissionId >@mission.Mission.Title</option>
+                        <option value=@mission.MissionId>@mission.Mission.Title @mission.MissionId</option>
                     }
                 </select>
             </div>
@@ -39,7 +41,7 @@
             </div>
         </div>
 
-        <div class="uploadphoto mt-3">
+        <div class="uploadphoto">
             <div>
                 <label for="uploadphoto">Upload your photos</label>
             </div>
@@ -53,9 +55,10 @@
                             Drag & Drop picture and video Here
                         </div>
                     </span>
-                    <input input type="file" id="file-input" class="file" multiple="multiple" name="files" accept="image/jpeg, image/png, image/jpg" style="display: none;">
+                    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display: none;">
                 </div>
                 <div id="image-preview" class="mt-2"></div>
+                <lable class="input-images d-block"></lable>
             </div>
         </div>
 
@@ -81,4 +84,32 @@
 <!-------------------------------------------------------------------------------------------->
 <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
 <script src="~/js/StoryAddPage.js"></script>
+<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="~/js/ImageUploader.js" asp-append-version="true"></script>
 
+<script>
+    $(document).ready(function () {
+    @{
+        int i = 1;
+    }
+
+            let preloaded = [
+    @if (Model.StoryMedium != null)
+    {
+        @foreach (var sm in Model.StoryMedium)
+        {
+            @:{ id: @i, src: "/images/storyimages/" },
+            i++;
+        }
+    }
+            ];
+
+        $('.input-images').imageUploader({
+            preloaded: preloaded,
+            maxSize: 0.5 * 1024 * 1024,
+        });
+    })
+
+</script>

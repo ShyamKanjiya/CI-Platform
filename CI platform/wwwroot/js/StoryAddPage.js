@@ -36,24 +36,24 @@ dropZone.addEventListener("drop", (event) => {
     event.preventDefault();
     dropZone.classList.remove("dragover");
     const files = event.dataTransfer.files;
-    handleFiles(files);
+    
 });
 
 fileInput.addEventListener("change", () => {
     const files = fileInput.files;
-    handleFiles(files);
+    
 });
 
-function handleFiles(files) {
+/*function handleFiles(file) {
     for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        console.log(file.name);
+
+        console.log(file);
         if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) continue;
         if (uploadedFiles.has(file.name)) {
             alert(`File "${file.name}" has already been uploaded.`);
             continue;
         }
-        uploadedFiles.add(file.name);
+        uploadedFiles.add(file);
         const image = document.createElement("img");
         image.classList.add("image-preview");
         const imageContainer = document.createElement("div");
@@ -62,10 +62,11 @@ function handleFiles(files) {
         removeImage.innerHTML = "&#10006;";
         removeImage.classList.add("remove-image");
         removeImage.addEventListener("click", () => {
-            uploadedFiles.delete(file.name);
+            uploadedFiles.delete(file);
             imageContainer.remove();
         });
         const reader = new FileReader();
+        console.log(file);
         reader.readAsDataURL(file);
         console.log(reader.result);
         reader.onload = () => {
@@ -76,7 +77,8 @@ function handleFiles(files) {
         };
         console.log(reader.result);
     }
-}
+}*/
+
 
 //----------------------------------------------------------------------------------------------------------------------//
 
@@ -116,6 +118,7 @@ function GetDraftedStory() {
                 //set images
                 for (let x in data) {
                     let imgPath = data[x].path.substring(51);
+                    console.log(imgPath);
 
                     var element = `<div class="image-container"><img class="image-preview" src="${imgPath}" alt="image"> <span onclick="deleteImage()">&times;</span></div >`
                     $("#image-preview").append(element);

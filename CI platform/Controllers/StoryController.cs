@@ -189,14 +189,15 @@ namespace CI_platform.Controllers
                         string imgExt = Path.GetExtension(img.FileName);
                         if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
                         {
-                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", img.FileName);
+                            string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
                             var stream = new FileStream(imgSaveTo, FileMode.Create);
                             img.CopyTo(stream);
 
                             StoryMedium storyMedium = new StoryMedium();
                             storyMedium.StoryId = data.StoryId;
                             storyMedium.Type = imgExt;
-                            storyMedium.Path = imgSaveTo;
+                            storyMedium.Path = ImageName;
 
                             _dbContext.StoryMedia.Add(storyMedium);
                             _dbContext.SaveChanges();

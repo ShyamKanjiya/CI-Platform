@@ -77,7 +77,7 @@
                                 <img src="~/images/drop-down.png" style="margin-left:5px" />
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                <li><a class="dropdown-item" href="#">First Link</a></li>
+                                <li><a class="dropdown-item" asp-controller="Timesheet" asp-action="VolunteerTimesheet">Volunteering Timesheet</a></li>
                                 <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Logout</a></li>
                             </ul>
                         </li>
@@ -88,7 +88,7 @@
             {
                 <div id="nav-bar">
                     <ul class="navbar-nav d-flex">
-                        <li class="nav-item dropdown">
+                        <li class="nav-item">
                             <a asp-action="login" asp-controller="Home" class="nav-link profile-link-part">
                                 <span>Login</span>
                             </a>
@@ -101,11 +101,8 @@
     </nav>
 
     <div>
-        <main role="main">
-
-            
+        <main role="main">       
             @RenderBody()
-
             @{
                 Html.RenderPartial("_footerPartialView");
             }

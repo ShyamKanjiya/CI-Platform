@@ -21,6 +21,7 @@ html {
     position: relative;
     display: flex;
     bottom: 0;
+    flex-basis: 8vh;
     height: 8vh;
     align-items: center;
 }
