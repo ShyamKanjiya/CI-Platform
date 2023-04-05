@@ -14,72 +14,6 @@
     height: 300,
 });
 
-const dropZone = document.getElementById("drop-zone");
-const fileInput = document.getElementById("file-input");
-const imagePreview = document.getElementById("image-preview");
-const uploadedFiles = new Set();
-
-dropZone.addEventListener("click", () => {
-    fileInput.click();
-});
-
-dropZone.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    dropZone.classList.add("dragover");
-});
-
-dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("dragover");
-});
-
-dropZone.addEventListener("drop", (event) => {
-    event.preventDefault();
-    dropZone.classList.remove("dragover");
-    const files = event.dataTransfer.files;
-    
-});
-
-fileInput.addEventListener("change", () => {
-    const files = fileInput.files;
-    
-});
-
-/*function handleFiles(file) {
-    for (let i = 0; i < files.length; i++) {
-
-        console.log(file);
-        if (!file.type.startsWith("image/") && !file.type.startsWith("video/")) continue;
-        if (uploadedFiles.has(file.name)) {
-            alert(`File "${file.name}" has already been uploaded.`);
-            continue;
-        }
-        uploadedFiles.add(file);
-        const image = document.createElement("img");
-        image.classList.add("image-preview");
-        const imageContainer = document.createElement("div");
-        imageContainer.classList.add("image-container");
-        const removeImage = document.createElement("div");
-        removeImage.innerHTML = "&#10006;";
-        removeImage.classList.add("remove-image");
-        removeImage.addEventListener("click", () => {
-            uploadedFiles.delete(file);
-            imageContainer.remove();
-        });
-        const reader = new FileReader();
-        console.log(file);
-        reader.readAsDataURL(file);
-        console.log(reader.result);
-        reader.onload = () => {
-            image.src = reader.result;
-            imageContainer.appendChild(image);
-            imageContainer.appendChild(removeImage);
-            imagePreview.appendChild(imageContainer);
-        };
-        console.log(reader.result);
-    }
-}*/
-
-
 //----------------------------------------------------------------------------------------------------------------------//
 
 function GetDraftedStory() {
@@ -97,12 +31,10 @@ function GetDraftedStory() {
 
             if (data == 0) {
                 $("#story_title").val(null);
-
                 $("#story_date").val(null);
-
                 tinyMCE.activeEditor.setContent("");
-                $("#image-preview").html("");
-
+                $(".input-images").html("");
+                $('.input-images').imageUploader({});
             }
             else {
 
@@ -113,26 +45,75 @@ function GetDraftedStory() {
                 $("#story_date").val(dt);
                 var txt = data[0].description;
 
-                tinyMCE.activeEditor.setContent(txt);
-                $("#image-preview").html("");
-                //set images
-                for (let x in data) {
-                    let imgPath = data[x].path.substring(51);
-                    console.log(imgPath);
 
-                    var element = `<div class="image-container"><img class="image-preview" src="${imgPath}" alt="image"> <span onclick="deleteImage()">&times;</span></div >`
-                    $("#image-preview").append(element);
+
+                tinyMCE.activeEditor.setContent(txt);
+
+
+                $(".input-images").html("");
+                var i = 1;
+                let preloaded = [];
+                if (data[0].path != null) {
+                    for (let x in data) {
+                        if (data[x].type != 'video') {
+                            let imgPath = data[x].path;
+                            var content = {
+                                id: i, src: "/StoryImages/" + imgPath
+                            };
+                            i++;
+                            preloaded.push(content);
+                        }
+                        else {
+                            $("#video_url").val(data[x].path);
+                        }
+                    }
                 }
 
-                if ($("#submitStoryBtn").hasClass('disabled')) {
+                $('.input-images').imageUploader({
+                    preloaded: preloaded,
+                    maxSize: 0.5 * 1024 * 1024,
+                });
+
+                if($("#submitStoryBtn").hasClass('disabled')) {
                     $("#submitStoryBtn").removeClass('disabled');
                 }
             }
+        },
+        error: function (error) {
+            console.log(error);
+        }       
+    });
+}
 
+//----------------------------------------------------------------------------------------------------------------------//
 
+function submitStory() {
+    var missionId = $("select").val();
+    $.ajax({
+        url: "/Story/SubmitStory",
+        method: 'POST',
+        data: { 'missionId': missionId },
+        success: function (data) {
+            location.reload();
         },
         error: function (error) {
             console.log(error);
         }
     });
+}
+
+//----------------------------------------------------------------------------------------------------------------------//
+
+function validateYouTubeUrl() {
+    var url = document.getElementById("video_url").value;
+    if (url != null) {
+        var regExp = /^(?:https?:\/\/)?(?:m\.|www\.)?(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))((\w|-){11})(?:\S+)?$/;
+        if (url.match(regExp)) {
+            alert("YoutubeURL");
+        }
+        else {
+            alert("WrongURL")
+        }
+    }
+    return false;
 }

@@ -5,6 +5,18 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="~/css/ImageUploder.css" />
 
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="~/js/StoryAddPage.js" asp-append-version="true"></script>
+
+
+<script>
+    $(document).ready(function () {
+        $('.input-images').imageUploader({});
+    })
+</script>
+
+
 
 <div class="container px-4 px-sm-2 mb-5" style="max-width:87%">
     @*heading*@
@@ -37,27 +49,15 @@
             </div>
             <div class="col-12">
                 <label class="mb-1" for="exampleInputEmail1">Enter Video URL</label>
-                <input class="form-control" type="url" placeholder="Enter video url" name="videoURL" id="video_url">
+                <input class="form-control" type="url" placeholder="Enter video url" name="videoURL" id="video_url" onkeypress="validateYouTubeUrl();">
             </div>
         </div>
 
-        <div class="uploadphoto">
+        <div class="uploadphoto mt-3">
             <div>
                 <label for="uploadphoto">Upload your photos</label>
             </div>
             <div>
-                <div id="drop-zone" class="my-1">
-                    <span class="drop-text">
-                        <div>
-                            <i class="bi bi-plus fs-1"></i>
-                        </div>
-                        <div class="text-secondary">
-                            Drag & Drop picture and video Here
-                        </div>
-                    </span>
-                    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display: none;">
-                </div>
-                <div id="image-preview" class="mt-2"></div>
                 <lable class="input-images d-block"></lable>
             </div>
         </div>
@@ -67,49 +67,13 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <button class="btn border rounded-pill px-4 mt-2">Cancel</button>
+                    <button class="btn border rounded-pill px-4 mt-2" asp-action="storyListingPage" asp-controller="Story">Cancel</button>
                 </div>
                 <div class="col-12 col-sm-6 text-sm-end">
                     <button class="btn border-warning text-warning rounded-pill px-4 mt-2" type="submit" id="saveStoryBtn">Save</button>
-                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2 disabled" id="submitStoryBtn">Submit</button>
+                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2 disabled" id="submitStoryBtn" onclick="submitStory();">Submit</button>
                 </div>
             </div>
         </div>
     </form>
 </div>
-
-
-
-
-<!-------------------------------------------------------------------------------------------->
-<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
-<script src="~/js/StoryAddPage.js"></script>
-<script src="https://cdn.ckeditor.com/ckeditor5/36.0.1/super-build/ckeditor.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script src="~/js/ImageUploader.js" asp-append-version="true"></script>
-
-<script>
-    $(document).ready(function () {
-    @{
-        int i = 1;
-    }
-
-            let preloaded = [
-    @if (Model.StoryMedium != null)
-    {
-        @foreach (var sm in Model.StoryMedium)
-        {
-            @:{ id: @i, src: "/images/storyimages/" },
-            i++;
-        }
-    }
-            ];
-
-        $('.input-images').imageUploader({
-            preloaded: preloaded,
-            maxSize: 0.5 * 1024 * 1024,
-        });
-    })
-
-</script>

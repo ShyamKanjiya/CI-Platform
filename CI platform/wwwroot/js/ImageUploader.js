@@ -5,7 +5,7 @@ Copyright (c) 2019 Christian Bayer; Licensed MIT */
         let n,
             i = {
                 preloaded: [],
-                imagesInputName: "myfile",
+                imagesInputName: "files",
                 preloadedInputName: "preloaded",
                 label: "Drag & Drop files here or click to browse",
                 extensions: [".jpg", ".jpeg", ".png", ".gif", ".svg"],

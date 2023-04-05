@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Net.Mail;
 using System.Net;
 using System.Security.Claims;
+using static System.Net.Mime.MediaTypeNames;
 
 
 namespace CI_platform.Controllers
@@ -118,7 +119,7 @@ namespace CI_platform.Controllers
 
 
         [HttpPost]
-        public IActionResult StoryAddPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files)
+        public IActionResult StoryAddPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files, string[] preloaded)
         {
             var user = GetThisUser();
             var uid = user.UserId;
@@ -142,27 +143,7 @@ namespace CI_platform.Controllers
 
                 _dbContext.Stories.Add(story);
                 _dbContext.SaveChanges();
-
-                var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
-
-                foreach (IFormFile img in files)
-                {
-                    string imgExt = Path.GetExtension(img.FileName);
-                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
-                    {
-                        var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", img.FileName);
-                        var stream = new FileStream(imgSaveTo, FileMode.Create);
-                        img.CopyTo(stream);
-
-                        StoryMedium storyMedium = new StoryMedium();
-                        storyMedium.StoryId = data.StoryId;
-                        storyMedium.Type = imgExt;
-                        storyMedium.Path = imgSaveTo;
-
-                        _dbContext.StoryMedia.Add(storyMedium);
-                        _dbContext.SaveChanges();
-                    }
-                }
+               
             }
  
             else if (alreadyPostedStory != null)
@@ -172,37 +153,110 @@ namespace CI_platform.Controllers
                 alreadyPostedStory.PublishedAt = DateTime.Parse(storyDate);
 
                 _dbContext.SaveChanges();
+            }
 
-                var imageCheck = _dbContext.StoryMedia.Where(m => m.StoryId == alreadyPostedStory.StoryId).ToList();
-                if (imageCheck != null)
+
+
+
+            var st = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
+            var media = _dbContext.StoryMedia.Where(m => m.StoryId == st.StoryId).ToList();
+
+
+            if (videoURL != null)
+            {
+                foreach (var video in media)
                 {
-                    foreach (var img in imageCheck)
+                    if (video.Type == "video")
                     {
+                        if (video != null)
+                        {
+                            _dbContext.StoryMedia.Remove(video);
+                        }
+                    }
+                }
+                StoryMedium objModel = new()
+                {
+                    StoryId = st.StoryId,
+                    Type = "video",
+                    Path = videoURL,
+                };
+                _dbContext.StoryMedia.Add(objModel);
+                _dbContext.SaveChanges();
+            }
+            else
+            {
+                foreach (var video in media)
+                {
+                    if (video.Type == "video")
+                    {
+                        if (video != null)
+                        {
+                            _dbContext.StoryMedia.Remove(video);
+                        }
+                    }
+                }
+                _dbContext.SaveChanges();
+            }
+
+
+            foreach (var img in media)
+            {
+                if(img.Type != "video")
+                {
+                    if (preloaded.Length < 1)
+                    {
+                        string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/", img.Path);
+
+                        if (System.IO.File.Exists(imagePath))
+                        {
+                            System.IO.File.Delete(imagePath);
+                        }
+
                         _dbContext.Remove(img);
                         _dbContext.SaveChanges();
                     }
-
-                    var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
-
-                    foreach (IFormFile img in files)
+                    else
                     {
-                        string imgExt = Path.GetExtension(img.FileName);
-                        if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                        for (int i = 0; i < preloaded.Length; i++)
                         {
-                            string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
-                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                            var stream = new FileStream(imgSaveTo, FileMode.Create);
-                            img.CopyTo(stream);
+                            var imgName = preloaded[i].Substring(13);
 
-                            StoryMedium storyMedium = new StoryMedium();
-                            storyMedium.StoryId = data.StoryId;
-                            storyMedium.Type = imgExt;
-                            storyMedium.Path = ImageName;
+                            if (!imgName.Equals(img.Path))
+                            {
+                                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/", img.Path);
 
-                            _dbContext.StoryMedia.Add(storyMedium);
-                            _dbContext.SaveChanges();
+                                if (System.IO.File.Exists(imagePath))
+                                {
+                                    System.IO.File.Delete(imagePath);
+                                }
+
+                                _dbContext.Remove(img);
+                                _dbContext.SaveChanges();
+                            }
+
                         }
                     }
+                }
+            }
+
+            var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
+            foreach (IFormFile img in files)
+            {
+                string imgExt = Path.GetExtension(img.FileName);
+                if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                {
+                    string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
+                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
+                    var stream = new FileStream(imgSaveTo, FileMode.Create);
+                    img.CopyTo(stream);
+
+                    StoryMedium storyMedium = new StoryMedium();
+                    storyMedium.StoryId = data.StoryId;
+                    storyMedium.Type = imgExt;
+                    storyMedium.Path = ImageName;
+
+                    _dbContext.StoryMedia.Add(storyMedium);
+                    _dbContext.SaveChanges();
                 }
             }
 
@@ -234,21 +288,40 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult GetMissionDetails(long missionId)
         {
+            User user = GetThisUser();
             var query = (from st in _dbContext.Stories
                          join md in _dbContext.StoryMedia
-                         on st.StoryId equals md.StoryId
-                         where st.MissionId == missionId && st.Status == "DRAFT"
+                         on st.StoryId equals md.StoryId into g
+                         from md in g.DefaultIfEmpty()
+                         where st.MissionId == missionId && st.UserId == user.UserId && st.Status == "DRAFT"
                          orderby st.StoryId descending
                          select new
                          {
                              st.Title,
                              st.Description,
                              st.PublishedAt,
-                             md.Path
+                             md.Path,
+                             md.Type
                          }).ToList();
 
             return Json(query);
+        }
 
+
+        [HttpPost]
+        public IActionResult SubmitStory(long missionId)
+        {
+            User user = GetThisUser();
+            Story storyOfUser = _dbContext.Stories.Where(m => m.MissionId == missionId && m.UserId == user.UserId && m.Status == "DRAFT").FirstOrDefault();
+            if (storyOfUser != null)
+            {
+
+                storyOfUser.Status = "PENDING";
+
+                _dbContext.Update(storyOfUser);
+                _dbContext.SaveChanges();
+            }
+            return RedirectToAction("StoryListingPage");
         }
 
 
