@@ -23,6 +23,8 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IUserRepository User { get; }
         IMissionRatingRepository MissionRating { get; }
         IStoryInviteRepository StoryInvite { get; }
+        IGoalMissionRepository GoalMission { get; }
+        IMissionDocumentRepositoy MissionDocument { get; }
         int Save();
     }
 }

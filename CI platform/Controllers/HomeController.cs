@@ -1,6 +1,7 @@
 ﻿using CI_platform.Entities.DataModels;
 using CI_platform.Entities.ViewModels;
 using CI_platform.Models;
+using CI_platform.Repositories.GenericRepository.Interface;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -16,17 +17,18 @@ namespace CI_platform.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly CIDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public HomeController(ILogger<HomeController> logger, CIDbContext dbContext)
+        public HomeController(ILogger<HomeController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
         }
 
 
         //---------------------- FOR REGISTARATION --------------------------//
 
+        #region Registration
         [HttpGet]
         public IActionResult Registration()
         {
@@ -47,12 +49,12 @@ namespace CI_platform.Controllers
                 CountryId = 1,
 
             };
-            var obj = _dbContext.Users.FirstOrDefault(m => m.Email == _userRegisterModel.Email);
+            var obj = _unitOfWork.User.GetFirstOrDefault(m => m.Email == _userRegisterModel.Email);
 
             if (obj == null)
             {
-                _dbContext.Users.Add(user);
-                _dbContext.SaveChanges();
+                _unitOfWork.User.Add(user);
+                _unitOfWork.Save();
                 return RedirectToAction("login", "Home");
             }
             else
@@ -62,9 +64,11 @@ namespace CI_platform.Controllers
 
             return View();
         }
-        //-----------------------------------------------------------//
+        #endregion
 
         //---------------------- FOR LOGIN --------------------------//
+
+        #region Login
         [HttpGet]
         public IActionResult Login()
         {
@@ -75,7 +79,7 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult Login(userLoginModel obj)
         {
-            var status = _dbContext.Users.FirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password);
+            var status = _unitOfWork.User.GetFirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password);
             if (status == null)
             {
                 ViewBag.LoginStatus = 0;
@@ -95,17 +99,21 @@ namespace CI_platform.Controllers
             }
             return View(obj);
         }
-        //----------------------------------------------------------//
+        #endregion
 
+        //---------------------- FOR LOGOUT --------------------------//
 
+        #region Logout
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("platformLandingPage", "Pages");
         }
-
+        #endregion
 
         //---------------------- FOR FORGOT PASSWORD --------------------------//
+
+        #region Forgot Password
         [HttpGet]
         public IActionResult forgotPassword()
         {
@@ -116,7 +124,7 @@ namespace CI_platform.Controllers
         public IActionResult forgotPassword(userForgotPasswordModel _userForgotPasswordModel)
         {
 
-            var status = _dbContext.Users.FirstOrDefault(m => m.Email == _userForgotPasswordModel.Email);
+            var status = _unitOfWork.User.GetFirstOrDefault(m => m.Email == _userForgotPasswordModel.Email);
             if (status == null)
             {
                 return RedirectToAction("login", "Home");
@@ -129,8 +137,8 @@ namespace CI_platform.Controllers
                 Email = _userForgotPasswordModel.Email,
                 Token = token,
             };
-            _dbContext.Add(passwordReset);
-            _dbContext.SaveChanges();
+            _unitOfWork.PasswordReset.Add(passwordReset);
+            _unitOfWork.Save();
 
             var resetLink = Url.Action("changePassword", "Home", new { email = _userForgotPasswordModel.Email, token }, Request.Scheme);
 
@@ -156,14 +164,16 @@ namespace CI_platform.Controllers
 
             return RedirectToAction("login", "Home");
         }
-        //---------------------------------------------------------------------//
+        #endregion
 
         //---------------------- FOR CHANGE PASSWORD --------------------------//
+
+        #region Change Password
         [HttpGet]
         [AllowAnonymous]
         public IActionResult changePassword(string Email, string Token)
         {
-            var changePassword = _dbContext.PasswordResets.FirstOrDefault(x => x.Email == Email && x.Token == Token);
+            var changePassword = _unitOfWork.PasswordReset.GetFirstOrDefault(x => x.Email == Email && x.Token == Token);
 
             if (changePassword == null)
             {
@@ -184,30 +194,29 @@ namespace CI_platform.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult changePassword(userChangePasswordModel _userChangePasswordModel)
         {
-            var status = _dbContext.Users.FirstOrDefault(x => x.Email == _userChangePasswordModel.Email);
+            var status = _unitOfWork.User.GetFirstOrDefault(x => x.Email == _userChangePasswordModel.Email);
             if (status == null)
             {
                 return RedirectToAction("forgetPassword", "Home");
             }
 
             status.Password = _userChangePasswordModel.Password;
-            _dbContext.Users.Update(status);
-            _dbContext.SaveChanges();
+            _unitOfWork.User.Update(status);
+            _unitOfWork.Save();
 
-            var deletion = _dbContext.PasswordResets.FirstOrDefault(x => x.Token == _userChangePasswordModel.Token && x.Email == _userChangePasswordModel.Email);
+            var deletion = _unitOfWork.PasswordReset.GetFirstOrDefault(x => x.Token == _userChangePasswordModel.Token && x.Email == _userChangePasswordModel.Email);
             if (deletion != null)
             {
-                _dbContext.PasswordResets.Remove(deletion);
+                _unitOfWork.PasswordReset.Remove(deletion);
             }
 
             return RedirectToAction("login", "Home");
         }
-
-        //---------------------------------------------------------------------//
-
+        #endregion
 
         //---------------------------- Hashing --------------------------------//
 
+        #region Hashing
         /*public static string GetHash(string text)
         {
             // SHA512 is disposable by inheritance.  
@@ -219,14 +228,17 @@ namespace CI_platform.Controllers
                 return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
             }
         }*/
+        #endregion
 
-        //---------------------------------------------------------------------//
+        //---------------------------- Error --------------------------------//
 
+        #region Error
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+        #endregion
 
     }
 

@@ -1,6 +1,10 @@
 using CI_platform.Entities.DataModels;
+using CI_platform.Repositories.GenericRepository.Interface;
+using CI_platform.Repositories.GenericRepository;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
+using CI_platform.Repositories.MethodRepository.Interface;
+using CI_platform.Repositories.MethodRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +14,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddCloudscribePagination();
 
 builder.Services.AddDbContext<CIDbContext>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IStoryMethodRepository, StoryMethodRepository>();
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
     AddCookie(option =>

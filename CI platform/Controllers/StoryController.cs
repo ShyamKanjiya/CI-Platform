@@ -6,21 +6,25 @@ using System.Net.Mail;
 using System.Net;
 using System.Security.Claims;
 using static System.Net.Mime.MediaTypeNames;
-
+using CI_platform.Repositories.GenericRepository;
+using CI_platform.Repositories.GenericRepository.Interface;
+using CI_platform.Repositories.MethodRepository.Interface;
 
 namespace CI_platform.Controllers
 {
     public class StoryController : Controller
     {
         private readonly ILogger<StoryController> _logger;
-        private readonly CIDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _iweb;
+        private readonly IStoryMethodRepository _repo;
 
-        public StoryController(ILogger<StoryController> logger, CIDbContext dbContext, IWebHostEnvironment iweb)
+        public StoryController(ILogger<StoryController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment iweb, IStoryMethodRepository storyMethodRepository)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
             _iweb = iweb;
+            _repo= storyMethodRepository;
         }
 
         public User GetThisUser()
@@ -28,7 +32,7 @@ namespace CI_platform.Controllers
             var identity = User.Identity as ClaimsIdentity;
             var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
 
-            var user = _dbContext.Users.Where(m => m.Email == email).FirstOrDefault();
+            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
             return user;
         }
 
@@ -43,14 +47,14 @@ namespace CI_platform.Controllers
 
         public IActionResult bringStories(int pg = 1)
         {
-            List<Story> stories = _dbContext.Stories.ToList();
+            List<Story> stories = (List<Story>)_unitOfWork.Story.GetAll();
 
             userStoryListModel userStory = new userStoryListModel
             {
-                Stories = _dbContext.Stories.ToList(),
-                Missions = _dbContext.Missions.ToList(),
-                Users = _dbContext.Users.ToList(),
-                MissionThemes = _dbContext.MissionThemes.ToList()
+                Stories = _unitOfWork.Story.GetAll(),
+                Missions = _unitOfWork.Mission.GetAll(),
+                Users = _unitOfWork.User.GetAll(),
+                MissionThemes = _unitOfWork.MissionTheme.GetAll()
             };
 
             const int pageSize = 3;
@@ -85,13 +89,13 @@ namespace CI_platform.Controllers
             User user = GetThisUser();
             userAddStoryModel userAddStoryModel = new userAddStoryModel();
 
-            userAddStoryModel.Missions = _dbContext.Missions.ToList();
+            userAddStoryModel.Missions = (List<Mission>)_unitOfWork.Mission.GetAll();
 
             List<MissionApplication> draftMissAppList = new List<MissionApplication>();
-            List<MissionApplication> usersAppMission = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+            List<MissionApplication> usersAppMission = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE");
             foreach (var mission in usersAppMission)
             {
-                var story = _dbContext.Stories.Where(m => m.MissionId == mission.MissionId && m.UserId == user.UserId).FirstOrDefault();
+                var story = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
                 if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
                 {
                     draftMissAppList.Add(mission);
@@ -106,8 +110,8 @@ namespace CI_platform.Controllers
             try
             {
                 userAddStoryModel.MissionApplication = draftMissAppList;
-                userAddStoryModel.Story = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.Status == "DRAFT").FirstOrDefault();
-                userAddStoryModel.StoryMedium = _dbContext.StoryMedia.Where(m => m.StoryId == userAddStoryModel.Story.StoryId).ToList();
+                userAddStoryModel.Story = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.Status == "DRAFT");
+                userAddStoryModel.StoryMedium = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == userAddStoryModel.Story.StoryId);
             }
             catch
             {
@@ -126,7 +130,7 @@ namespace CI_platform.Controllers
             userAddStoryModel obj = new userAddStoryModel();
 
 
-            var alreadyPostedStory = _dbContext.Stories.Where(m => m.MissionId == MissionId && m.UserId == uid && m.Status == "DRAFT").FirstOrDefault();
+            var alreadyPostedStory = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == MissionId && m.UserId == uid && m.Status == "DRAFT");
             obj.Result = "false";
 
             if (alreadyPostedStory == null)
@@ -141,8 +145,8 @@ namespace CI_platform.Controllers
                     PublishedAt = DateTime.Parse(storyDate)
                 };
 
-                _dbContext.Stories.Add(story);
-                _dbContext.SaveChanges();
+                _unitOfWork.Story.Add(story);
+                _unitOfWork.Save();
                
             }
  
@@ -152,14 +156,12 @@ namespace CI_platform.Controllers
                 alreadyPostedStory.Description = storyDesc;
                 alreadyPostedStory.PublishedAt = DateTime.Parse(storyDate);
 
-                _dbContext.SaveChanges();
+                _unitOfWork.Save();
             }
 
 
-
-
-            var st = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
-            var media = _dbContext.StoryMedia.Where(m => m.StoryId == st.StoryId).ToList();
+            var st = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.MissionId == MissionId);
+            var media = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == st.StoryId);
 
 
             if (videoURL != null)
@@ -170,7 +172,7 @@ namespace CI_platform.Controllers
                     {
                         if (video != null)
                         {
-                            _dbContext.StoryMedia.Remove(video);
+                            _unitOfWork.StoryMedia.Remove(video);
                         }
                     }
                 }
@@ -180,8 +182,8 @@ namespace CI_platform.Controllers
                     Type = "video",
                     Path = videoURL,
                 };
-                _dbContext.StoryMedia.Add(objModel);
-                _dbContext.SaveChanges();
+                _unitOfWork.StoryMedia.Add(objModel);
+                _unitOfWork.Save();
             }
             else
             {
@@ -191,11 +193,11 @@ namespace CI_platform.Controllers
                     {
                         if (video != null)
                         {
-                            _dbContext.StoryMedia.Remove(video);
+                            _unitOfWork.StoryMedia.Remove(video);
                         }
                     }
                 }
-                _dbContext.SaveChanges();
+                _unitOfWork.Save();
             }
 
 
@@ -212,8 +214,8 @@ namespace CI_platform.Controllers
                             System.IO.File.Delete(imagePath);
                         }
 
-                        _dbContext.Remove(img);
-                        _dbContext.SaveChanges();
+                        _unitOfWork.StoryMedia.Remove(img);
+                        _unitOfWork.Save();
                     }
                     else
                     {
@@ -230,16 +232,15 @@ namespace CI_platform.Controllers
                                     System.IO.File.Delete(imagePath);
                                 }
 
-                                _dbContext.Remove(img);
-                                _dbContext.SaveChanges();
+                                _unitOfWork.StoryMedia.Remove(img);
+                                _unitOfWork.Save();
                             }
-
                         }
                     }
                 }
             }
 
-            var data = _dbContext.Stories.Where(m => m.UserId == user.UserId && m.MissionId == MissionId).FirstOrDefault();
+            var data = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.MissionId == MissionId);
             foreach (IFormFile img in files)
             {
                 string imgExt = Path.GetExtension(img.FileName);
@@ -255,18 +256,18 @@ namespace CI_platform.Controllers
                     storyMedium.Type = imgExt;
                     storyMedium.Path = ImageName;
 
-                    _dbContext.StoryMedia.Add(storyMedium);
-                    _dbContext.SaveChanges();
+                    _unitOfWork.StoryMedia.Add(storyMedium);
+                    _unitOfWork.Save();
                 }
             }
 
             userAddStoryModel model = new userAddStoryModel();
 
             List<MissionApplication> draftMissAppList = new List<MissionApplication>();
-            List<MissionApplication> usersAppMission = _dbContext.MissionApplications.Where(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE").ToList();
+            List<MissionApplication> usersAppMission = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE");
             foreach (var mission in usersAppMission)
             {
-                var story = _dbContext.Stories.Where(m => m.MissionId == mission.MissionId && m.UserId == user.UserId).FirstOrDefault();
+                var story = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
                 if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
                 {
                     draftMissAppList.Add(mission);
@@ -279,7 +280,7 @@ namespace CI_platform.Controllers
             }
 
             model.MissionApplication = draftMissAppList;
-            model.Missions = _dbContext.Missions.ToList();
+            model.Missions = (List<Mission>)_unitOfWork.Mission.GetAll();
             return View("StoryAddPage", model);
 
         }
@@ -289,20 +290,7 @@ namespace CI_platform.Controllers
         public IActionResult GetMissionDetails(long missionId)
         {
             User user = GetThisUser();
-            var query = (from st in _dbContext.Stories
-                         join md in _dbContext.StoryMedia
-                         on st.StoryId equals md.StoryId into g
-                         from md in g.DefaultIfEmpty()
-                         where st.MissionId == missionId && st.UserId == user.UserId && st.Status == "DRAFT"
-                         orderby st.StoryId descending
-                         select new
-                         {
-                             st.Title,
-                             st.Description,
-                             st.PublishedAt,
-                             md.Path,
-                             md.Type
-                         }).ToList();
+            var query =  _repo.GetStory(missionId,user.UserId);
 
             return Json(query);
         }
@@ -312,19 +300,16 @@ namespace CI_platform.Controllers
         public IActionResult SubmitStory(long missionId)
         {
             User user = GetThisUser();
-            Story storyOfUser = _dbContext.Stories.Where(m => m.MissionId == missionId && m.UserId == user.UserId && m.Status == "DRAFT").FirstOrDefault();
+            Story storyOfUser = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == missionId && m.UserId == user.UserId && m.Status == "DRAFT");
             if (storyOfUser != null)
             {
-
                 storyOfUser.Status = "PENDING";
 
-                _dbContext.Update(storyOfUser);
-                _dbContext.SaveChanges();
+                _unitOfWork.Story.Update(storyOfUser);
+                _unitOfWork.Save();
             }
             return RedirectToAction("StoryListingPage");
         }
-
-
         #endregion
 
         //---------------------- Volunteering Story Page --------------------------//
@@ -333,26 +318,26 @@ namespace CI_platform.Controllers
 
         public IActionResult VolunteeringStoryPage(long storyId, int views)
         {
-            var storyForView = _dbContext.Stories.Where(m => m.StoryId == storyId).FirstOrDefault();
+            var storyForView = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId);
 
             if(storyForView.Views < views)
             {
                 storyForView.Views = views;
-                _dbContext.Update(storyForView);
-                _dbContext.SaveChanges();
+                _unitOfWork.Story.Update(storyForView);
+                _unitOfWork.Save();
             }
 
 
             User? user = GetThisUser();
-            User? FindingStoryCreator = _dbContext.Stories.Where(m => m.StoryId == storyId).Select(m => m.User).FirstOrDefault();
-            List<User> ListOfUsers = _dbContext.Users.ToList();
+            User? FindingStoryCreator = _repo.UserOfStory(storyId);
+            List<User> ListOfUsers = (List<User>)_unitOfWork.User.GetAll();
             userVolunteerStoryModel userVolunteerStoryModel = new()
             {
                 User = user,
                 UserList = ListOfUsers,
                 UserOfStory = FindingStoryCreator,
-                StoryDetails = _dbContext.Stories.Where(m => m.StoryId == storyId).FirstOrDefault(),
-                StoryMedia = _dbContext.StoryMedia.Where(m => m.StoryId == storyId).ToList()
+                StoryDetails = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId),
+                StoryMedia = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == storyId)
             };
 
             return View(userVolunteerStoryModel);
@@ -363,23 +348,23 @@ namespace CI_platform.Controllers
         public void RecommandToCoworker(int[]? userIds, long sId, int totalViews)
         {
             var thisUser = GetThisUser();
-            Story thisStory = _dbContext.Stories.Find(sId);
+            Story thisStory = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == sId);
 
             if (userIds != null)
             {
                 foreach (var id in userIds)
                 {
-                    var user = _dbContext.Users.Where(m => m.UserId == id).FirstOrDefault();
+                    var user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == id);
                     StoryInvite obj = new()
                     {
                         StoryId = sId,
                         ToUserId = user.UserId,
                         FromUserId = thisUser.UserId
                     };
-                    _dbContext.Add(obj);
-                    _dbContext.SaveChanges();
+                    _unitOfWork.StoryInvite.Add(obj);
+                    _unitOfWork.Save();
 
-                    var inviteLink = Url.Action("ViewStory", "Story", new { storyId = sId, views = totalViews }, Request.Scheme);
+                    var inviteLink = Url.Action("VolunteeringStoryPage", "Story", new { storyId = sId, views = totalViews }, Request.Scheme);
                     var fromAddress = new MailAddress("kanjiyashyam15@gmail.com", "CI Platform");
                     var toAddress = new MailAddress(user.Email);
                     var subject = "Mission Invite";
@@ -393,7 +378,7 @@ namespace CI_platform.Controllers
 
                     var smtpClient = new SmtpClient("smtp.gmail.com", 587)
                     {
-                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "swbylrxevxoaubor"),
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "aswytlgxbpbrjpmn"),
                         EnableSsl = true,
                     };
                     smtpClient.Send(msg);

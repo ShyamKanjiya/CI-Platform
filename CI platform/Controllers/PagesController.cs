@@ -13,34 +13,35 @@ using System.Reflection;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Xml.Schema;
+using CI_platform.Repositories.GenericRepository.Interface;
 
 namespace CI_platform.Controllers
 {
     public class PagesController : Controller
     {
         private readonly ILogger<PagesController> _logger;
-        private readonly CIDbContext _dbContext;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PagesController(ILogger<PagesController> logger, CIDbContext dbContext)
+        public PagesController(ILogger<PagesController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _dbContext = dbContext;
+            _unitOfWork = unitOfWork;
         }
 
 
-        //---------------------- CARD VIEW --------------------------//
+        //---------------------- Platform Landing Page --------------------------//
 
-        #region Card View
+        #region Platform Landing Page
         [HttpGet]
         public IActionResult platformLandingPage()
         {
 
             userViewModel viewModel = new userViewModel
             {
-                Countries = _dbContext.Countries.ToList(),
-                Cities = _dbContext.Cities.ToList(),
-                MissionThemes = _dbContext.MissionThemes.ToList(),
-                Skills = _dbContext.Skills.ToList()
+                Countries = _unitOfWork.Country.GetAll(),
+                Cities = _unitOfWork.City.GetAll(),
+                MissionThemes = _unitOfWork.MissionTheme.GetAll(),
+                /*Skills = _unitOfWork.   .ToList()*/
             };
 
             return View(viewModel);
@@ -53,18 +54,18 @@ namespace CI_platform.Controllers
 
             userViewModel userView = new userViewModel
             {
-                Missions = _dbContext.Missions.ToList(),
-                GoalMissions = _dbContext.GoalMissions.ToList(),
-                Countries = _dbContext.Countries.ToList(),
-                Cities = _dbContext.Cities.ToList(),
-                MissionThemes = _dbContext.MissionThemes.ToList(),
-                Skills = _dbContext.Skills.ToList(),
+                Missions = _unitOfWork.Mission.GetAll(),
+                GoalMissions = _unitOfWork.GoalMission.GetAll(),
+                Countries = _unitOfWork.Country.GetAll(),
+                Cities = _unitOfWork.City.GetAll(),
+                MissionThemes = _unitOfWork.MissionTheme.GetAll(),
+                /*Skills = _dbContext.Skills.ToList(),*/
                 userDetails = GetThisUser(),
-                FavoriteMissions = _dbContext.FavoriteMissions.ToList(),
-                MissionApplications = _dbContext.MissionApplications.ToList(),
+                FavoriteMissions = _unitOfWork.FavouriteMission.GetAll(),
+                MissionApplications = _unitOfWork.MissionApplication.GetAll(),
             };
 
-            List<Mission> missions = _dbContext.Missions.ToList();
+            List<Mission> missions = (List<Mission>)_unitOfWork.Mission.GetAll();
 
             if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0)
             {
@@ -98,18 +99,18 @@ namespace CI_platform.Controllers
 
             if (user != null)
             {
-                userView.Volunteers = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
+                userView.Volunteers = _unitOfWork.User.GetAccToFilter(m => m.UserId != user.UserId);
             }
             else
             {
-                userView.Volunteers = _dbContext.Users.ToList();
+                userView.Volunteers = _unitOfWork.User.GetAll();
             }
 
             foreach (var mission in userView.Missions)
             {
                 try
                 {
-                    userView.RateMission = _dbContext.MissionRatings.Where(r => r.MissionId == mission.MissionId).ToList();
+                    userView.RateMission = _unitOfWork.MissionRating.GetAccToFilter(r => r.MissionId == mission.MissionId);
 
                 }
                 catch
@@ -196,23 +197,23 @@ namespace CI_platform.Controllers
 
         public IActionResult volunteeringMissionPage(int id)
         {
-            var missionDetail = _dbContext.Missions.Where(m => m.MissionId == id).FirstOrDefault();
+            var missionDetail = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == id);
             var user = GetThisUser();
 
-            var thismission = _dbContext.Missions.Where(m => m.MissionId.Equals(id)).FirstOrDefault();
-            var relatedmissions = _dbContext.Missions.Where(s => s.MissionId != id && (s.CityId == thismission.CityId || s.CountryId == thismission.CountryId || s.MissionThemeId == thismission.MissionThemeId)).Take(3).ToList();
+            var thismission = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId.Equals(id));
+            var relatedmissions = _unitOfWork.Mission.GetAccToFilter(s => s.MissionId != id && (s.CityId == thismission.CityId || s.CountryId == thismission.CountryId || s.MissionThemeId == thismission.MissionThemeId)).Take(3);
             var missionRatings = GetMissionRatings(id);
 
-            var cities = _dbContext.Cities.ToList();
-            var countries = _dbContext.Countries.ToList();
-            var missionTheme = _dbContext.MissionThemes.ToList();
-            var goalMission = _dbContext.GoalMissions.Where(m => m.MissionId == id).FirstOrDefault();
-            var goal = _dbContext.GoalMissions.ToList();
-            List<FavoriteMission> favouriteMission = _dbContext.FavoriteMissions.ToList();
+            var cities = _unitOfWork.City.GetAll();
+            var countries = _unitOfWork.Country.GetAll();
+            var missionTheme = _unitOfWork.MissionTheme.GetAll();
+            var goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == id);
+            var goal = _unitOfWork.GoalMission.GetAll();
+            IEnumerable<FavoriteMission> favouriteMission = _unitOfWork.FavouriteMission.GetAll();
 
-            List<Comment> comments = _dbContext.Comments.Where(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt).ToList();
-            var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
-            var missionDocuments = _dbContext.MissionDocuments.Where(m => m.MissionId == id).ToList();
+            IEnumerable<Comment> comments = _unitOfWork.Comment.GetAccToFilter(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt);
+            var missionApp = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == id && m.ApprovalStatus == "APPROVE");
+            var missionDocuments = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == id);
 
 
             userVolunteerMission viewModel = new()
@@ -234,17 +235,17 @@ namespace CI_platform.Controllers
 
             if (user != null)
             {
-                viewModel.Volunteers = _dbContext.Users.Where(m => m.UserId != user.UserId).ToList();
-                viewModel.MissionApplications = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.UserId == user.UserId).FirstOrDefault();
+                viewModel.Volunteers = _unitOfWork.User.GetAccToFilter(m => m.UserId != user.UserId);
+                viewModel.MissionApplications = _unitOfWork.MissionApplication.GetFirstOrDefault(m => m.MissionId == id && m.UserId == user.UserId);
             }
             else
             {
-                viewModel.Volunteers = _dbContext.Users.ToList();
+                viewModel.Volunteers = _unitOfWork.User.GetAll();
             }
 
             if (viewModel.userDetails != null)
             {
-                viewModel.RateMission = _dbContext.MissionRatings.Where(m => m.UserId == viewModel.userDetails.UserId && m.MissionId == id).FirstOrDefault();
+                viewModel.RateMission = _unitOfWork.MissionRating.GetFirstOrDefault(m => m.UserId == viewModel.userDetails.UserId && m.MissionId == id);
             }
 
             try
@@ -267,14 +268,14 @@ namespace CI_platform.Controllers
             var identity = User.Identity as ClaimsIdentity;
             var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
 
-            var user = _dbContext.Users.Where(m => m.Email == email).FirstOrDefault();
+            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
             return user;
         }
 
         public void AddToFavourite(int missionId)
         {
             var user = GetThisUser();
-            var favMission = _dbContext.FavoriteMissions.Where(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId).FirstOrDefault();
+            var favMission = _unitOfWork.FavouriteMission.GetFirstOrDefault(m => m.UserId.Equals(user.UserId) && m.MissionId == missionId);
 
             if (favMission == null)
             {
@@ -284,13 +285,13 @@ namespace CI_platform.Controllers
                     MissionId = missionId
                 };
 
-                _dbContext.Add(favoriteMission);
-                _dbContext.SaveChanges();
+                _unitOfWork.FavouriteMission.Add(favoriteMission);
+                _unitOfWork.Save();
             }
             else
             {
-                _dbContext.Remove(favMission);
-                _dbContext.SaveChanges();
+                _unitOfWork.FavouriteMission.Remove(favMission);
+                _unitOfWork.Save();
             }
         }
 
@@ -304,8 +305,8 @@ namespace CI_platform.Controllers
                 MissionId = (long)missionId,
                 CreatedAt = DateTime.UtcNow
             };
-            _dbContext.Comments.Add(obj);
-            _dbContext.SaveChanges();
+            _unitOfWork.Comment.Add(obj);
+            _unitOfWork.Save();
 
             return RedirectToAction("volunteeringMissionPage", new { id = missionId });
         }
@@ -318,7 +319,7 @@ namespace CI_platform.Controllers
                 foreach (var id in userIds)
                 {
                     var inviteLink = Url.Action("volunteeringMissionPage", "Home", new { id = missionId }, Request.Scheme);
-                    var user = _dbContext.Users.Where(m => m.UserId == id).FirstOrDefault();
+                    var user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == id);
 
 
                     MissionInvite obj = new()
@@ -327,8 +328,8 @@ namespace CI_platform.Controllers
                         ToUserId = user.UserId,
                         FromUserId = thisUser.UserId
                     };
-                    _dbContext.Add(obj);
-                    _dbContext.SaveChanges();
+                    _unitOfWork.MissionInvite.Add(obj);
+                    _unitOfWork.Save();
 
 
 
@@ -361,7 +362,7 @@ namespace CI_platform.Controllers
             var missionratings = new List<MissionRating>();
             if (id != 0)
             {
-                missionratings = _dbContext.MissionRatings.Where(m => m.MissionId == id).ToList();
+                missionratings = _unitOfWork.MissionRating.GetAccToFilter(m => m.MissionId == id);
             }
             return missionratings;
         }
@@ -369,32 +370,30 @@ namespace CI_platform.Controllers
         public IActionResult UpdateAndAddRate(int missionId, int rating)
         {
             var user = GetThisUser();
-            var mission_rating = _dbContext.MissionRatings.Include(m => m.Mission).Include(m => m.User).ToList();
-            var rate_update = mission_rating.SingleOrDefault(m => m.User.UserId == user.UserId && m.Mission.MissionId == missionId);
+            var rate_update = _unitOfWork.MissionRating.GetFirstOrDefault(m => m.User.UserId == user.UserId && m.Mission.MissionId == missionId);
 
             //Update Rating
             if (rate_update != null)
             {
                 rate_update.UpdatedAt = DateTime.Now;
                 rate_update.Rating = rating;
-                _dbContext.Update(rate_update);
-                _dbContext.SaveChanges();
+                _unitOfWork.MissionRating.Update(rate_update);
+                _unitOfWork.Save();
 
             }
 
             //Add Rating for the first time user
             if (rate_update == null)
             {
-                var userId = _dbContext.Users.Where(u => u.UserId == user.UserId).Select(u => u.UserId).FirstOrDefault();
                 var missionrating = new MissionRating
                 {
                     MissionId = missionId,
-                    UserId = userId,
+                    UserId = user.UserId,
                     Rating = rating,
                 };
 
-                _dbContext.Add(missionrating);
-                _dbContext.SaveChanges();
+                _unitOfWork.MissionRating.Add(missionrating);
+                _unitOfWork.Save();
             }
 
             return RedirectToAction("volunteeringMissionPage", new { id = missionId });
@@ -403,14 +402,14 @@ namespace CI_platform.Controllers
         public IActionResult applyMission(int missionId)
         {
             var thisUser = GetThisUser();
-            var status = _dbContext.MissionApplications.Where(m => m.MissionId == missionId && m.UserId == thisUser.UserId).FirstOrDefault();
+            var status = _unitOfWork.MissionApplication.GetFirstOrDefault(m => m.MissionId == missionId && m.UserId == thisUser.UserId);
             if (status.ApprovalStatus == "DECLINE")
             {
                 status.ApprovalStatus = "PENDING";
                 status.AppliedAt = DateTime.Now;
                 status.UpdatedAt = DateTime.Now;
-                _dbContext.Update(status);
-                _dbContext.SaveChanges();
+                _unitOfWork.MissionApplication.Update(status);
+                _unitOfWork.Save();
             }
             else
             {
@@ -420,8 +419,8 @@ namespace CI_platform.Controllers
                     UserId = thisUser.UserId,
                     AppliedAt = DateTime.Now
                 };
-                _dbContext.MissionApplications.Add(obj);
-                _dbContext.SaveChanges();
+                _unitOfWork.MissionApplication.Add(obj);
+                _unitOfWork.Save();
             }
 
             return RedirectToAction("volunteeringMissionPage", new { id = missionId });
@@ -429,14 +428,14 @@ namespace CI_platform.Controllers
 
         public IActionResult volunteerPage(int pg, int id)
         {
-            var missionApp = _dbContext.MissionApplications.Where(m => m.MissionId == id && m.ApprovalStatus == "APPROVE").ToList();
+            var missionApp = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == id && m.ApprovalStatus == "APPROVE");
 
 
             userVolunteerMission viewModel = new()
             {
-                Volunteers = _dbContext.Users.ToList(),
+                Volunteers = _unitOfWork.User.GetAll(),
                 MissionApp = missionApp,
-                MissionDetail = _dbContext.Missions.Where(m => m.MissionId == id).FirstOrDefault()
+                MissionDetail = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == id)
             };
 
             const int pageSize = 9;

@@ -31,6 +31,8 @@ namespace CI_platform.Repositories.GenericRepository
             User = new UserRepository(_db);
             MissionRating = new MissionRatingRepository(_db);
             StoryInvite = new StoryInviteRepository(_db);
+            GoalMission= new GoalMissionRepository(_db);
+            MissionDocument = new MissionDocumentRepository(_db);
         }
         public ICityRepository City { get; private set; }
 
@@ -59,6 +61,10 @@ namespace CI_platform.Repositories.GenericRepository
         public IMissionRatingRepository MissionRating { get; private set; }
 
         public IStoryInviteRepository StoryInvite { get; private set; }
+
+        public IGoalMissionRepository GoalMission { get; private set; }
+
+        public IMissionDocumentRepositoy MissionDocument { get; private set; }
 
         public int Save()
         {
