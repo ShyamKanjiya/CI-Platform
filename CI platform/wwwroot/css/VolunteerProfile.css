@@ -1,0 +1,71 @@
+﻿.profile-div {
+    height: 40vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#profileImage {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+
+@media (max-width: 991px){
+    .profile-div {
+        height: 270px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+        .profile-div p {
+            margin-right: 20px;
+        }
+
+    .list-arrows {
+        flex-direction: row !important;
+    }
+
+        .list-arrows a {
+            margin: 20px;
+        }
+}
+
+
+.dual-list .list-group {
+    margin-top: 8px;
+    max-height: 40vh;
+    overflow-y: scroll;
+}
+
+.list-left li, .list-right li {
+    cursor: pointer;
+}
+
+.list-arrows {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+    .list-arrows a {
+        margin-bottom: 20px;
+    }
+
+.active-skill {
+    background: #cfd0d1;
+}
+
+.modal-body {
+    max-height: 80vh;
+    overflow-x: hidden;
+}
+
+.search-icon {
+    right: 0;
+    z-index: 1000;
+}

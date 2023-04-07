@@ -25,6 +25,7 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IStoryInviteRepository StoryInvite { get; }
         IGoalMissionRepository GoalMission { get; }
         IMissionDocumentRepositoy MissionDocument { get; }
+        ISkillRepository Skill { get; }
         int Save();
     }
 }

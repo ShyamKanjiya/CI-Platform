@@ -33,6 +33,7 @@ function GetDraftedStory() {
                 $("#story_title").val(null);
                 $("#story_date").val(null);
                 tinyMCE.activeEditor.setContent("");
+                $("#video_url").val(null);
                 $(".input-images").html("");
                 $('.input-images').imageUploader({});
             }
