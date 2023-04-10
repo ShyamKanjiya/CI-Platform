@@ -1,6 +1,8 @@
 ﻿using CI_platform.Entities.DataModels;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +35,6 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<MissionRating> RateMission { get; set; }
 
-        public IEnumerable<MissionApplication> MissionApplications { get; set; }   
-
+        public IEnumerable<MissionApplication> MissionApplications { get; set; }
     }
 }

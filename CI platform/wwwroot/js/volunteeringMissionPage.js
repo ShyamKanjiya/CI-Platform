@@ -45,7 +45,7 @@ function AddComment(missionId) {
 //----------------------------------------------------------------------------------------//
 
 function Alert(text) {
-    Swal.fre({
+    Swal.fire({
         icon: 'eror',
         text: text,
         timer: 1500

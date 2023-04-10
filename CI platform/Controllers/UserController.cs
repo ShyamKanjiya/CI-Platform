@@ -24,23 +24,14 @@ namespace CI_platform.Controllers
             var identity = User.Identity as ClaimsIdentity;
             var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
 
-            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
+            var user =  _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
             return user;
         }
-
-
-        //---------------------- Volunteer Timesheet --------------------------//
-
-        #region Volunteer Timesheet
-        public IActionResult VolunteerTimesheet()
-        {
-            return View();
-        }
-        #endregion
 
         //---------------------- Volunteeer Profile --------------------------//
 
         #region Volunteer Profile
+        [HttpGet]
         public IActionResult VolunteerProfile()
         {
             User user = GetThisUser();
@@ -56,6 +47,46 @@ namespace CI_platform.Controllers
             };
             return View(obj);
         }
+
+        [HttpPost]
+        public IActionResult ChangePassword(string OldPassword, string NewPassword) 
+        {
+            User user = GetThisUser();
+
+            if (user != null && OldPassword != null && NewPassword != null)
+            {
+                if (user.Password == OldPassword)
+                {
+                    user.Password = NewPassword;
+                    user.UpdatedAt = DateTime.Now;
+                    _unitOfWork.User.Update(user);
+                    _unitOfWork.Save();
+
+                    return Json(1);
+                }
+            }
+            return Json(0);
+        }
+
+        #endregion
+
+        //---------------------- Volunteer Timesheet --------------------------//
+
+        #region Volunteer Timesheet
+        public IActionResult VolunteerTimesheet()
+        {
+            return View();
+        }
+        #endregion
+
+        //---------------------- Volunteer Policy --------------------------//
+
+        #region Volunteer Policy
+        public IActionResult VolunteerPolicy()
+        {
+            return View();
+        }
+
         #endregion
     }
 }

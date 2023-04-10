@@ -1,7 +1,9 @@
-﻿$(function () {
+﻿// Add Skills
+var skillList = [];
+var skillId = [];
 
-    var skillList = [];
-    var skillId = [];
+$(function () {
+
     var actives = '';
 
     $('body').on('click', '.list-group .list-group-item', function () {
@@ -86,3 +88,66 @@
         }
     });
 });
+
+//---------------------------------------------------------------------------------------------------------------------------------------//
+
+// Change Password
+
+function ChangePassword() {
+    var OldPassword = $('#old-password').val();
+    var NewPassword = $('#new-password').val();
+    var ConfirmPassword = $('#confirm-password').val();
+
+
+    if (NewPassword == ConfirmPassword) {
+        if (OldPassword == NewPassword) {
+            Alert('New Password must not be same as Previous One.');
+            location.reload();
+        }
+        else {
+            $.ajax({
+                url: "/User/ChangePassword",
+                method: "POST",
+                data: { 'OldPassword': OldPassword, "NewPassword": NewPassword },
+                success: function (data) {
+                    if (data == 0) {
+                        Alert('Entered Old Password does not match with current Password!');
+                        location.reload();
+
+                    }
+                    if (data == 1) {
+                        Alert('Password change successfully.');
+                        location.reload();
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+    }
+    else {
+        Alert('Password does not match with confirm password!');
+        location.reload();
+
+    }
+}
+
+function Alert(message) {
+    Swal.fire({
+        title: message,
+        timer: 2000,
+        didOpen: () => {
+            Swal.showLoading()
+            const b = Swal.getHtmlContainer().querySelector('b')
+            timerInterval = setInterval(() => {
+                b.textContent = Swal.getTimerLeft()
+            }, 100)
+        },
+        willClose: () => {
+            clearInterval(timerInterval)
+        }
+    });
+}
+
+//---------------------------------------------------------------------------------------------------------------------------------------//
