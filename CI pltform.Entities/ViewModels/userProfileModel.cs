@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CI_platform.Entities.DataModels;
 
 namespace CI_pltform.Entities.ViewModels
 {
@@ -31,8 +32,12 @@ namespace CI_pltform.Entities.ViewModels
 
         public string? WhyIVolunteer { get; set; }
 
+        public string? Avatar { get; set; }
+
         public string? EmployeeId { get; set; }
-        
+
+        public string? Manager { get; set; }
+
         public string? Department { get; set; }
 
         [Required]
@@ -45,7 +50,15 @@ namespace CI_pltform.Entities.ViewModels
         public string? ProfileText { get; set; }
 
         public string? LinkedInUrl { get; set; }
-        
+
+        public string? Availibility { get; set; }
+
         public string? Title { get; set; }
+
+        public IEnumerable<UserSkill>? UserSkillList { get; set; }
+        public IEnumerable<City>? Cities { get; set; }
+        public IEnumerable<Country>? Countries { get; set; }
+        public IEnumerable<Skill>? SkillsList { get; set; }
+
     }
 }

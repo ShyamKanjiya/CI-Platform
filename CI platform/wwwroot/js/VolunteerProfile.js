@@ -1,11 +1,36 @@
-﻿// Add Skills
+﻿//initializing the arrays
 var skillList = [];
 var skillId = [];
+var actives = '';
+
+////preloaded skills
+var preloadedSkills = [];
+$('#user-skills li').each(function () {
+    preloadedSkills.push($(this).val());
+});
+for (var i = 0; i < preloadedSkills.length; i++) {
+    $('#available li').each(function () {
+        if (($(this).val()) == preloadedSkills[i]) {
+            $(this).addClass('active-skill');
+            return false;
+        }
+    });
+}
+actives = $('.list-left ul li.active-skill');
+actives.clone().appendTo('.list-right ul');
+
+actives.remove();
+if ($('.list-right ul li').hasClass('active-skill')) {
+    $('.list-right ul li').removeClass('active-skill');
+}
+
+getSkillListAndIds();
+fetchingSkillList();
+
+
+//add skills
 
 $(function () {
-
-    var actives = '';
-
     $('body').on('click', '.list-group .list-group-item', function () {
         $(this).toggleClass('active-skill');
     });
@@ -27,44 +52,14 @@ $(function () {
                 $('.list-right ul li').removeClass('active-skill');
             }
         }
-        skillList = [];
-        $('.list-right ul li').map(function () {
-            skillList.push($(this).text());
-        });
-        skillId = [];
-        $('.list-right ul li').map(function () {
-            skillId.push($(this).val());
-        });
-        console.log(skillList);
-        console.log(skillId);
+        getSkillListAndIds();
     });
 
     $('#save-skills').on('click', function () {
         $('#add-skills').modal('toggle');
         $('#selected-skills').html('');
-        if (skillList.length > 0) {
-            for (var i = 0; i < skillList.length; i++) {
-                $('#selected-skills').append('<small class="mb-2">' + skillList[i] + '</small>');
-            }
-        }
-        else {
-            $('#selected-skills').append('<small class="mb-2 text-danger">No Skills Selected</small>');
-        }
-        if (skillId.length > 0) {
-            for (var i = 0; i < skillId.length; i++) {
-                let inputElement = $('<input>', {
-                    type: 'hidden',
-                    value: skillId[i],
-                    name: 'finalSkillList'
-                });
-                $('#selected-skills').append(inputElement);
-            }
-        }
+        fetchingSkillList();
     });
-
-    if (skillList.length == 0) {
-        $('#selected-skills').append('<small class="mb-2 text-danger">No Skills Selected</small>');
-    }
 
     $('[name="SearchDualList"]').keyup(function (e) {
         var code = e.keyCode || e.which;
@@ -88,6 +83,39 @@ $(function () {
         }
     });
 });
+
+function fetchingSkillList() {
+    if (skillList.length > 0) {
+        for (var i = 0; i < skillList.length; i++) {
+            $('#selected-skills').append('<small class="mb-2">' + skillList[i] + '</small>');
+        }
+    }
+    else {
+        $('#selected-skills').append('<small class="mb-2 text-danger">No Skills Selected</small>');
+    }
+    if (skillId.length > 0) {
+        for (var i = 0; i < skillId.length; i++) {
+            let inputElement = $('<input>', {
+                type: 'hidden',
+                value: skillId[i],
+                name: 'finalSkillList'
+            });
+            $('#selected-skills').append(inputElement);
+        }
+    }
+}
+
+function getSkillListAndIds() {
+    skillList = [];
+    $('.list-right ul li').map(function () {
+        skillList.push($(this).text());
+    });
+    skillId = [];
+    $('.list-right ul li').map(function () {
+        skillId.push($(this).val());
+    });
+}
+
 
 //---------------------------------------------------------------------------------------------------------------------------------------//
 

@@ -34,6 +34,7 @@ namespace CI_platform.Repositories.GenericRepository
             GoalMission= new GoalMissionRepository(_db);
             MissionDocument = new MissionDocumentRepository(_db);
             Skill = new SkillRepository(_db);
+            UserSkill = new UserSkillsRepository(_db);
         }
         public ICityRepository City { get; private set; }
 
@@ -68,6 +69,8 @@ namespace CI_platform.Repositories.GenericRepository
         public IMissionDocumentRepositoy MissionDocument { get; private set; }
 
         public ISkillRepository Skill { get; private set; }
+
+        public IUserSkillsRepository UserSkill { get; private set; }
         public int Save()
         {
             return _db.SaveChanges();

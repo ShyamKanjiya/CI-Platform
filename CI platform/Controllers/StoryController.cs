@@ -24,7 +24,7 @@ namespace CI_platform.Controllers
             _logger = logger;
             _unitOfWork = unitOfWork;
             _iweb = iweb;
-            _repo= storyMethodRepository;
+            _repo = storyMethodRepository;
         }
 
         public User GetThisUser()
@@ -147,9 +147,9 @@ namespace CI_platform.Controllers
 
                 _unitOfWork.Story.Add(story);
                 _unitOfWork.Save();
-               
+
             }
- 
+
             else if (alreadyPostedStory != null)
             {
                 alreadyPostedStory.Title = storyTitle;
@@ -203,7 +203,7 @@ namespace CI_platform.Controllers
 
             foreach (var img in media)
             {
-                if(img.Type != "video")
+                if (img.Type != "video")
                 {
                     if (preloaded.Length < 1)
                     {
@@ -219,23 +219,30 @@ namespace CI_platform.Controllers
                     }
                     else
                     {
+                        bool flag = false;
+
                         for (int i = 0; i < preloaded.Length; i++)
                         {
                             var imgName = preloaded[i].Substring(13);
 
-                            if (!imgName.Equals(img.Path))
+                            if (imgName.Equals(img.Path))
                             {
-                                string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/", img.Path);
-
-                                if (System.IO.File.Exists(imagePath))
-                                {
-                                    System.IO.File.Delete(imagePath);
-                                }
-
-                                _unitOfWork.StoryMedia.Remove(img);
-                                _unitOfWork.Save();
+                                flag = true;
                             }
                         }
+                        if (!flag)
+                        {
+                            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/", img.Path);
+
+                            if (System.IO.File.Exists(imagePath))
+                            {
+                                System.IO.File.Delete(imagePath);
+                            }
+
+                            _unitOfWork.StoryMedia.Remove(img);
+                            _unitOfWork.Save();
+                        }
+
                     }
                 }
             }
@@ -248,10 +255,13 @@ namespace CI_platform.Controllers
                 {
                     string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
                     var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                    var stream = new FileStream(imgSaveTo, FileMode.Create);
-                    img.CopyTo(stream);
+                    /*var stream = new FileStream(imgSaveTo, FileMode.Create);
+                    img.CopyTo(stream);*/
+                    using(FileStream stream = new (imgSaveTo, FileMode.Create)) {
+                        img.CopyTo(stream);
+                    }
 
-                    StoryMedium storyMedium = new StoryMedium();
+                        StoryMedium storyMedium = new StoryMedium();
                     storyMedium.StoryId = data.StoryId;
                     storyMedium.Type = imgExt;
                     storyMedium.Path = ImageName;
@@ -290,7 +300,7 @@ namespace CI_platform.Controllers
         public IActionResult GetMissionDetails(long missionId)
         {
             User user = GetThisUser();
-            var query =  _repo.GetStory(missionId,user.UserId);
+            var query = _repo.GetStory(missionId, user.UserId);
 
             return Json(query);
         }
@@ -320,7 +330,7 @@ namespace CI_platform.Controllers
         {
             var storyForView = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId);
 
-            if(storyForView.Views < views)
+            if (storyForView.Views < views)
             {
                 storyForView.Views = views;
                 _unitOfWork.Story.Update(storyForView);

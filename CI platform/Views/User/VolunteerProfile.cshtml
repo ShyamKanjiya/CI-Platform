@@ -1,5 +1,6 @@
 ﻿@using CI_platform.Entities.DataModels;
-@model userViewModel;
+@using CI_pltform.Entities.ViewModels;
+@model userProfileModel;
 <link rel="stylesheet" href="~/css/VolunteerProfile.css" asp-append-version="true" />
 
 
@@ -10,9 +11,9 @@
                 <img id="profileImage" src="/images/volunteer1.png" alt="">
             </div>
             <div class="d-flex flex-column justify-content-center text-center ms-3">
-                <p class="mt-4 ms-lg-0 ms-4 mb-2">@Model?.userDetails?.FirstName @Model?.userDetails?.LastName</p>
-                <button class="border-0 bg-white mb-3" data-bs-toggle="modal" data-bs-target="#change-password">
-                    <input type="file" class="d-none" asp-for="@Model.userDetails.Avatar" />
+                <p class="mt-4 ms-lg-0 ms-4 mb-2">@Model?.FirstName @Model?.LastName</p>
+                <button class="border-0 bg-white mb-3" data-bs-toggle="modal" data-bs-target="#change-avatar">
+                    <input type="file" class="d-none" asp-for="@Model.Avatar" />
                     <i class="bi bi-pencil-square"></i>
                     <small class="fw-normal">Change Password</small>
                 </button>
@@ -53,72 +54,72 @@
         </div>
     </div>
     <div class="col-lg-9 col-12">
-        <form asp-controller="User" asp-action="UpdateUser" method="post">
+        <form asp-controller="User" asp-action="VolunteerProfile" method="post">
             <div class="basicInfo mb-5 mt-4 mt-lg-0">
                 <h3 class="border-bottom pb-3 mb-3">Basic Information</h3>
                 <div class="row">
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="firstName">First Name</label>
+                            <label class="form-label" for="FirstName">First Name</label>
                             <input type="text" class="form-control" id="firstName"
-                                   placeholder="Enter your FirstName" asp-for="@Model.userDetails.FirstName" required>
+                                   placeholder="Enter your FirstName" asp-for="@Model.FirstName" required>
                         </div>
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="lastName">Last Name</label>
+                            <label class="form-label" for="LastName">Last Name</label>
                             <input type="text" class="form-control" id="lastName"
-                                   placeholder="Enter your LastName" asp-for="@Model.userDetails.LastName" required>
+                                   placeholder="Enter your LastName" asp-for="@Model.LastName" required>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="employeeId">Employee Id</label>
+                            <label class="form-label" for="EmployeeId">Employee Id</label>
                             <input type="text" class="form-control" id="employeeId"
-                                   placeholder="Enter your Employee ID" asp-for="@Model.userDetails.EmployeeId">
+                                   placeholder="Enter your Employee ID" asp-for="@Model.EmployeeId">
                         </div>
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="managerDetail">Manager</label>
+                            <label class="form-label" for="Manager">Manager</label>
                             <input type="text" class="form-control" id="managerDetail"
-                                   placeholder="Enter your Manager Detail" @*value="@Model?.UserDetail?."*@>
+                                   placeholder="Enter your Manager Detail" value="@Model?.Manager">
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="userTitle">Title</label>
+                            <label class="form-label" for="Title">Title</label>
                             <input type="text" class="form-control" id="userTitle"
-                                   placeholder="Enter your Title" asp-for="@Model.userDetails.Title">
+                                   placeholder="Enter your Title" asp-for="@Model.Title">
                         </div>
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <div class="form-group">
-                            <label class="form-label" for="departmentDetail">Department</label>
+                            <label class="form-label" for="Department">Department</label>
                             <input type="text" class="form-control" id="departmentDetail"
-                                   placeholder="Enter your Department" asp-for="@Model.userDetails.Department">
+                                   placeholder="Enter your Department" asp-for="@Model.Department">
                         </div>
                     </div>
                 </div>
                 <div class="form-outline mb-sm-4 mb-3">
-                    <label class="form-label" for="abt-my-profile">My Profile</label>
-                    <textarea class="form-control" id="abt-my-profile" rows="5" placeholder="Enter your profile summary" asp-for="@Model.userDetails.ProfileText" required></textarea>
+                    <label class="form-label" for="ProfileText">My Profile</label>
+                    <textarea class="form-control" id="abt-my-profile" rows="5" placeholder="Enter your profile summary" asp-for="@Model.ProfileText" required></textarea>
                 </div>
                 <div class="form-outline mb-sm-4 mb-3">
-                    <label class="form-label" for="why-i-volunteer">Why I Volunteer?</label>
-                    <textarea class="form-control" id="why-i-volunteer" rows="5" placeholder="Enter about Why are u Volunteered?" asp-for="@Model.userDetails.WhyIVolunteer"></textarea>
+                    <label class="form-label" for="WhyIVolunteer">Why I Volunteer?</label>
+                    <textarea class="form-control" id="why-i-volunteer" rows="5" placeholder="Enter about Why are u Volunteered?" asp-for="@Model.WhyIVolunteer"></textarea>
                 </div>
             </div>
             <div class="addressInfo mb-4">
                 <h3 class="border-bottom pb-3 mb-3">Address Information</h3>
                 <div class="row">
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
-                        <label class="form-label" for="userCountry">Country</label>
-                        <select asp-for="@Model.userDetails.CountryId" class="form-select" value="" aria-label="Default select example" id="userCountry">
+                        <label class="form-label" for="CountryId">Country</label>
+                        <select asp-for="@Model.CountryId" class="form-select" value="" aria-label="Default select example" id="userCountry">
                             <option selected>Select Your Country</option>
                             @foreach (Country country in Model.Countries)
                             {
@@ -127,8 +128,8 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
-                        <label class="form-label" for="userCity">City</label>
-                        <select asp-for="@Model.userDetails.CityId" class="form-select" aria-label="Default select example" id="userCity">
+                        <label class="form-label" for="CityId">City</label>
+                        <select asp-for="@Model.CityId" class="form-select" aria-label="Default select example" id="userCity">
                             <option selected>Select Your City</option>
                             @foreach (City city in Model.Cities)
                             {
@@ -142,7 +143,7 @@
                 <h3 class="border-bottom pb-3 mb-3">professional Information</h3>
                 <div class="row mb-4">
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
-                        <label class="form-label" for="availability">Availability</label>
+                        <label class="form-label" for="Availibility">Availability</label>
                         <select class="form-select" value="" aria-label="Default select example" id="availability">
                             <option class="border-bottom" selected>Open this select menu</option>
                             <option value="1">One</option>
@@ -151,7 +152,7 @@
                         </select>
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
-                        <label class="form-label" for="linkedInURL">LinkedIn Url</label>
+                        <label class="form-label" for="LinkedInUrl">LinkedIn Url</label>
                         <input type="url" class="form-control" id="linkedInURL"
                                placeholder="Enter your linkedIn URL">
                     </div>
@@ -160,6 +161,14 @@
             <div class="mySkills mb-5">
                 <h3 class="border-bottom pb-3 mb-3">My Skills</h3>
                 <div class="border px-3 py-2 p mt-4 d-flex flex-column" id="selected-skills">
+                    <div hidden>
+                        <ul id="user-skills">
+                            @foreach (var userSkills in Model.UserSkillList)
+                            {
+                                <li value="@userSkills.SkillId">@userSkills.Skill.SkillName</li>
+                            }
+                        </ul>
+                    </div>
                 </div>
                 <a class="btn rounded-5 mt-3 border bg-white px-3" data-bs-toggle="modal" data-bs-target="#add-skills">Add Skills</a>
                 <div class="modal fade" id="add-skills" tabindex="-1" aria-labelledby="e" aria-hidden="true">
@@ -188,7 +197,7 @@
                                                         </div>
                                                     </div>
                                                     <ul class="list-group w-100" id="available" multiple>
-                                                        @foreach (Skill skillList in @Model.Skills)
+                                                        @foreach (Skill skillList in @Model.SkillsList)
                                                         {
                                                             <li class="list-group-item" value="@skillList.SkillId">@skillList.SkillName</li>
                                                         }

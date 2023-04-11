@@ -46,20 +46,11 @@
                         <ul class="navbar-nav nav-item">
                             <a class="nav-link" aria-current="page" asp-controller="Story" asp-action="storyListingPage">Stories</a>
                         </ul>
-                        <ul class="navbar-nav nav-item dropdown">
-                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button"
-                               data-bs-toggle="dropdown" aria-expanded="false">
+                        <ul class="navbar-nav nav-item dropdown" >
+                            <a class="nav-link" asp-controller="User" asp-action="VolunteerPolicy">
                                 Privacy
                                 <img src="~/images/drop-down.png" style="margin-left:5px" />
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                <li><a class="dropdown-item" href="#">First Link</a></li>
-                                <li><a class="dropdown-item" href="#">Second Link</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
-                                <li><a class="dropdown-item" href="#">Third Link</a></li>
-                            </ul>
                         </ul>
                     </div>
                 </div>

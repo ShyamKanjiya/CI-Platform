@@ -26,6 +26,7 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IGoalMissionRepository GoalMission { get; }
         IMissionDocumentRepositoy MissionDocument { get; }
         ISkillRepository Skill { get; }
+        IUserSkillsRepository UserSkill { get; }
         int Save();
     }
 }
