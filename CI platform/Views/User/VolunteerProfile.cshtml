@@ -1,6 +1,12 @@
 ﻿@using CI_platform.Entities.DataModels;
 @using CI_pltform.Entities.ViewModels;
 @model userProfileModel;
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_LayoutFullHeader.cshtml";
+}
+
 <link rel="stylesheet" href="~/css/VolunteerProfile.css" asp-append-version="true" />
 
 
@@ -12,13 +18,13 @@
             </div>
             <div class="d-flex flex-column justify-content-center text-center ms-3">
                 <p class="mt-4 ms-lg-0 ms-4 mb-2">@Model?.FirstName @Model?.LastName</p>
-                <button class="border-0 bg-white mb-3" data-bs-toggle="modal" data-bs-target="#change-avatar">
+                <button class="border-0 bg-white mb-3" data-bs-toggle="modal" data-bs-target="#change-password">
                     <input type="file" class="d-none" asp-for="@Model.Avatar" />
                     <i class="bi bi-pencil-square"></i>
                     <small class="fw-normal">Change Password</small>
                 </button>
                 <div class="modal fade" id="change-password" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                         <div class="modal-content">
                             <div id="modal-content">
                                 <div class="modal-header">
@@ -29,17 +35,22 @@
                                     <div class="form-group mb-3">
                                         <label class="form-label" for="old-password">Old Password</label>
                                         <input type="password" class="form-control" id="old-password"
-                                               placeholder="Enter old password">
+                                        placeholder="Enter old password">
+                                        <span asp-validation-for="OldPassword" class="text-danger"></span>
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="form-label" for="new-password">New Password</label>
                                         <input type="password" class="form-control" id="new-password"
                                                placeholder="Enter new password">
+                                        <span asp-validation-for="NewPassword" class="text-danger"></span>
+
                                     </div>
                                     <div class="form-group mb-3">
                                         <label class="form-label" for="confirm-password">Confirm Password</label>
                                         <input type="password" class="form-control" id="confirm-password"
                                                placeholder="Enter password again">
+                                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+
                                     </div>
                                 </div>
                                 <div class="modal-footer">
@@ -172,7 +183,7 @@
                 </div>
                 <a class="btn rounded-5 mt-3 border bg-white px-3" data-bs-toggle="modal" data-bs-target="#add-skills">Add Skills</a>
                 <div class="modal fade" id="add-skills" tabindex="-1" aria-labelledby="e" aria-hidden="true">
-                    <div class="modal-dialog modal-xl modal-dialog-scrollable" id="modal-dialog">
+                    <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" id="modal-dialog">
                         <div class="modal-content">
                             <div id="modal-content">
                                 <div class="modal-header">
@@ -250,7 +261,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-end mb-5">
-                <button class="btn text-warning border-warning px-4 mb-5" type="submit">Save</button>
+                <button class="btn text-warning border-warning px-4 mb-5" style="border-radius: 50px;" type="submit">Save</button>
 
             </div>
         </form>

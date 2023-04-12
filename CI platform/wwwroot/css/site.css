@@ -20,7 +20,7 @@ html {
 .footer1 {
     position: relative;
     display: flex;
-    bottom: 0;
+    top: 0vh;
     flex-basis: 8vh;
     height: 8vh;
     align-items: center;

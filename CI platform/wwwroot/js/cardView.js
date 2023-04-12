@@ -16,6 +16,7 @@ function loadMissions(pg, sortVal) {
     console.log(country);
     $('#dropDownCountry').find("input:checked").each(function (i, ob) {
         country.push($(ob).val());
+        console.log(country);
     });
 
     var cities = [];

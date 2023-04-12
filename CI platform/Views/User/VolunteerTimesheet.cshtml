@@ -4,46 +4,159 @@
 @{
 }
 
-<div class="container" style="max-width: 85vw;">
+<style>
+    #add{
+        width: 5rem;
+        height: 2rem;
+        border-radius: 20px;
+        background-color: white;
+        border: 1px solid #D9D9D9;
+    }
+</style>
+
+<div class="container" style="max-width: 85vw; min-height:79vh;">
 
     <h1 class="mt-5 mb-4 mx-4">Volunteering Timesheet</h1>
 
     <div class="container">
         <div class="row justify-content-center mt-2 ">
-            <div class="col-sm-12 col-md border mx-2 mb-3" style="max-height:80vh">
-                <div class="d-flex ">
+            <div class="col-sm-12 col-md border mx-2 mb-3" style="max-height:69vh; min-height:40vh;">
+                <div class="d-flex justify-content-between align-items-center">
                     <h5 class="my-4 mx-3">
                         Volunteering Hours
                     </h5>
+                    <button class="d-flex justify-content-center align-items-center me-3" id="add" data-bs-toggle="modal" data-bs-target="#addTimeData">
+                        <i class="bi bi-plus text-warning"></i>
+                        <p class="mb-0 text-warning h6">ADD</p>
+                    </button>
+                    <div class="modal fade" id="addTimeData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                            <div class="modal-content" >
+                                <div id="modal-content" >
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label" >Mission</label>
+                                            <input class="form-control" placeholder="Select Mission">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Date Volunteered</label>
+                                            <input class="form-control" placeholder="Select Date">
+                                        </div>
+                                        <div class="form-group mb-3 d-flex justify-content-between">
+                                            <div class="col me-2">
+                                                <label class="form-label">Hours</label>
+                                                <input class="form-control" placeholder="Enter Spent Hours">
+                                            </div>
+                                            <div class="col ms-2">
+                                                <label class="form-label">Minutes</label>
+                                                <input class="form-control" placeholder="Enter Spent Minutes">
+                                            </div>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Message</label>
+                                            <input class="form-control" placeholder="Enter Your Message">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                        <button class="btn border-warning text-warning px-4" style="border-radius:50px">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <table class="mx-3" style="width:100%">
+                <table class="mx-3 mb-3" style="width:100%">
                     <thead>
-                    <th style="width:40%">Mission</th>
-                    <th style="width:15%">Date</th>
+                    <th style="width:35%">Mission</th>
+                    <th style="width:20%">Date</th>
                     <th style="width:15%">Hours</th>
                     <th style="width:15%">Minutes</th>
+                    <th style="width:15%"></th>
+                    </thead>
+                    <tbody>
+                        <tr class="mt-5">
+                            <td>Assistant Manager</td>
+                            <td>10/10/22</td>
+                            <td>2</td>
+                            <td>40</td>
+                            <td>
+                                <i class="bi bi-pencil-square text-warning mx-1"></i>
+                                <i class="bi bi-trash text-warning mx-1"></i>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="col-sm-12 col-md border mx-2 mb-3" style="max-height:69vh; min-height:40vh;">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="my-4 mx-3">
+                        Volunteering Goals
+                    </h5>
+                    <button class="d-flex justify-content-center align-items-center me-3" id="add" data-bs-toggle="modal" data-bs-target="#addGoalData">
+                        <i class="bi bi-plus text-warning"></i>
+                        <p class="mb-0 text-warning h6">ADD</p>
+                    </button>
+                    <div class="modal fade" id="addGoalData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                            <div class="modal-content">
+                                <div id="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Mission</label>
+                                            <input class="form-control" placeholder="Select Mission">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Actions</label>
+                                            <input class="form-control" placeholder="Enter Actions">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Date Volunteered</label>
+                                            <input class="form-control" placeholder="Select Date">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                            <label class="form-label">Message</label>
+                                            <input class="form-control" placeholder="Enter Your Message">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                        <button class="btn border-warning text-warning px-4" style="border-radius:50px">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <table class="mx-3 mb-3" style="width:100%">
+                    <thead>
+                    <th style="width:40%">Mission</th>
+                    <th style="width:25%">Date</th>
+                    <th style="width:20%">Action</th>
                     <th style="width:15%"></th>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Assistant Manager</td>
                             <td>10/10/22</td>
-                            <td>2</td>
-                            <td>40</td>
-                            <td>links</td>
+                            <td>1</td>
+                            <td class="justify-content-around">
+                                <i class="bi bi-pencil-square text-warning mx-1"></i>
+                                <i class="bi bi-trash text-warning mx-1"></i>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-
-            <div class="col-sm-12 col-md border mx-2 mb-3" style="max-height:70vh">
-                <div class="d-flex">
-                    <h5 class="my-4 mx-3">
-                        Volunteering Goals
-                    </h5>
-                </div>
-            </div>
         </div>
     </div>
-
 </div>
