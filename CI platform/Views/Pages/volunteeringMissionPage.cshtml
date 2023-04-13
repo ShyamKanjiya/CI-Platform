@@ -110,7 +110,7 @@
                                     }
                                     else if (@Model.MissionDetail.MissionType == "GOAL")
                                     {
-                                        int percentComplete = (int)Math.Round((double)(100 * Model.GoalMissions.GoalValue) / Model.GoalMissions.TotalValue);
+                                        int percentComplete = (int)Math.Round((double)(100 * Model.GoalMissions.GoalValue) / (double)Model.GoalMissions.TotalValue);
                                         <img class="me-2" height="25" src="~/images/achieved.png" alt="">
                                         <div>
                                             <div class="progress" style="min-width:100px; width: 10vw; height: 15px;">
@@ -382,16 +382,6 @@
                             <div class="tab-pane fade show active" id="nav-mission" role="tabpanel" aria-labelledby="nav-home-tab">
                                 <h3 class="pb-2">Introduction</h3>
                                 <p>@Model.MissionDetail.Description</p>
-                                @*<p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </p>
-                                <h3 class="pb-2">Challenge</h3>
-                                <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                </p>*@
                                 <h3 class="pb-2">Documents</h3>
                                 <div class="d-flex me-5" id="documentSmall">
                                     @foreach (var documents in Model.MissionDocuments)
@@ -431,17 +421,6 @@
                             <div class="tab-pane fade" id="nav-organization" role="tabpanel" aria-labelledby="nav-profile-tab">
                                 <h3 class="pb-2">Introduction</h3>
                                 <p>@Model.MissionDetail.OrganizationDetail</p>
-                                @* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.<br /> <br />
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </p>
-                                <h3 class="pb-2">Challenge</h3>
-                                <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. <br /><br />
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                </p>*@
                             </div>
 
                             <!--Comments section-->
@@ -473,7 +452,7 @@
                                                                 <div class="col">
                                                                     <p class="mb-1">@item.User.FirstName @item.User.LastName</p>
                                                                     <small class="d-block">@dt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
-                                                                    <p>@item.CommentText</p>
+                                                                    @*<p>@item.CommentText</p>*@
                                                                 </div>
                                                             </div>
                                                         </div>

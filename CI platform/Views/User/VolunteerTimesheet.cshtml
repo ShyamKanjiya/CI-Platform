@@ -1,11 +1,6 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-
+﻿@model userVolunteerTimesheetModel
 <style>
-    #add{
+    #add {
         width: 5rem;
         height: 2rem;
         border-radius: 20px;
@@ -29,22 +24,28 @@
                         <i class="bi bi-plus text-warning"></i>
                         <p class="mb-0 text-warning h6">ADD</p>
                     </button>
-                    <div class="modal fade" id="addTimeData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+                    <div class="modal fade" id="addTimeData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
-                            <div class="modal-content" >
-                                <div id="modal-content" >
+                            <div class="modal-content">
+                                <div id="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group mb-3">
-                                            <label class="form-label" >Mission</label>
-                                            <input class="form-control" placeholder="Select Mission">
+                                            <label class="mb-1" for="missionDropDownList">Select Mission</label>
+                                            <select class="form-select select"  required>
+                                                <option value="Select Mission">Select Mission</option>
+                                                @foreach (var mission in Model.MissionApplicationForTime)
+                                                {
+                                                    <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                }
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label class="form-label">Date Volunteered</label>
-                                            <input class="form-control" placeholder="Select Date">
+                                            <label class="mb-1" for="story_date">Date</label>
+                                            <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
                                         </div>
                                         <div class="form-group mb-3 d-flex justify-content-between">
                                             <div class="col me-2">
@@ -58,7 +59,7 @@
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label">Message</label>
-                                            <input class="form-control" placeholder="Enter Your Message">
+                                            <textarea class="form-control" id="timesheetMessage" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -112,20 +113,26 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="form-group mb-3">
-                                            <label class="form-label">Mission</label>
-                                            <input class="form-control" placeholder="Select Mission">
+                                            <label class="mb-1" for="missionDropDownList">Select Mission</label>
+                                            <select class="form-select select"  required>
+                                                <option value="Select Mission">Select Mission</option>
+                                                @foreach (var mission in Model.MissionApplicationForGoal)
+                                                {
+                                                    <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                }
+                                            </select>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label">Actions</label>
                                             <input class="form-control" placeholder="Enter Actions">
                                         </div>
                                         <div class="form-group mb-3">
-                                            <label class="form-label">Date Volunteered</label>
-                                            <input class="form-control" placeholder="Select Date">
+                                            <label class="mb-1" for="story_date">Date</label>
+                                            <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
                                         </div>
                                         <div class="form-group mb-3">
                                             <label class="form-label">Message</label>
-                                            <input class="form-control" placeholder="Enter Your Message">
+                                            <textarea class="form-control" id="timesheetMessage" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
                                         </div>
                                     </div>
                                     <div class="modal-footer">

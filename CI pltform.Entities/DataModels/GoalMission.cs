@@ -13,13 +13,13 @@ public partial class GoalMission
 
     public int GoalValue { get; set; }
 
-    public int TotalValue { get; set; }
-
     public byte[] CreatedAt { get; set; } = null!;
 
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
+
+    public int? TotalValue { get; set; }
 
     public virtual Mission Mission { get; set; } = null!;
 }

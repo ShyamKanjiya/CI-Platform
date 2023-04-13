@@ -11,8 +11,6 @@ public partial class Story
 
     public long MissionId { get; set; }
 
-    public int? Views { get; set; }
-
     public string? Title { get; set; }
 
     public string? Description { get; set; }
@@ -26,6 +24,8 @@ public partial class Story
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
+
+    public int? Views { get; set; }
 
     public virtual Mission Mission { get; set; } = null!;
 

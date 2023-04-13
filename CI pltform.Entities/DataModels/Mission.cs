@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CI_platform.Entities.DataModels;
 
@@ -24,13 +23,9 @@ public partial class Mission
 
     public DateTime? EndDate { get; set; }
 
-    public DateTime? Deadline { get; set; }
-
     public string MissionType { get; set; } = null!;
 
     public int? Status { get; set; }
-
-    public int? Seats { get; set; }
 
     public string? OrganizationName { get; set; }
 
@@ -43,6 +38,10 @@ public partial class Mission
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
+
+    public DateTime? Deadline { get; set; }
+
+    public int? Seats { get; set; }
 
     public virtual City City { get; set; } = null!;
 

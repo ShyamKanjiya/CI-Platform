@@ -7,8 +7,6 @@ public partial class Comment
 {
     public long CommentId { get; set; }
 
-    public string CommentText { get; set; }
-
     public long UserId { get; set; }
 
     public long MissionId { get; set; }
@@ -20,6 +18,8 @@ public partial class Comment
     public DateTime? UpdatedAt { get; set; }
 
     public DateTime? DeletedAt { get; set; }
+
+    public string? Comment1 { get; set; }
 
     public virtual Mission Mission { get; set; } = null!;
 

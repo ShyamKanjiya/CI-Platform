@@ -35,6 +35,8 @@ namespace CI_platform.Repositories.GenericRepository
             MissionDocument = new MissionDocumentRepository(_db);
             Skill = new SkillRepository(_db);
             UserSkill = new UserSkillsRepository(_db);
+            ContectUs = new ContectUsRepository(_db);
+            Timesheet = new TimesheetRepository(_db);
         }
         public ICityRepository City { get; private set; }
 
@@ -71,6 +73,10 @@ namespace CI_platform.Repositories.GenericRepository
         public ISkillRepository Skill { get; private set; }
 
         public IUserSkillsRepository UserSkill { get; private set; }
+
+        public IContectUsRepository ContectUs { get; private set; }
+
+        public ITimesheetRepository Timesheet { get; private set; }
         public int Save()
         {
             return _db.SaveChanges();

@@ -33,6 +33,7 @@ namespace CI_platform.Controllers
 
         //---------------------- Volunteeer Profile --------------------------//
 
+        #region Volunteer Profile
 
         [HttpGet]
         public IActionResult VolunteerProfile()
@@ -63,7 +64,6 @@ namespace CI_platform.Controllers
             };
             return View(obj);
         }
-
 
         //update user details
         [HttpPost]
@@ -188,12 +188,32 @@ namespace CI_platform.Controllers
             return Json(0);
         }
 
+        #endregion
+
         //---------------------- Volunteer Timesheet --------------------------//
 
         #region Volunteer Timesheet
         public IActionResult VolunteerTimesheet()
         {
-            return View();
+            User user = GetThisUser();
+            userVolunteerTimesheetModel obj = new userVolunteerTimesheetModel();
+
+            obj.Missions = (List<Mission>)_unitOfWork.Mission.GetAll();
+            obj.Cities = (List<City>)_unitOfWork.City.GetAll();
+            obj.Timesheets = (List<Timesheet>)_unitOfWork.Timesheet.GetAll();
+
+            List<MissionApplication> draftMissAppListForTime = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "TIME");
+            List<MissionApplication> draftMissAppListForGoal = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "GOAL");
+            IEnumerable<Timesheet> timeBasedData = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
+            IEnumerable<Timesheet> goalBasedData = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
+            try
+            {
+                obj.MissionApplicationForTime = draftMissAppListForTime;
+                obj.MissionApplicationForGoal = draftMissAppListForGoal;
+            }
+            catch { }
+
+            return View(obj);
         }
         #endregion
 
@@ -203,6 +223,34 @@ namespace CI_platform.Controllers
         public IActionResult VolunteerPolicy()
         {
             return View();
+        }
+
+        #endregion
+
+        //---------------------- Contect Us --------------------------//
+
+        #region Contect Us
+
+        [HttpGet]
+        public userViewModel ContectUs(userViewModel userView)
+        {
+            userView.userDetails = GetThisUser();
+            return userView;
+        }
+
+        [HttpPost]
+        public void ContectUs(string subject, string message)
+        {
+            User user = GetThisUser();
+            ContectUs contectUs = new()
+            {
+                UserId = user.UserId,
+                Subject = subject, 
+                Message = message
+            };
+
+            _unitOfWork.ContectUs.Add(contectUs);
+            _unitOfWork.Save();
         }
 
         #endregion

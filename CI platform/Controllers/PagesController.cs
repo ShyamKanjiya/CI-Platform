@@ -300,7 +300,7 @@ namespace CI_platform.Controllers
             var user = GetThisUser();
             Comment obj = new()
             {
-                CommentText = comment_area,
+                Comment1 = comment_area,
                 UserId = user.UserId,
                 MissionId = (long)missionId,
                 CreatedAt = DateTime.UtcNow

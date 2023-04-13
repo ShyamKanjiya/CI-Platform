@@ -25,6 +25,8 @@ public partial class CIDbContext : DbContext
 
     public virtual DbSet<Comment> Comments { get; set; }
 
+    public virtual DbSet<ContectUs> ContectUs { get; set; }
+
     public virtual DbSet<Country> Countries { get; set; }
 
     public virtual DbSet<FavoriteMission> FavoriteMissions { get; set; }
@@ -65,7 +67,7 @@ public partial class CIDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=SHYAM\\SQL2019;Initial Catalog=CI_Platform;Persist Security Info=False;User ID=sa;Password=Tatva@123;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Connection Timeout=30;");
+        => optionsBuilder.UseSqlServer("Server=SHYAM\\SQL2019;Initial Catalog=CI_platform;Persist Security Info=False;User ID=sa;Password=Tatva@123;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Connection Timeout=300;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -202,16 +204,15 @@ public partial class CIDbContext : DbContext
             entity.ToTable("comment");
 
             entity.Property(e => e.CommentId).HasColumnName("comment_id");
-            entity.Property(e => e.CommentText)
-                .HasColumnType("text")
-                .HasColumnName("comment");
             entity.Property(e => e.ApprovalStatus)
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasDefaultValueSql("('PENDING')")
                 .HasColumnName("approval_status");
+            entity.Property(e => e.Comment1)
+                .IsUnicode(false)
+                .HasColumnName("comment");
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
                 .HasColumnName("created_at");
             entity.Property(e => e.DeletedAt)
@@ -232,6 +233,38 @@ public partial class CIDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK__comment__user_id__0E04126B");
+        });
+
+        modelBuilder.Entity<ContectUs>(entity =>
+        {
+            entity.HasKey(e => e.ContectId).HasName("PK__contect___AE4563F1AA1BCAB6");
+
+            entity.ToTable("contect_us");
+
+            entity.Property(e => e.ContectId).HasColumnName("contect_id");
+            entity.Property(e => e.CreatedAt)
+                .IsRowVersion()
+                .IsConcurrencyToken()
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.Message)
+                .IsUnicode(false)
+                .HasColumnName("message");
+            entity.Property(e => e.Subject)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("subject");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ContectUs)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__contect_u__user___0B47A151");
         });
 
         modelBuilder.Entity<Country>(entity =>
@@ -311,8 +344,8 @@ public partial class CIDbContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("goal_objective_text");
             entity.Property(e => e.GoalValue).HasColumnName("goal_value");
-            entity.Property(e => e.TotalValue).HasColumnName("total_value");
             entity.Property(e => e.MissionId).HasColumnName("mission_id");
+            entity.Property(e => e.TotalValue).HasColumnName("total_value");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
@@ -340,6 +373,9 @@ public partial class CIDbContext : DbContext
                 .IsRowVersion()
                 .IsConcurrencyToken()
                 .HasColumnName("created_at");
+            entity.Property(e => e.Deadline)
+                .HasColumnType("datetime")
+                .HasColumnName("deadline");
             entity.Property(e => e.DeletedAt)
                 .HasColumnType("datetime")
                 .HasColumnName("deleted_at");
@@ -361,17 +397,14 @@ public partial class CIDbContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("organization_name");
+            entity.Property(e => e.Seats).HasColumnName("seats");
             entity.Property(e => e.ShortDescription)
                 .HasColumnType("text")
                 .HasColumnName("short_description");
             entity.Property(e => e.StartDate)
                 .HasColumnType("datetime")
                 .HasColumnName("start_date");
-            entity.Property(e => e.Deadline)
-                .HasColumnType("datetime")
-                .HasColumnName("deadline");
             entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.Seats).HasColumnName("seats");
             entity.Property(e => e.Title)
                 .HasMaxLength(128)
                 .IsUnicode(false)
@@ -689,7 +722,6 @@ public partial class CIDbContext : DbContext
             entity.ToTable("story");
 
             entity.Property(e => e.StoryId).HasColumnName("story_id");
-            entity.Property(e => e.Views).HasColumnName("views");
             entity.Property(e => e.CreatedAt)
                 .IsRowVersion()
                 .IsConcurrencyToken()
@@ -717,16 +749,19 @@ public partial class CIDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId).HasColumnName("user_id");
+            entity.Property(e => e.Views)
+                .HasDefaultValueSql("((0))")
+                .HasColumnName("views");
 
             entity.HasOne(d => d.Mission).WithMany(p => p.Stories)
                 .HasForeignKey(d => d.MissionId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__story__mission_i__1F63A897");
+                .HasConstraintName("FK_story_mission");
 
             entity.HasOne(d => d.User).WithMany(p => p.Stories)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK__story__user_id__1E6F845E");
+                .HasConstraintName("FK_story_user");
         });
 
         modelBuilder.Entity<StoryInvite>(entity =>

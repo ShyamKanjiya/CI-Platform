@@ -8,7 +8,7 @@
 <footer class="border-top footer1">
     <div class="container d-flex">
         <a class="text-start nav-link" asp-controller="User" asp-action="VolunteerPolicy">Privacy Policy</a>
-        <a class="text-start nav-link ms-4" data-bs-toggle="modal" data-bs-target="#contectUs">
+        <a class="text-start nav-link ms-4" data-bs-toggle="modal" data-bs-target="#contectUs" onclick="ContectUsGetData()">
             Contect Us
         </a>
         <div class="modal fade" id="contectUs" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -39,7 +39,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                            <button class="btn border-warning text-warning px-4" style="border-radius:50px;">Submit</button>
+                            <button class="btn border-warning text-warning px-4" style="border-radius:50px;" onclick="ContectUsPostData()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -47,3 +47,5 @@
         </div>
     </div>
 </footer>
+
+<script src="~/js/site.js" asp-append-version="true"></script>
