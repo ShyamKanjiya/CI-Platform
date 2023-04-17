@@ -126,10 +126,10 @@
                         <div class="container mx-auto row mt-4 mb-4">
                             <div class="col-12 col-sm-6 mb-3">
                                 <div class="d-flex">
-                                    @if (Model.userDetails != null)
+                                    @if (Model.UserDetails != null)
                                     {
                                         <a class="btn d-flex align-items-center justify-content-center mx-auto addRecommand" onclick="AddToFavourite(@Model.MissionDetail.MissionId)" id="favouriteBtn">
-                                            @if (Model.favoriteMissions.Where(m => m.MissionId == Model.MissionDetail.MissionId && m.UserId == Model.userDetails.UserId).Count() == 1)
+                                            @if (Model.favoriteMissions.Where(m => m.MissionId == Model.MissionDetail.MissionId && m.UserId == Model.UserDetails.UserId).Count() == 1)
                                             {
                                                 <i class="bi bi-heart-fill text-danger pe-2 "></i>
                                                 <small class="mb-0 pe-4 h6">Remove from Favourite</small>
@@ -154,7 +154,7 @@
 
                             <div class="col-12 col-sm-6 mb-2">
                                 <div class="d-flex">
-                                    @if (Model.userDetails != null)
+                                    @if (Model.UserDetails != null)
                                     {
                                         <a class="d-flex align-items-center justify-content-center mx-auto text-decoration-none text-black addRecommand" data-bs-toggle="modal" data-bs-target="#exampleModal">
                                             <img class="me-2" src="/images/add1.png" alt="">

@@ -107,6 +107,7 @@ namespace CI_platform.Controllers
         public IActionResult Logout()
         {
             HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            HttpContext.Session.Clear();
             return RedirectToAction("platformLandingPage", "Pages");
         }
         #endregion

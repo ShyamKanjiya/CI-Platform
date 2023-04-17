@@ -28,16 +28,17 @@ namespace CI_platform.Controllers
             _unitOfWork = unitOfWork;
         }
 
-
         //---------------------- Platform Landing Page --------------------------//
 
         #region Platform Landing Page
         [HttpGet]
         public IActionResult platformLandingPage()
         {
+            User user = GetThisUser();
 
             userViewModel viewModel = new userViewModel
             {
+                UserDetails = user,
                 Countries = _unitOfWork.Country.GetAll(),
                 Cities = _unitOfWork.City.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll(),
@@ -60,7 +61,7 @@ namespace CI_platform.Controllers
                 Cities = _unitOfWork.City.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll(),
                 /*Skills = _dbContext.Skills.ToList(),*/
-                userDetails = GetThisUser(),
+                UserDetails = GetThisUser(),
                 FavoriteMissions = _unitOfWork.FavouriteMission.GetAll(),
                 MissionApplications = _unitOfWork.MissionApplication.GetAll(),
             };
@@ -178,7 +179,6 @@ namespace CI_platform.Controllers
             return missions.ToList();
         }
 
-
         #endregion
 
         //---------------------- No Mission Found --------------------------//
@@ -225,7 +225,7 @@ namespace CI_platform.Controllers
                 GoalMissions = goalMission,
                 RelatedMissions = relatedmissions,
                 Goal = goal,
-                userDetails = user,
+                UserDetails = user,
                 commentList = comments,
                 favoriteMissions = favouriteMission,
                 MissionApp = missionApp,
@@ -243,9 +243,9 @@ namespace CI_platform.Controllers
                 viewModel.Volunteers = _unitOfWork.User.GetAll();
             }
 
-            if (viewModel.userDetails != null)
+            if (viewModel.UserDetails != null)
             {
-                viewModel.RateMission = _unitOfWork.MissionRating.GetFirstOrDefault(m => m.UserId == viewModel.userDetails.UserId && m.MissionId == id);
+                viewModel.RateMission = _unitOfWork.MissionRating.GetFirstOrDefault(m => m.UserId == viewModel.UserDetails.UserId && m.MissionId == id);
             }
 
             try

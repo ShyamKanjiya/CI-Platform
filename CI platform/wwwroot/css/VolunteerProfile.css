@@ -1,7 +1,7 @@
 ﻿.profile-div {
-    height: 40vh;
+    height: 20%;
     display: flex;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     padding: 20px;
     flex-direction: column;
@@ -14,7 +14,7 @@
     border-radius: 50%;
 }
 
-@media (max-width: 991px){
+@media (max-width: 991px) {
     .profile-div {
         height: 270px;
         flex-direction: row;
@@ -33,7 +33,6 @@
             margin: 20px;
         }
 }
-
 
 .dual-list .list-group {
     margin-top: 8px;
@@ -69,3 +68,47 @@
     right: 0;
     z-index: 1000;
 }
+
+.modal-body {
+    text-align: left;
+}
+
+.modal-dialog-scrollable .modal-content {
+    max-height: 100%;
+    overflow-y: scroll;
+}
+
+#edit-pic-icon {
+    width: 30px;
+    height: 30px;
+    bottom: 2px;
+    right: 10px;
+    background: #f1cf15;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+}
+
+#profileDiv {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    border-radius: 50%;
+}
+
+/*upload avatar button*/
+.upload-avatar {
+    color: #F88634;
+    background: white;
+    border: 1px solid #F88634;
+}
+
+    .upload-avatar:hover {
+        color: white;
+        background: #F88634;
+        transition: 0.5s;
+    }

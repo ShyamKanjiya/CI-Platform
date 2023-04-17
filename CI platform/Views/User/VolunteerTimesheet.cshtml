@@ -1,4 +1,5 @@
 ﻿@model userVolunteerTimesheetModel
+
 <style>
     #add {
         width: 5rem;
@@ -24,6 +25,8 @@
                         <i class="bi bi-plus text-warning"></i>
                         <p class="mb-0 text-warning h6">ADD</p>
                     </button>
+
+                    <!--Popup for time based mission-->
                     <div class="modal fade" id="addTimeData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                             <div class="modal-content">
@@ -32,45 +35,54 @@
                                         <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="form-group mb-3">
-                                            <label class="mb-1" for="missionDropDownList">Select Mission</label>
-                                            <select class="form-select select"  required>
-                                                <option value="Select Mission">Select Mission</option>
-                                                @foreach (var mission in Model.MissionApplicationForTime)
-                                                {
-                                                    <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
-                                                }
-                                            </select>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label class="mb-1" for="story_date">Date</label>
-                                            <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
-                                        </div>
-                                        <div class="form-group mb-3 d-flex justify-content-between">
-                                            <div class="col me-2">
-                                                <label class="form-label">Hours</label>
-                                                <input class="form-control" placeholder="Enter Spent Hours">
+                                    <form id="formForTimeBased" asp-controller="User" asp-action="ChangeInTimesheet" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-group mb-3">
+                                                <label class="mb-1" for="missionDropDownList">Select Mission</label>
+                                                <select asp-for="MissionId" id="missForTimeMiss" class="form-select select">
+                                                    <option value="Select Mission">Select Mission</option>
+                                                    @foreach (var mission in Model.MissionApplicationForTime)
+                                                    {
+                                                        <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                    }
+                                                    <span class="text-danger" asp-validation-for="MissionId"></span>
+                                                </select>
                                             </div>
-                                            <div class="col ms-2">
-                                                <label class="form-label">Minutes</label>
-                                                <input class="form-control" placeholder="Enter Spent Minutes">
+                                            <div class="form-group mb-3">
+                                                <label class="mb-1" for="story_date">Date</label>
+                                                <input asp-for="DateVolunteered" type="date" id="dateForTimeMiss" class="form-control" placeholder="Select Date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")' value="">
+                                                <span class="text-danger" asp-validation-for="DateVolunteered"></span>
+                                            </div>
+                                            <div class="form-group mb-3 d-flex justify-content-between">
+                                                <div class="col me-2">
+                                                    <label class="form-label">Hours</label>
+                                                    <input asp-for="Hours" id="hrsForTimeMiss" class="form-control" placeholder="Enter Spent Hours" value="">
+                                                    <span class="text-danger" asp-validation-for="Hours"></span>
+                                                </div>
+                                                <div class="col ms-2">
+                                                    <label class="form-label">Minutes</label>
+                                                    <input asp-for="Minutes" id="minForTimeMiss" class="form-control" placeholder="Enter Spent Minutes" value="">
+                                                    <span class="text-danger" asp-validation-for="Minutes"></span>
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Message</label>
+                                                <textarea asp-for="Notes" id="msgForTimeMiss" class="form-control" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
+                                                <span class="text-danger" asp-validation-for="Notes"></span>
                                             </div>
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label class="form-label">Message</label>
-                                            <textarea class="form-control" id="timesheetMessage" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                            <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
                                         </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                                        <button class="btn border-warning text-warning px-4" style="border-radius:50px">Submit</button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
                 <table class="mx-3 mb-3" style="width:100%">
                     <thead>
                     <th style="width:35%">Mission</th>
@@ -80,16 +92,81 @@
                     <th style="width:15%"></th>
                     </thead>
                     <tbody>
-                        <tr class="mt-5">
-                            <td>Assistant Manager</td>
-                            <td>10/10/22</td>
-                            <td>2</td>
-                            <td>40</td>
-                            <td>
-                                <i class="bi bi-pencil-square text-warning mx-1"></i>
-                                <i class="bi bi-trash text-warning mx-1"></i>
-                            </td>
-                        </tr>
+                        @foreach (var timeData in Model.TimesheetsForTime)
+                        {
+                            <tr>
+                                <td id="timeSheetId" hidden>@timeData.TimesheetId</td>
+                                <td>@timeData.Mission.Title</td>
+                                <td>@timeData.DateVolunteered.ToString("dd-MM-yy")</td>
+                                <td>@timeData.Time.Value.Hours hr</td>
+                                <td>@timeData.Time.Value.Minutes min</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="border-0 bg-transparent" onclick="getTimesheetDataForTimeMiss(@timeData.TimesheetId)"><i class="bi bi-pencil-square text-warning"></i></button>
+                                        <div class="modal fade" id="editBtnForTimeMiss" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form id="formForTimeBased" asp-controller="User" asp-action="AddUpdateTimesheet" method="post">
+                                                        <div class="modal-body">
+                                                            <div hidden>
+                                                                <label for="timeSheetIdForEdit" class="form-label">Mission</label>
+                                                                <input asp-for="TimeSheetId" class="form-control" id="timeSheetIdForEdit" type="text" value="" />
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="missForTimeMissEdit" class="form-label">Mission</label>
+                                                                <select asp-for="MissionId" id="missForTimeMissEdit" class="form-select">
+                                                                    <option value="">Select Mission</option>
+                                                                    @foreach (var mission in Model.MissionApplicationForTime)
+                                                                    {
+                                                                        <option value="@mission.MissionId">@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                                    }
+                                                                </select>
+                                                                <span class="text-danger" asp-validation-for="MissionId"></span>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="dateForTimeMissEdit" class="form-label">Date</label>
+                                                                <input asp-for="DateVolunteered" type="date" id="dateForTimeMissEdit" class="form-control" value="" />
+                                                                <span class="text-danger" asp-validation-for="DateVolunteered"></span>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-sm-6">
+                                                                    <div class="mb-3">
+                                                                        <label for="hrsForTimeMissEdit" class="form-label">Hours</label>
+                                                                        <input asp-for="Hours" id="hrsForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Hours..." value="" />
+                                                                        <span class="text-danger" asp-validation-for="Hours"></span>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-sm-6">
+                                                                    <div class="mb-3">
+                                                                        <label for="minForTimeMissEdit" class="form-label">Minutes</label>
+                                                                        <input asp-for="Minutes" id="minForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Minutes..." value="" />
+                                                                        <span class="text-danger" asp-validation-for="Minutes"></span>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="msgForTimeMissEdit" class="form-label">Message</label>
+                                                                <textarea asp-for="Notes" id="msgForTimeMissEdit" class="form-control" rows="3" placeholder="Enter message..."></textarea>
+                                                                <span class="text-danger" asp-validation-for="Notes"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                            <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="ms-1 border-0 bg-transparent" onclick="deleteAlert(@timeData.TimesheetId)"><i class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }</tr>
                     </tbody>
                 </table>
             </div>
@@ -103,6 +180,8 @@
                         <i class="bi bi-plus text-warning"></i>
                         <p class="mb-0 text-warning h6">ADD</p>
                     </button>
+
+                    <!--Popup for goal based mission-->
                     <div class="modal fade" id="addGoalData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
                             <div class="modal-content">
@@ -111,39 +190,47 @@
                                         <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="form-group mb-3">
-                                            <label class="mb-1" for="missionDropDownList">Select Mission</label>
-                                            <select class="form-select select"  required>
-                                                <option value="Select Mission">Select Mission</option>
-                                                @foreach (var mission in Model.MissionApplicationForGoal)
-                                                {
-                                                    <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
-                                                }
-                                            </select>
+                                    <form id="formForGoalBased" asp-controller="User" asp-action="ChangeInTimesheet" method="post">
+                                        <div class="modal-body">
+                                            <div class="form-group mb-3">
+                                                <label class="mb-1" for="missionDropDownList">Select Mission</label>
+                                                <select asp-for="MissionId" id="missForGoalMiss" class="form-select select" required>
+                                                    <option value="Select Mission">Select Mission</option>
+                                                    @foreach (var mission in Model.MissionApplicationForGoal)
+                                                    {
+                                                        <option value=@mission.MissionId>@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                    }
+                                                </select>
+                                                <span class="text-danger" asp-validation-for="MissionId"></span>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Actions</label>
+                                                <input asp-for="Action" id="actForGoalMiss" class="form-control" placeholder="Enter Actions" value="">
+                                                <span class="text-danger" asp-validation-for="Action"></span>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="mb-1" for="story_date">Date</label>
+                                                <input asp-for="DateVolunteered" id="dateForGoalMiss" type="date" class="form-control" placeholder="Select Date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")' value="">
+                                                <span class="text-danger" asp-validation-for="DateVolunteered"></span>
+                                            </div>
+                                            <div class="form-group mb-3">
+                                                <label class="form-label">Message</label>
+                                                <textarea asp-for="Notes" id="msgForGoalMiss" class="form-control" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
+                                                <span class="text-danger" asp-validation-for="Notes"></span>
+                                            </div>
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label class="form-label">Actions</label>
-                                            <input class="form-control" placeholder="Enter Actions">
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                            <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
                                         </div>
-                                        <div class="form-group mb-3">
-                                            <label class="mb-1" for="story_date">Date</label>
-                                            <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
-                                        </div>
-                                        <div class="form-group mb-3">
-                                            <label class="form-label">Message</label>
-                                            <textarea class="form-control" id="timesheetMessage" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                                        <button class="btn border-warning text-warning px-4" style="border-radius:50px">Submit</button>
-                                    </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
+
                 <table class="mx-3 mb-3" style="width:100%">
                     <thead>
                     <th style="width:40%">Mission</th>
@@ -152,18 +239,76 @@
                     <th style="width:15%"></th>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Assistant Manager</td>
-                            <td>10/10/22</td>
-                            <td>1</td>
-                            <td class="justify-content-around">
-                                <i class="bi bi-pencil-square text-warning mx-1"></i>
-                                <i class="bi bi-trash text-warning mx-1"></i>
-                            </td>
-                        </tr>
+                        @foreach (var goalData in Model.TimesheetsForGoal)
+                        {
+                            <tr>
+                                <td id="timeSheetId" hidden>@goalData.TimesheetId</td>
+                                <td>@goalData.Mission.Title</td>
+                                <td>@goalData.DateVolunteered.ToString("dd-MM-yy")</td>
+                                <td>@goalData.Action</td>
+                                <td>
+                                    <div class="d-flex">
+                                        <button class="border-0 bg-transparent"><i class="bi bi-pencil-square text-warning" onclick="getTimesheetDataForGoalMiss(@goalData.TimesheetId)"></i></button>
+                                        <div class="modal fade" id="editBtnForGoalMiss" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="exampleModalLabel">Please input below Volunteering Hours</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <form id="formForTimeBased" asp-controller="User" asp-action="AddUpdateTimesheet" method="post">
+                                                        <div class="modal-body">
+                                                            <div hidden>
+                                                                <label for="tSIdForEditGoalMiss" class="form-label">Mission</label>
+                                                                <input asp-for="TimeSheetId" class="form-control" id="tSIdForEditGoalMiss" type="text" value="" />
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="missForGoalMissEdit" class="form-label">Mission</label>
+                                                                <select asp-for="MissionId" id="missForGoalMissEdit" class="form-select">
+                                                                    <option value="">Select Mission</option>
+                                                                    @foreach (var mission in Model.MissionApplicationForGoal)
+                                                                    {
+                                                                        <option value="@mission.MissionId">@mission.Mission.Title --- @mission.Mission.City.Name</option>
+                                                                    }
+                                                                </select>
+                                                                <span class="text-danger" asp-validation-for="MissionId"></span>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="actForGoalMissEdit" class="form-label">Actions</label>
+                                                                <input asp-for="Action" id="actForGoalMissEdit" type="text" class="form-control" placeholder="Enter Actions..." value="" />
+                                                                <span class="text-danger" asp-validation-for="Action"></span>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="dateForGoalMissEdit" class="form-label">Date</label>
+                                                                <input asp-for="DateVolunteered" type="date" id="dateForGoalMissEdit" class="form-control" value="" />
+                                                                <span class="text-danger" asp-validation-for="DateVolunteered"></span>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="msgForGoalMissEdit" class="form-label">Message</label>
+                                                                <textarea asp-for="Notes" id="msgForGoalMissEdit" class="form-control" rows="3" placeholder="Enter message..."></textarea>
+                                                                <span class="text-danger" asp-validation-for="Notes"></span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                            <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button class="ms-1 border-0 bg-transparent" onclick="deleteAlert(@goalData.TimesheetId)"><i class="bi bi-trash3"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
                     </tbody>
                 </table>
+
             </div>
         </div>
     </div>
 </div>
+
+
+<script src="~/js/VolunteerTimesheet.js"></script>

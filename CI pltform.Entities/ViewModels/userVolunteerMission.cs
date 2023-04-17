@@ -35,7 +35,7 @@ namespace CI_platform.Entities.ViewModels
 
         public GoalMission GoalMissions { get; set; }
 
-        public User userDetails { get; set; }
+        public User UserDetails { get; set; }
 
         public MissionRating RateMission { get; set; }
 

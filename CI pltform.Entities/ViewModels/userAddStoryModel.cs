@@ -23,7 +23,7 @@ namespace CI_platform.Entities.ViewModels
 
         public List<StoryMedium> StoryMedium { get; set; }
 
-        public User User { get; set; }
+        public User UserDetails { get; set; }
 
         public string Result { get; set; }
     }

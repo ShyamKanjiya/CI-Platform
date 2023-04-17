@@ -121,31 +121,32 @@ function getSkillListAndIds() {
 
 // Change Password
 
+$(document).ready(function () {
+    $.validator.unobtrusive.parse($("#changePasswordForm"));
+});
+
+
 function ChangePassword() {
     var OldPassword = $('#old-password').val();
     var NewPassword = $('#new-password').val();
-    var ConfirmPassword = $('#confirm-password').val();
 
-
-    if (NewPassword == ConfirmPassword) {
-        if (OldPassword == NewPassword) {
-            Alert('New Password must not be same as Previous One.');
-            location.reload();
-        }
-        else {
+    if (OldPassword != "" && NewPassword != "" && OldPassword == NewPassword) {
+        Alert("New Password must not be same as Previous One.");
+    }
+    else {
+        if ($("#changePasswordForm").valid()) {
+            var formData = $("#changePasswordForm").serialize();
             $.ajax({
                 url: "/User/ChangePassword",
                 method: "POST",
-                data: { 'OldPassword': OldPassword, "NewPassword": NewPassword },
+                data: formData,
                 success: function (data) {
                     if (data == 0) {
-                        Alert('Entered Old Password does not match with current Password!');
-                        location.reload();
-
+                        Alert("Entered Old Password does not match with current Password!");
                     }
                     if (data == 1) {
-                        Alert('Password change successfully.');
-                        location.reload();
+                        Alert("Password changed successfully!");
+                        $('#change-password').modal('hide');
                     }
                 },
                 error: function (error) {
@@ -154,28 +155,60 @@ function ChangePassword() {
             });
         }
     }
-    else {
-        Alert('Password does not match with confirm password!');
-        location.reload();
-
-    }
 }
 
+//alert function
 function Alert(message) {
+    let timerInterval
     Swal.fire({
         title: message,
-        timer: 2000,
+        timer: 1500,
+        timerProgressBar: true,
         didOpen: () => {
             Swal.showLoading()
-            const b = Swal.getHtmlContainer().querySelector('b')
-            timerInterval = setInterval(() => {
-                b.textContent = Swal.getTimerLeft()
-            }, 100)
         },
         willClose: () => {
             clearInterval(timerInterval)
         }
-    });
+    }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+            console.log("I was closed");
+        }
+    })
 }
 
 //---------------------------------------------------------------------------------------------------------------------------------------//
+
+// Filter City From Country
+
+
+$(document).ready(function () {
+    var cId = $('#countryOfUser').val();
+    cascadeCity(cId);
+});
+
+$('#countryOfUser').change(function () {
+    var cId = $('#countryOfUser').val();
+    cascadeCity(cId);
+});
+
+function cascadeCity(cId) {
+    $.ajax({
+        type: 'POST',
+        url: '/User/FilterCity',
+        data: { "countryId": cId },
+        success: function (data) {
+            $('#cityOfUser').empty();
+            $.each(data.cities, function (i, city) {
+                $('#cityOfUser').append('<option value=' + city.cityId + '>' + city.name + '</option>');
+            });
+            //console.log(data.cityId);
+            $("#cityOfUser").val(data.cityId).change();
+        },
+        error: function (e) {
+            console.log(e);
+        }
+    });
+}
+
+

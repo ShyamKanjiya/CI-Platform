@@ -19,7 +19,7 @@ namespace CI_pltform.Entities.ViewModels
         public string NewPassword { get; set; } = null!;
 
         [NotMapped]
-        [Compare("Password")]
+        [Compare("NewPassword")]
         [Required]
         public string? ConfirmPassword { get; set; }
 
@@ -59,6 +59,6 @@ namespace CI_pltform.Entities.ViewModels
         public IEnumerable<City>? Cities { get; set; }
         public IEnumerable<Country>? Countries { get; set; }
         public IEnumerable<Skill>? SkillsList { get; set; }
-
+        public User? UserDetails { get; set; }
     }
 }

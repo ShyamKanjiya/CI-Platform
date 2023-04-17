@@ -19,5 +19,6 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<MissionApplication> missionApplications { get; set; }
 
+        public User? UserDetails { get; set; }
     }
 }

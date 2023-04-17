@@ -42,7 +42,11 @@ namespace CI_platform.Controllers
 
         public IActionResult storyListingPage()
         {
-            return View();
+            userStoryListModel userStory = new()
+            {
+                UserDetails = GetThisUser()
+            };
+            return View(userStory);
         }
 
         public IActionResult bringStories(int pg = 1)
@@ -51,6 +55,7 @@ namespace CI_platform.Controllers
 
             userStoryListModel userStory = new userStoryListModel
             {
+                UserDetails = GetThisUser(),
                 Stories = _unitOfWork.Story.GetAll(),
                 Missions = _unitOfWork.Mission.GetAll(),
                 Users = _unitOfWork.User.GetAll(),
@@ -112,6 +117,7 @@ namespace CI_platform.Controllers
                 userAddStoryModel.MissionApplication = draftMissAppList;
                 userAddStoryModel.Story = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.Status == "DRAFT");
                 userAddStoryModel.StoryMedium = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == userAddStoryModel.Story.StoryId);
+                userAddStoryModel.UserDetails = user;
             }
             catch
             {
@@ -255,13 +261,11 @@ namespace CI_platform.Controllers
                 {
                     string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
                     var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                    /*var stream = new FileStream(imgSaveTo, FileMode.Create);
-                    img.CopyTo(stream);*/
                     using(FileStream stream = new (imgSaveTo, FileMode.Create)) {
                         img.CopyTo(stream);
                     }
 
-                        StoryMedium storyMedium = new StoryMedium();
+                    StoryMedium storyMedium = new StoryMedium();
                     storyMedium.StoryId = data.StoryId;
                     storyMedium.Type = imgExt;
                     storyMedium.Path = ImageName;
@@ -343,7 +347,7 @@ namespace CI_platform.Controllers
             List<User> ListOfUsers = (List<User>)_unitOfWork.User.GetAll();
             userVolunteerStoryModel userVolunteerStoryModel = new()
             {
-                User = user,
+                UserDetails = user,
                 UserList = ListOfUsers,
                 UserOfStory = FindingStoryCreator,
                 StoryDetails = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId),

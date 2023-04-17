@@ -29,7 +29,7 @@ namespace CI_platform.Entities.ViewModels
 
         public IEnumerable<User> Volunteers { get; set; }
 
-        public User userDetails { get; set; }
+        public User UserDetails { get; set; }
 
         public Mission MissionDetail { get; set; }
 

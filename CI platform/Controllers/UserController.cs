@@ -61,6 +61,7 @@ namespace CI_platform.Controllers
                 SkillsList = skillList,
                 Countries = countryList,
                 Cities = cityList,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -112,72 +113,68 @@ namespace CI_platform.Controllers
             return RedirectToAction("VolunteerProfile");
         }
 
-
         [HttpPost]
         public IActionResult ChangeAvatar(IFormFile avatar)
         {
             User user = GetThisUser();
 
-            if (user.Avatar == null)
+
+            string imgExt = Path.GetExtension(avatar.FileName);
+            if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
             {
-                string imgExt = Path.GetExtension(avatar.Name);
-                if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                if (user.Avatar != null)
                 {
-                    string ImageName = user.UserId + Path.GetExtension(avatar.Name);
-                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                    /*var stream = new FileStream(imgSaveTo, FileMode.Create);
-                    avatar.CopyTo(stream);*/
-                    using (FileStream stream = new(imgSaveTo, FileMode.Create))
+                    string ImageName = user.UserId + Path.GetFileName(avatar.FileName);
+                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Avatars/", ImageName);
+                    string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                    if (!imgSaveTo.Equals(user.Avatar))
                     {
-                        avatar.CopyTo(stream);
+                        string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + user.Avatar);
+                        if (System.IO.File.Exists(alrExists))
+                        {
+                            System.IO.File.Delete(alrExists);
+                        }
+
+                        using (FileStream stream = new(finalPath, FileMode.Create))
+                        {
+                            avatar.CopyTo(stream);
+                        }
+                        user.Avatar = imgSaveTo;
+                        user.UpdatedAt = DateTime.Now;
+                        _unitOfWork.User.Update(user);
                     }
-
-                    user.Avatar = ImageName;
-
-                    _unitOfWork.User.Add(user);
                 }
-            }
-            else
-            {
-                if (user.UserId + Path.GetExtension(avatar.Name) != user.Avatar)
+                else
                 {
-                    string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/", user.Avatar);
+                    string ImageName = user.UserId + Path.GetFileName(avatar.FileName);
+                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Avatars/", ImageName);
+                    string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
 
-                    if (System.IO.File.Exists(imagePath))
-                    {
-                        System.IO.File.Delete(imagePath);
-                    }
-
-                    string ImageName = user.UserId + Path.GetExtension(avatar.Name);
-                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                    /*var stream = new FileStream(imgSaveTo, FileMode.Create);
-                    avatar.CopyTo(stream);*/
-                    using (FileStream stream = new(imgSaveTo, FileMode.Create))
+                    using (FileStream stream = new(finalPath, FileMode.Create))
                     {
                         avatar.CopyTo(stream);
                     }
-
-                    user.Avatar = ImageName;
-
+                    user.Avatar = imgSaveTo;
+                    user.UpdatedAt = DateTime.Now;
                     _unitOfWork.User.Update(user);
                 }
-
             }
             _unitOfWork.Save();
-            return View();
+            return RedirectToAction("VolunteerProfile");
         }
 
 
         [HttpPost]
-        public IActionResult ChangePassword(string OldPassword, string NewPassword)
+        public IActionResult ChangePassword(userProfileModel obj)
         {
             User user = GetThisUser();
 
-            if (user != null && OldPassword != null && NewPassword != null)
+            if (user != null && obj.OldPassword != null && obj.NewPassword != null)
             {
-                if (user.Password == OldPassword)
+                if (user.Password == obj.OldPassword)
                 {
-                    user.Password = NewPassword;
+                    user.Password = obj.NewPassword;
                     user.UpdatedAt = DateTime.Now;
                     _unitOfWork.User.Update(user);
                     _unitOfWork.Save();
@@ -188,6 +185,16 @@ namespace CI_platform.Controllers
             return Json(0);
         }
 
+
+        public JsonResult FilterCity(long countryId)
+        {
+            User user = GetThisUser();
+            var cityId = user.CityId;
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(m => m.CountryId == countryId);
+            return new JsonResult(new { CityId = cityId, Cities = cityList });
+
+        }
+
         #endregion
 
         //---------------------- Volunteer Timesheet --------------------------//
@@ -196,25 +203,98 @@ namespace CI_platform.Controllers
         public IActionResult VolunteerTimesheet()
         {
             User user = GetThisUser();
-            userVolunteerTimesheetModel obj = new userVolunteerTimesheetModel();
 
-            obj.Missions = (List<Mission>)_unitOfWork.Mission.GetAll();
-            obj.Cities = (List<City>)_unitOfWork.City.GetAll();
-            obj.Timesheets = (List<Timesheet>)_unitOfWork.Timesheet.GetAll();
+            IEnumerable<MissionApplication> draftMissAppListForTime = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "TIME");
+            IEnumerable<MissionApplication> draftMissAppListForGoal = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "GOAL");
+            IEnumerable<Timesheet> dataOfTimeBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
+            IEnumerable<Timesheet> dataOfGoalBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
 
-            List<MissionApplication> draftMissAppListForTime = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "TIME");
-            List<MissionApplication> draftMissAppListForGoal = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "GOAL");
-            IEnumerable<Timesheet> timeBasedData = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
-            IEnumerable<Timesheet> goalBasedData = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
-            try
-            {
-                obj.MissionApplicationForTime = draftMissAppListForTime;
-                obj.MissionApplicationForGoal = draftMissAppListForGoal;
-            }
-            catch { }
+            userVolunteerTimesheetModel obj = new();
+            obj.UserDetails = user;
+            obj.MissionApplicationForTime = draftMissAppListForTime;
+            obj.MissionApplicationForGoal = draftMissAppListForGoal;
+            obj.TimesheetsForTime = dataOfTimeBasedMission;
+            obj.TimesheetsForGoal = dataOfGoalBasedMission;
+
+            obj.Missions = _unitOfWork.Mission.GetAll();
+            obj.Cities = _unitOfWork.City.GetAll();
 
             return View(obj);
         }
+
+        [HttpPost]
+        public IActionResult ChangeInTimesheet(userVolunteerTimesheetModel obj)
+        {
+            User user = GetThisUser();
+            var hours = obj.Hours;
+            var minutes = obj.Minutes;
+            TimeSpan time = new(hours, minutes, 0);
+
+            if (obj.TimeSheetId == 0)
+            {
+                Timesheet data = new()
+                {
+                    UserId = user.UserId,
+                    MissionId = obj.MissionId,
+                    Time = time,
+                    Action = obj.Action,
+                    DateVolunteered = obj.DateVolunteered,
+                    Notes = obj.Notes,
+                    Status = "SUBMIT_FOR_APPROVAL",
+                };
+                _unitOfWork.Timesheet.Add(data);
+                _unitOfWork.Save();
+                TempData["success"] = "Data added successfully!";
+                return RedirectToAction("VolunteerTimesheet");
+            }
+            else
+            {
+                Timesheet updatedData = _unitOfWork.Timesheet.GetFirstOrDefault(timeSheetData => timeSheetData.TimesheetId == obj.TimeSheetId);
+                if (updatedData != null)
+                {
+                    updatedData.MissionId = obj.MissionId;
+                    updatedData.Action = obj.Action;
+                    updatedData.Time = time;
+                    updatedData.Notes = obj.Notes;
+                    updatedData.DateVolunteered = obj.DateVolunteered;
+                    updatedData.UpdatedAt = DateTime.Now;
+
+                    _unitOfWork.Timesheet.Update(updatedData);
+                    _unitOfWork.Save();
+
+                    TempData["success"] = "Data updated successfully!";
+                    return RedirectToAction("VolTimeSheet");
+                }
+            }
+
+            TempData["error"] = "Something went wrong!";
+            return RedirectToAction("VolunteerTimesheet");
+        }
+
+
+        public IActionResult GetTimeSheetData(long timesheetId)
+        {
+            Timesheet timesheetData = _unitOfWork.Timesheet.GetFirstOrDefault(m => m.TimesheetId == timesheetId);
+            return Json(timesheetData);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteTimeSheetData(long timesheetId)
+        {
+            if(timesheetId > 0)
+            {
+                Timesheet deletingData = _unitOfWork.Timesheet.GetFirstOrDefault(m => m.TimesheetId == timesheetId);
+                deletingData.DeletedAt = DateTime.Now;
+                _unitOfWork.Timesheet.Update(deletingData);
+                _unitOfWork.Save();
+
+                return RedirectToAction("VolunteerTimesheet");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("VolunteerTimesheet");
+        }
+
         #endregion
 
         //---------------------- Volunteer Policy --------------------------//
@@ -222,7 +302,11 @@ namespace CI_platform.Controllers
         #region Volunteer Policy
         public IActionResult VolunteerPolicy()
         {
-            return View();
+            userProfileModel userProfile = new()
+            {
+                UserDetails = GetThisUser()
+            };
+            return View(userProfile);
         }
 
         #endregion
@@ -234,7 +318,7 @@ namespace CI_platform.Controllers
         [HttpGet]
         public userViewModel ContectUs(userViewModel userView)
         {
-            userView.userDetails = GetThisUser();
+            userView.UserDetails = GetThisUser();
             return userView;
         }
 
@@ -245,7 +329,7 @@ namespace CI_platform.Controllers
             ContectUs contectUs = new()
             {
                 UserId = user.UserId,
-                Subject = subject, 
+                Subject = subject,
                 Message = message
             };
 
