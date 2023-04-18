@@ -5,14 +5,14 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 <link rel="stylesheet" href="~/css/ImageUploder.css" />
 
-<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
 <script src="~/js/StoryAddPage.js" asp-append-version="true"></script>
 
 
 <script>
     $(document).ready(function () {
-        $('.input-images').imageUploader({});
+        $('#input-images').imageUploader({});
     })
 </script>
 
@@ -58,7 +58,7 @@
                 <label for="uploadphoto">Upload your photos</label>
             </div>
             <div>
-                <lable class="input-images d-block"></lable>
+                <lable class="input-images d-block" id="input-images"></lable>
             </div>
         </div>
 

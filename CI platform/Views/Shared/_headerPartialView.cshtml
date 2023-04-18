@@ -40,7 +40,7 @@
                                     @foreach (var item in Model.Countries)
                                     {
                                         <li class="dropdown-item">
-                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-countryId ="@item.CountryId">  @item.Name
+                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-countryId="@item.CountryId">  @item.Name
                                         </li>
                                     }
                                 </ul>
@@ -60,7 +60,7 @@
                                     @foreach (var item in Model.Cities)
                                     {
                                         <li class="dropdown-item">
-                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-pId ="@item.CountryId">  @item.Name
+                                            <input type="checkbox" id="" value="@item.Name" class="checkbox" data-pId="@item.CountryId">  @item.Name
                                         </li>
                                     }
                                 </ul>
@@ -96,13 +96,13 @@
                                     <span>Skills</span>
                                     <img src="~/images/drop-down.png" style="margin-left:5px" />
                                 </a>
-                                <ul class="dropdown-menu scrollable-menu" aria-labelledby="navbarScrollingDropdown">
-                                    @*foreach (var item in Model.Skills)
+                                <ul class="dropdown-menu scrollable-menu" aria-labelledby="navbarScrollingDropdown" id="dropDownSkill">
+                                    @foreach (var item in Model.Skills)
                                     {
                                         <li class="dropdown-item">
-                                            <input type="checkbox" id="" value=@item.SkillName class="checkbox">  @item.SkillName
+                                            <input type="checkbox" id="" value="@item.SkillName" class="checkbox">  @item.SkillName
                                         </li>
-                                    }*@
+                                    }
                                 </ul>
                             </li>
                         </ul>

@@ -281,7 +281,7 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult DeleteTimeSheetData(long timesheetId)
         {
-            if(timesheetId > 0)
+            if (timesheetId > 0)
             {
                 Timesheet deletingData = _unitOfWork.Timesheet.GetFirstOrDefault(m => m.TimesheetId == timesheetId);
                 deletingData.DeletedAt = DateTime.Now;
@@ -293,6 +293,13 @@ namespace CI_platform.Controllers
 
             TempData["error"] = "Opps! something went wrong";
             return RedirectToAction("VolunteerTimesheet");
+        }
+
+        [HttpGet]
+        public IActionResult getDate(long missionId)
+        {
+            var mission = _unitOfWork.Mission.GetAccToFilter(m => m.MissionId == missionId);
+            return Json(mission);
         }
 
         #endregion

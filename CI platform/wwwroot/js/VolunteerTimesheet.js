@@ -1,4 +1,4 @@
-﻿function deleteAlert(timeSheetId) {
+﻿function deleteAlert(timesheetId) {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't to delete!",
@@ -12,7 +12,7 @@
             $.ajax({
                 type: 'POST',
                 url: '/User/DeleteTimeSheetData',
-                data: { "tsId": timeSheetId },
+                data: { "timesheetId": timesheetId },
                 success: function () {
                     Swal.fire(
                         'Deleted!',
@@ -46,7 +46,7 @@ function getTimesheetDataForTimeMiss(timesheetId) {
                 var dt = data.dateVolunteered;
                 dt = dt.split('T');
                 $('#dateForTimeMissEdit').val(dt[0]);
-                var time = data.totalTime;
+                var time = data.time;
                 time = time.split(':');
                 $('#hrsForTimeMissEdit').val(time[0]);
                 $('#minForTimeMissEdit').val(time[1]);
@@ -93,4 +93,30 @@ function getTimesheetDataForGoalMiss(timesheetId) {
             'error'
         )
     }
+}
+
+function getDate(x) {
+    var missionId = $(x).val();
+    $.ajax({
+        type: 'GET',
+        url: '/User/getDate',
+        data: { "missionId": missionId },
+        success: function (data) {
+            var startDate = data[0].startDate.split('T')[0];
+            var endDate = data[0].endDate.split('T')[0];
+            var currentDate = new Date();
+            currentDate = currentDate.toISOString().split('T')[0];
+
+            $('.getDate').attr("min", startDate);
+            if (currentDate > endDate) {
+                $('.getDate').attr("max", endDate);
+            }
+            else {
+                $('.getDate').attr("max", currentDate);
+            }
+        },
+        error: function () {
+            console.log('error');
+        }
+    });
 }

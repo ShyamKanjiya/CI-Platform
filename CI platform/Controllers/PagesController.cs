@@ -42,7 +42,7 @@ namespace CI_platform.Controllers
                 Countries = _unitOfWork.Country.GetAll(),
                 Cities = _unitOfWork.City.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll(),
-                /*Skills = _unitOfWork.   .ToList()*/
+                Skills = _unitOfWork.Skill.GetAll()
             };
 
             return View(viewModel);
@@ -60,7 +60,7 @@ namespace CI_platform.Controllers
                 Countries = _unitOfWork.Country.GetAll(),
                 Cities = _unitOfWork.City.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll(),
-                /*Skills = _dbContext.Skills.ToList(),*/
+                Skills = _unitOfWork.Skill.GetAll(),
                 UserDetails = GetThisUser(),
                 FavoriteMissions = _unitOfWork.FavouriteMission.GetAll(),
                 MissionApplications = _unitOfWork.MissionApplication.GetAll(),
@@ -68,7 +68,7 @@ namespace CI_platform.Controllers
 
             List<Mission> missions = (List<Mission>)_unitOfWork.Mission.GetAll();
 
-            if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0)
+            if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0 || skill.Count() > 0)
             {
                 missions = filterMission(missions, country, cities, theme, skill);
             }
@@ -172,10 +172,10 @@ namespace CI_platform.Controllers
             {
                 missions = missions.Where(s => theme.Contains(s.MissionTheme.Title)).ToList();
             }
-            /* if (skill.Length > 0)
-             {
-                 missions = missions.Where(s => skill.Contains(s.)).ToList();
-             }*/
+           /* if (skill.Length > 0)
+            {
+                missions = missions.Where(s => skill.Contains(s.)).ToList();
+            }*/
             return missions.ToList();
         }
 

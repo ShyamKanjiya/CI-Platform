@@ -70,6 +70,7 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerProfile">Profile</a></li>
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerTimesheet">Volunteering Timesheet</a></li>
+                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="AdminUserDetails">Volunteering Timesheet</a></li>
                                 <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Logout</a></li>
                             </ul>
                         </li>
@@ -112,6 +113,7 @@
     <script src="~/js/platfromLandingPage.js"></script>
     <script src="~/js/cardView.js"></script>
     <script src="~/js/volunteeringMissionPage.js"></script>
+    <script src="~/js/imageUploader.js" asp-append-version="true"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

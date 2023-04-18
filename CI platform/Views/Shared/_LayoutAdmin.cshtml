@@ -1,0 +1,203 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/css/site.css">
+    <link rel="stylesheet" href="~/css/sb-admin-2.css">
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div class="navbar-nav sidebar sidebar-dark accordion admin-panel" id="accordionSidebar">
+
+            <!-- Sidebar - Brand -->
+            <div class="sidebar-brand d-flex align-items-center justify-content-center">
+                <div class="sidebar-brand-icon">
+                    <i class="bi bi-person-circle"></i>
+                </div>
+                <div class="sidebar-brand-text mx-3">Admin</div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider my-0">
+
+            <!-- Nav Item - Dashboard -->
+            <div class="nav-item disabled">
+                <div class="nav-link disabled">
+                    <i class="bi bi-sign-turn-slight-right-fill"></i>
+                    <span class="fw-bold">NAVIGATION</span>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider">
+
+
+            <!-- Nav Item - Pages Collapse Menu -->
+            <ul class="navbar-nav">
+                <!-- Nav Item - User -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" asp-controller="Admin" asp-action="UserDetail">
+                        <i class="bi bi-person-bounding-box"></i>
+                        <span>User</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - CMS Page -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" asp-controller="Admin" asp-action="CMSPage">
+                        <i class="bi bi-file-earmark-fill"></i>
+                        <span>CMS Page</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Mission -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-bullseye"></i>
+                        <span>Mission</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Mission Theme -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-columns-gap"></i>
+                        <span>Mission Theme</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Mission Skills -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-tools"></i>
+                        <span>Mission Skills</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Mission Application -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-folder-symlink-fill"></i>
+                        <span>Mission Application</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Story -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-journal-album"></i>
+                        <span>Story</span>
+                    </a>
+                </li>
+
+                <!-- Nav Item - Banner Management -->
+                <li class="nav-item list-unstyled">
+                    <a class="nav-link" href="#">
+                        <i class="bi bi-file-earmark-image-fill"></i>
+                        <span>Banner Management</span>
+                    </a>
+                </li>
+
+            </ul>
+
+            <!-- Divider -->
+            <hr class="sidebar-divider d-none d-md-block">
+
+            <!-- Sidebar Toggler (Sidebar) -->
+            <div class="text-center d-none d-md-inline">
+                <button class="rounded-circle border-0" id="sidebarToggle">
+                </button>
+            </div>
+
+        </div>
+        <!-- End of Sidebar -->
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="bi bi-list"></i>
+                    </button>
+
+                    <div class="current-time">
+                        <span>@DateTime.Now.ToString("dddd, MMMM dd, yyyy, hh:mm:ss tt")</span>
+                    </div>
+
+                    <!-- Topbar Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item dropdown">
+
+                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+                               aria-expanded="false" style="width:auto">
+                                <img src="~/images//default-user-icon.png" class="rounded-circle" height="35" width="35" alt="Profile pic"
+                                     loading="lazy" />
+                                <span class="px-2">Evan Donohue</span>
+                                <img src="/images/drop-down.png" alt="">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                <li><a class="dropdown-item btn">My Profile</a></li>
+                                <li><a class="dropdown-item btn">Volunteering Timesheet</a></li>
+                                <li><a class="dropdown-item btn">Logout</a></li>
+                                <li><a class="dropdown-item btn">Dashboard</a></li>
+                            </ul>
+
+                        </li>
+                    </ul>
+
+                </nav>
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container-fluid">
+
+                    @RenderBody()
+
+                </div>
+                <!-- /.container-fluid -->
+
+            </div>
+            <!-- End of Main Content -->
+            <!-- Footer -->
+            <footer class="sticky-footer bg-white">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Copyright &copy; CI Platform 2023</span>
+                    </div>
+                </div>
+            </footer>
+            <!-- End of Footer -->
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous" asp-append-version="true"></script>
+    <script src="~/js/sb-admin-2.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

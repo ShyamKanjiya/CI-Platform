@@ -29,10 +29,10 @@ function loadMissions(pg, sortVal) {
         theme.push($(ob).val());
     });
 
-    //var skill = "";
-    //$("input[name='skill']:checked").each(function () {
-    //    skill += $(this).val() + ",";
-    //});
+    var skill = [];
+    $('#dropDownSkill').find("input:checked").each(function (i, ob) {
+        skill.push($(ob).val());
+    });
 
     if (sortVal != null) { 
         sortBy = sortVal;
@@ -46,7 +46,7 @@ function loadMissions(pg, sortVal) {
         url: "/Pages/bringMissions",
         method: "POST",
         dataType: "html",
-        data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme },
+        data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme, 'skill': skill },
         success: function (data) {
             $("#divLoader").addClass("d-none");
             $('#mission-list').html("");

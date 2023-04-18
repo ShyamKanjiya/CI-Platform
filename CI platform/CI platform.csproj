@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\User\VolunteerProfile.cshtml~RF3bcdde2.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="cloudscribe.Web.Pagination" Version="6.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.16" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
