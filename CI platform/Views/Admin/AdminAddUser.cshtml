@@ -1,0 +1,211 @@
+﻿@model adminUserDetails;
+
+@{
+    ViewData["Title"] = "AddUserDetail";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<style>
+    .display-avatar {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+    }
+
+    .display-avatar img{
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+    }
+</style>
+
+<div class="container-fluid p-0">
+    <div class="border-bottom add-edit-heading">
+        <h5 class="heading">Add User</h5>
+    </div>
+    <div class="form">
+        <form asp-controller="Admin" asp-action="AddUser" method="post" enctype="multipart/form-data">
+            <div class="form-content">
+                <div class="row my-3">
+                    <div class="col-sm-3 avatar-div">
+                        <div class="display-avatar mx-auto">
+                          @*  <img src="~/images/default-user-icon.png" id="showImg"/>*@
+                        </div>
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="form-group">
+                            <label class="form-label" for="avatar">Add Avatar</label>
+                            <input type="file" class="form-control" name="userAvatar" id="userAvatar"
+                                   placeholder="Choose avatar" accept="image/jpg,image/jpeg,image/png" onchange="loadImg(this)">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="firstName">First Name</label>
+                            <input asp-for="FirstName" type="text" class="form-control" id="firstName"
+                                   placeholder="Enter your FirstName">
+                            <span class="text-danger" asp-validation-for="FirstName"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="lastName">Last Name</label>
+                            <input asp-for="LastName" type="text" class="form-control" id="lastName"
+                                   placeholder="Enter your LastName">
+                            <span class="text-danger" asp-validation-for="LastName"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="emailId">Email</label>
+                            <input asp-for="Email" type="email" class="form-control" id="emailId"
+                                   placeholder="Enter your Email">
+                            <span class="text-danger" asp-validation-for="Email"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" asp-for="PhoneNumber" class="form-label">Number</label>
+                            <input asp-for="PhoneNumber" type="number" class="form-control" id="number" value=""
+                                   aria-describedby="emailHelp" placeholder="Enter your number">
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="position-relative" id="show_hide_password1">
+                                <input asp-for="Password" type="password" class="form-control" id="txtPassword" placeholder="Enter password">
+                                <div class="position-absolute" id="eye-btn">
+                                    <a><i class="bi bi-eye-fill text-secondary" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label asp-for="ConfirmPassword" class="form-label">Confirm Password</label>
+                            <div class="position-relative" id="show_hide_password2">
+                                <input asp-for="ConfirmPassword" type="password" class="form-control" id="txtConfirmPassword" placeholder="Enter password again">
+                                <div class="position-absolute" id="eye-btn">
+                                    <a><i class="bi bi-eye-fill text-secondary" aria-hidden="true"></i></a>
+                                </div>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="profileText">Profile Text</label>
+                    <textarea asp-for="ProfileText" class="form-control" id="profileText" rows="3"
+                           placeholder="Enter about yourself"></textarea>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="employeeId">Employee Id</label>
+                            <input asp-for="EmployeeId" type="text" class="form-control" id="employeeId"
+                                   placeholder="Enter your Employee ID">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="departmentDetail">Department</label>
+                            <input asp-for="Department" type="text" class="form-control" id="departmentDetail"
+                                   placeholder="Enter your Department">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label">Country</label>
+                            <select asp-for="CountryId" class="form-select select" id="cascade">
+                                <option value="">Select Country</option>
+                                @foreach (var country in Model.CountryList)
+                                {
+                                    <option value="@country.CountryId">@country.Name</option>
+                                }
+                            </select>
+                            <span asp-validation-for="CountryId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label">City</label>
+                            <select asp-for="CityId" class="form-select select" id="cascade-city">
+                                <option value="">Please Select Country First</option>
+                            </select>
+                            <span asp-validation-for="CityId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex justify-content-end align-items-center mt-3">
+                <a asp-controller="Admin" asp-action="UserDetail" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>
+                <button class="btn px-4 mb-5 submit-btn rounded-pill" type="submit">Save</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="~/js/ShowHidePassword.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        var countryId = $('#cascade').val();
+        cityRegCascade(countryId);
+    });
+    $('#cascade').change(function () {
+        var countryId = $('#cascade').val();
+        console.log(countryId);
+        cityRegCascade(countryId);
+    });
+    function cityRegCascade(cId) {
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/CascadeCity',
+            data: { "countryId": cId },
+            success: function (data) {
+                $('#cascade-city').empty();
+                $('#cascade-city').append('<option value="">Select City</option>');
+                $.each(data, function (i, city) {
+                    $('#cascade-city').append('<option value=' + city.cityId + '>' + city.name + '</option>');
+                });
+            },
+            error: function (e) {
+                console.log(e);
+            }
+        });
+    }
+    //$('input[type="file"]').change(function (e) {
+    //    var fileName = e.target.files[0].name;
+    //    console.log(fileName);
+    //});
+    //const input = document.getElementById('userAvatar');
+    //input.addEventListener('change', (event) => {
+    //  const fullPath = event.target.value;
+    //  const fileName = fullPath.split('\\').pop(); // for Windows OS
+    //  // const fileName = fullPath.split('/').pop(); // for Unix-based OS
+    //  console.log('Selected file:', fullPath);
+    //});
+
+    function loadImg(image){
+        if (image.files && image.files[0]) {
+                    //for(var i = 0; i < input.l0)
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#showImg').attr("src", e.target.result);
+                    };
+                    reader.readAsDataURL(image.files[0]);
+                    $('#showImg').show();
+                }
+    }
+</script>

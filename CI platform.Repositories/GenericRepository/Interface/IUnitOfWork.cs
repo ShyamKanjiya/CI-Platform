@@ -29,6 +29,9 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IUserSkillsRepository UserSkill { get; }
         IContectUsRepository ContectUs { get; }
         ITimesheetRepository Timesheet { get; }
+        IMissionSkillsRepository MissionSkills { get; }
+        ICMSPageRepository CMSPage { get; }
+        IBannerRepository Banner { get; }
         int Save();
     }
 }

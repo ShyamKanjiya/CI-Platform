@@ -76,7 +76,7 @@ hr {
     box-sizing: content-box;
     height: 0;
     overflow: visible;
-    color:white;
+    color: white;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -4213,8 +4213,10 @@ input[type="button"].btn-block {
 }
 
 .nav-link {
+    margin: 10px auto;
     display: block;
     padding: 0.5rem 1rem;
+    border-radius: 5px;
 }
 
     .nav-link:hover, .nav-link:focus {
@@ -11333,7 +11335,7 @@ a:focus {
 
 @media (min-width: 768px) {
     .sidebar {
-        width: 14rem !important;
+        width: 18rem !important;
     }
 
         .sidebar .nav-item .collapse {
@@ -11545,6 +11547,7 @@ a:focus {
     .sidebar-dark .nav-item .nav-link:active, .sidebar-dark .nav-item .nav-link:focus, .sidebar-dark .nav-item .nav-link:hover {
         color: #F88634;
         background: white;
+        box-shadow: 0px 2px 10px grey;
     }
 
         .sidebar-dark .nav-item .nav-link:active i, .sidebar-dark .nav-item .nav-link:focus i, .sidebar-dark .nav-item .nav-link:hover i {

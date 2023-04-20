@@ -1,13 +1,15 @@
-﻿@model adminUserDetails;
+﻿@model adminCMSPageDetails;
 
 @{
-    ViewData["Title"] = "UserDetails";
+    ViewData["Title"] = "CMSDetail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+
+
 <div class="container-fluid">
     <div class="border-bottom">
-        <h1 class="heading">User</h1>
+        <h1 class="heading">CMS Page</h1>
     </div>
     <div class="d-flex justify-content-between mt-5 mb-4">
         <div class="input-group rounded position-relative search-bar">
@@ -15,34 +17,26 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <a class="btn add-btn rounded-pill" asp-controller="Admin" asp-action="AdminAddUser">
+            <button class="btn add-btn rounded-pill">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
-            </a>
+            </button>
         </div>
     </div>
     <div class="table-div">
-        <table id="userTable" class="table">
+        <table id="cmsTable" class="table">
             <thead>
                 <tr>
-                    <th>FirstName</th>
-                    <th>LastName</th>
-                    <th>Email</th>
-                    <th>EmployeeId</th>
-                    <th>Department</th>
+                    <th>Title</th>
                     <th>Status</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.UserLists)
+                @foreach (var item in Model.CMSLists)
                 {
                     <tr>
-                        <td>@item.FirstName</td>
-                        <td>@item.LastName</td>
-                        <td>@item.Email</td>
-                        <td>@item.EmployeeId</td>
-                        <td>@item.Department</td>
+                        <td>@item.Title</td>
                         <td>
                             @if (@item.Status == 1)
                             {
@@ -53,20 +47,17 @@
                                 <small class="text-danger fs-6">InActive</small>
                             }
                         </td>
-                        <td class="text-center">
-                            @if (item.Status != 0)
-                            {
-                                <span>
-                                    <a asp-controller="Admin" asp-action="EditUser" asp-route-uid="@item.UserId" class="btn border-0 bg-transparent edit-btn">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </span>
-                                <span>
-                                    <a asp-controller="Admin" asp-action="DeleteUser" asp-route-userId="@item.UserId" class="btn border-0 bg-transparent del-btn">
-                                        <i class="bi bi-trash3"></i>
-                                    </a>
-                                </span>
-                            }
+                        <td class="d-flex justify-content-center align-items-center">
+                            <span>
+                                <button class="btn border-0 bg-transparent edit-btn">
+                                    <i class="bi bi-pencil-square"></i>
+                                </button>
+                            </span>
+                            <span>
+                                <button class="btn border-0 bg-transparent del-btn">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </span>
                         </td>
                     </tr>
                 }
@@ -77,10 +68,8 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var sort_col = $('#userTable').find("th:contains('Status')")[0].cellIndex;
-        var dataTable = $('#userTable').DataTable({
+        var dataTable = $('#cmsTable').DataTable({
             "pageLength": 5,
-            "order": [[sort_col, 'asc']],
             pagingType: 'full_numbers',
             oLanguage: {
                 oPaginate:
@@ -100,5 +89,10 @@
         $('#search-bar').keyup(function () {
             dataTable.search(this.value).draw();
         });
+        //var activeTab = "@ViewBag.ActiveTab";
+        //    console.log(activeTab);
+        //    if(activeTab == "cms"){
+        //        $('#cms').addClass('active');
+        //    }
     });
 </script>

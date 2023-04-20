@@ -29,7 +29,7 @@ namespace CI_platform.Entities.ViewModels
         public string? ConfirmPassword { get; set; }
 
         [Required]
-        [RegularExpression(@"^(\d{10})$", ErrorMessage = "Mobile no not valid")]
+        [RegularExpression(@"^(\d{10})$", ErrorMessage = "Mobile is not valid")]
         public long PhoneNumber { get; set; }
 
         public long CityId { get; set; }

@@ -3,16 +3,12 @@ using CI_platform.Repositories.Interface;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace CI_platform.Repositories.Repository.Interface
 {
-    public interface IStoryRepository : IGenericRepository<Story>
+    public interface ICMSPageRepository : IGenericRepository<CmsPage>
     {
-        Story GetStoryAndMedia(Expression<Func<Story, bool>> filter);
-
-        IEnumerable<Story> GetAllStory();
     }
 }

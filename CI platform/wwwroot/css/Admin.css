@@ -1,0 +1,124 @@
+﻿heading {
+    width: max-content;
+    margin: 0;
+    border-bottom: 3px solid black;
+}
+
+.edit-btn i {
+    color: #F88634;
+}
+
+.edit-btn:hover {
+    box-shadow: 0px 0px 5px grey;
+}
+
+.del-btn i {
+    color: darkred;
+}
+
+.del-btn:hover {
+    box-shadow: 0px 0px 5px grey;
+}
+
+.search-bar {
+    max-width: 400px;
+}
+
+@media (max-width: 800px){
+    .search-bar {
+        max-width: 200px;
+    }
+}
+
+    .search-bar input {
+        padding-left: 50px;
+    }
+
+.search-icon {
+    position: absolute;
+    top: 6px;
+    left: 20px;
+    z-index: 500;
+}
+
+.table-div {
+    overflow-x: scroll;
+}
+.table{
+    color: black;
+
+
+}
+
+.add-btn {
+    color: #F88634;
+    background: white;
+    border: 1px solid #F88634;
+}
+
+    .add-btn:hover {
+        color: white;
+        background-color: #F88634;
+        transition: 0.5s;
+    }
+
+    .cancel-btn{
+        border: 1px solid black;
+        color: black;
+    }
+
+    .submit-btn{
+        color: #F88634;
+        border: 1px solid #F88634;
+    }
+
+.cancel-btn:hover {
+    box-shadow: 0px 0px 5px grey;
+    color: black;
+}
+
+.submit-btn:hover{
+    color: white;
+    background: #F88634;
+}
+
+.add-edit-heading {
+    background: #f1f1f1;
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+}
+.add-edit-heading h5{
+   padding: 10px 20px;
+   margin: 0;
+}
+.form-content {
+    padding: 20px 15px;
+    border: 1px solid lightgray;
+}
+
+table {
+    border: 1px solid lightgray;
+    border-bottom: 1px solid lightgray !important;
+    min-width: 700px;
+}
+
+    table thead {
+        background: #f1f1f1;
+    }
+th {
+    border: 0;
+    padding: 10px !important;
+    border-bottom: 0 !important;
+}
+        td{
+            border: 0;
+        }
+
+        table tbody tr {
+            border: 1px solid lightgray;
+            border-collapse: collapse;
+        }
+
+.sidebar {
+    background-color: #F88634;
+}
