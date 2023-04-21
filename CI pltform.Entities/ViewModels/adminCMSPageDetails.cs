@@ -10,5 +10,15 @@ namespace CI_platform.Entities.ViewModels
     public class adminCMSPageDetails
     {
         public IEnumerable<CmsPage> CMSLists { get; set; } = new List<CmsPage>();
+
+        public string? CMSTitle { get; set; }
+
+        public string? CMSDescription { get; set; }
+
+        public string? CMSSlug { get; set; }
+
+        public long CMSId { get; set; }
+
+        public int Status { get; set; }
     }
 }

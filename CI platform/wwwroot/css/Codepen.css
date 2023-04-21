@@ -42,7 +42,7 @@ button, input, input:not([type]), input[type=button], input[type=color], input[t
 }
 
 body {
-    padding: 1em
+    padding: 0em
 }
 
 .codepen body {

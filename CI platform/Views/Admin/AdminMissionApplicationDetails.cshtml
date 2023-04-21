@@ -16,12 +16,7 @@
             <input type="search" class="form-control rounded" placeholder="Search" id="search-bar" />
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
-        <div>
-            <button class="btn add-btn rounded-pill">
-                <i class="bi bi-plus"></i>
-                <span>Add</span>
-            </button>
-        </div>
+
     </div>
     <div class="table-div">
         <table id="userTable" class="table">
@@ -46,12 +41,12 @@
                         <td>@item.AppliedAt.ToString("dd/mm/yyyy")</td>
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent approve-btn">
+                                <button class="btn border-0 bg-transparent approve-btn" onclick="approveAndDeclineMissionApplication(@item.MissionApplicationId,1)">
                                     <i class="bi bi-check-circle text-success"></i>
                                 </button>
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent decline-btn">
+                                <button class="btn border-0 bg-transparent decline-btn" onclick="approveAndDeclineMissionApplication(@item.MissionApplicationId,0)">
                                     <i class="bi bi-x-circle text-danger"></i>
                                 </button>
                             </span>

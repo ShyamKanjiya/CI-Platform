@@ -10,5 +10,7 @@ namespace CI_platform.Entities.ViewModels
     public class adminStoryDetails
     {
         public IEnumerable<Story> StoryLists { get; set; } = new List<Story>();
+
+
     }
 }

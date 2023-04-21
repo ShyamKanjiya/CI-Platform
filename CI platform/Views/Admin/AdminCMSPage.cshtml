@@ -1,5 +1,12 @@
 ﻿@model adminCMSPageDetails;
 
+<link rel="stylesheet" href="~/css/Codepen.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
+
+
 @{
     ViewData["Title"] = "CMSDetail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
@@ -17,17 +24,57 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <button class="btn add-btn rounded-pill">
+            <button class="btn add-btn rounded-pill" data-bs-toggle="modal" data-bs-target="#addCMS">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
             </button>
+
+            <!--Popup for CMS-->
+            <div class="modal fade" id="addCMS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-xl">
+                    <div class="modal-content">
+                        <div id="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add CMS Page</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="formForCMS" asp-controller="Admin" asp-action="AddAndUpdateCMSPage" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">CMS Title</label>
+                                        <input type="text" asp-for="CMSTitle" class="form-control" placeholder="Enter CMS Title" value="">
+                                        <span class="text-danger" asp-validation-for="CMSTitle"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3" id="textarea">
+                                        <label class="mb-1" for="CMSDescription">CMS Description</label>
+                                        <textarea style="min-height: 300px" asp-for="CMSDescription" id="CMSDescription"></textarea>
+                                        <span class="text-danger" asp-validation-for="CMSDescription"></span>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">CMS Slug</label>
+                                        <input type="text" asp-for="CMSSlug" class="form-control" placeholder="Enter CMS Slug" value="">
+                                        <span class="text-danger" asp-validation-for="CMSSlug"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
         </div>
     </div>
     <div class="table-div">
         <table id="cmsTable" class="table">
             <thead>
                 <tr>
-                    <th>Title</th>
+                    <th style ="width:65%">Title</th>
                     <th>Status</th>
                     <th class="text-center">Action</th>
                 </tr>
@@ -49,9 +96,63 @@
                         </td>
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent edit-btn">
+                                <button class="btn border-0 bg-transparent edit-btn" onclick="getCMSData(@item.CmsPageId)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+
+                                <!-- Modal for CMS -->
+                                <div class="modal fade" id="editBtnForCMS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit CMS</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="forSkillId" asp-controller="Admin" asp-action="AddAndUpdateCMSPage" method="post">
+                                                <div class="modal-body">
+
+                                                    <div hidden>
+                                                        <label for="CMSIdForEdit" class="form-label">Skills</label>
+                                                        <input asp-for="CMSId" class="form-control" id="CMSIdForEdit" type="text" value="" />
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">CMS Title</label>
+                                                        <input type="text" asp-for="CMSTitle" class="form-control" placeholder="Enter CMS Title" id="CMSTitleEdit" value="">
+                                                        <span class="text-danger" asp-validation-for="CMSTitle"></span>
+                                                    </div>
+
+                                                    <div class="form-group mb-3" id="textarea">
+                                                        <label class="mb-1" for="CMSDescription">CMS Description</label>
+                                                        <textarea style="min-height: 300px" asp-for="CMSDescription" id="CMSDescriptionEdit"></textarea>
+                                                        <span class="text-danger" asp-validation-for="CMSDescription"></span>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">CMS Slug</label>
+                                                        <input type="text" asp-for="CMSSlug" class="form-control" placeholder="Enter CMS Slug" id="CMSSlugEdit" value="">
+                                                        <span class="text-danger" asp-validation-for="CMSSlug"></span>
+                                                    </div>
+
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Skill Status</label>
+                                                        <div>
+                                                            <input type="radio" asp-for="Status" id="Active" value="1">
+                                                            <label for="Active">Active</label><br>
+                                                            <input type="radio" asp-for="Status" id="Inactive" value="0">
+                                                            <label for="Inactive">Inactive</label><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                    <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </span>
                             <span>
                                 <button class="btn border-0 bg-transparent del-btn">

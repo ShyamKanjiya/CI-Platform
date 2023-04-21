@@ -4,6 +4,11 @@
     border-bottom: 3px solid black;
 }
 
+.form-control
+{
+    color:black !important;
+}
+
 .edit-btn i {
     color: #F88634;
 }

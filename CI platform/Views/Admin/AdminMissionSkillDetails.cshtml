@@ -17,10 +17,38 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <button class="btn add-btn rounded-pill">
+            <button class="btn add-btn rounded-pill" data-bs-toggle="modal" data-bs-target="#addSkill">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
             </button>
+
+            <!--Popup for Skill-->
+            <div class="modal fade" id="addSkill" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                    <div class="modal-content">
+                        <div id="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Skills</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="formForAddSkill" asp-controller="Admin" asp-action="AddAndUpdateSkill" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Mission Skill Title</label>
+                                        <input type="text" asp-for="SkillName" class="form-control" placeholder="Enter Skill Name" value="">
+                                        <span class="text-danger" asp-validation-for="SkillName"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="table-div">
@@ -28,6 +56,7 @@
             <thead>
                 <tr>
                     <th>SkillName</th>
+                    <th>Status</th>
                     <th class="text-center">Action</th>
                 </tr>
             </thead>
@@ -36,14 +65,65 @@
                 {
                     <tr>
                         <td>@item.SkillName</td>
+
+                        <td>
+                            @if (@item.Status == 1)
+                            {
+                                <small class="text-success fs-6">Active</small>
+                            }
+                            else
+                            {
+                                <small class="text-danger fs-6">InActive</small>
+                            }
+                        </td>
+
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent edit-btn">
+                                <button class="btn border-0 bg-transparent edit-btn" onclick="getSkillData(@item.SkillId)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+
+                                <!-- Modal for Edit Skills -->
+                                <div class="modal fade" id="editBtnForSkill" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Skills</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="forSkillId" asp-controller="Admin" asp-action="AddAndUpdateSkill" method="post">
+                                                <div class="modal-body">
+                                                    <div hidden>
+                                                        <label for="skillIdForEdit" class="form-label">Skills</label>
+                                                        <input asp-for="SkillIds" class="form-control" id="skillIdForEdit" type="text" value="" />
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Skill Name</label>
+                                                        <input type="text" asp-for="SkillName" class="form-control" placeholder="Enter Mission Theme Title" id="skillNameEdit" value="" >
+                                                        <span class="text-danger" asp-validation-for="SkillName"></span>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Skill Status</label>
+                                                        <div>
+                                                            <input type="radio" asp-for="Status" id="Active" value="1">
+                                                            <label for="Active">Active</label><br>
+                                                            <input type="radio" asp-for="Status" id="Inactive" value="0">
+                                                            <label for="Inactive">Inactive</label><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                    <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent del-btn">
+                                <button class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForSkill(@item.SkillId)">
                                     <i class="bi bi-trash3"></i>
                                 </button>
                             </span>

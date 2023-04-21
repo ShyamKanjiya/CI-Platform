@@ -17,10 +17,38 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <button class="btn add-btn rounded-pill">
+            <button class="btn add-btn rounded-pill" data-bs-toggle="modal" data-bs-target="#addMissionTheme">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
             </button>
+
+            <!--Popup for Mission Theme-->
+            <div class="modal fade" id="addMissionTheme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
+                    <div class="modal-content">
+                        <div id="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Mission Theme</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="formForTimeBased" asp-controller="Admin" asp-action="AddAndUpdateMissionTheme" method="post">
+                                <div class="modal-body">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Mission Theme Title</label>
+                                        <input type="text" asp-for="MissionThemeTitle" class="form-control" placeholder="Enter Mission Theme Title" value="">
+                                        <span class="text-danger" asp-validation-for="MissionThemeTitle"></span>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="table-div">
@@ -36,6 +64,7 @@
                 @foreach (var item in Model.MissionThemeLists)
                 {
                     <tr>
+                        <span id="missionThemeId" hidden>@item.MissionThemeId</span>
                         <td>@item.Title</td>
                         <td>
                             @if (@item.Status == 1)
@@ -49,12 +78,51 @@
                         </td>
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent edit-btn">
+                                <button class="btn border-0 bg-transparent edit-btn" onclick="getMissionThemeData(@item.MissionThemeId)">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+
+                                <!-- Modal for Edit Mission Theme -->
+                                <div class="modal fade" id="editBtnForMissionTheme" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Mission Theme</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="forMissionThemeId" asp-controller="Admin" asp-action="AddAndUpdateMissionTheme" method="post">
+                                                <div class="modal-body">
+                                                    <div hidden>
+                                                        <label for="missionThemeIdForEdit" class="form-label">MissionTheme</label>
+                                                        <input asp-for="MissionThemeId" class="form-control" id="missionThemeIdForEdit" type="text" value="" />
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Mission Theme Title</label>
+                                                        <input type="text" asp-for="MissionThemeTitle" class="form-control" placeholder="Enter Mission Theme Title" id="missionThemeTitleEdit" value="" >
+                                                        <span class="text-danger" asp-validation-for="MissionThemeTitle"></span>
+                                                    </div>
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Mission Theme Status</label>
+                                                        <div >
+                                                            <input type="radio" asp-for="Status" id="Active" value="1">
+                                                            <label for="Active">Active</label><br>
+                                                            <input type="radio" asp-for="Status" id="Inactive" value="0">
+                                                            <label for="Inactive">Inactive</label><br>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                    <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent del-btn">
+                                <button class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForMissionTheme(@item.MissionThemeId)">
                                     <i class="bi bi-trash3"></i>
                                 </button>
                             </span>

@@ -263,7 +263,7 @@ namespace CI_platform.Controllers
                     _unitOfWork.Save();
 
                     TempData["success"] = "Data updated successfully!";
-                    return RedirectToAction("VolTimeSheet");
+                    return RedirectToAction("VolunteerTimesheet");
                 }
             }
 
