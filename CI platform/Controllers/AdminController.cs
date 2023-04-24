@@ -1,6 +1,7 @@
 ﻿using CI_platform.Entities.DataModels;
 using CI_platform.Entities.ViewModels;
 using CI_platform.Repositories.GenericRepository.Interface;
+using CI_platform.Repositories.MethodRepository.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CI_platform.Controllers
@@ -8,19 +9,50 @@ namespace CI_platform.Controllers
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public AdminController(IUnitOfWork unitOfWork)
+        private readonly IStoryMethodRepository _repo;
+        public AdminController(IUnitOfWork unitOfWork, IStoryMethodRepository storyMethodRepository)
         {
             _unitOfWork = unitOfWork;
+            _repo = storyMethodRepository;
         }
 
+        //---------------------- User --------------------------//
 
+        #region User
+        //User lists
+
+        [HttpGet]
         public IActionResult AdminUserDetails()
         {
-            IEnumerable<User> userLists = _unitOfWork.User.GetAll();
+            IEnumerable<User> userLists = _unitOfWork.User.GetAccToFilter(m => m.DeletedAt == null);
             adminUserDetails obj = new();
             obj.UserLists = userLists;
             return View(obj);
         }
+
+        [HttpGet]
+        public IActionResult AdminAddUser()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult DeleteUserData(long userId)
+        {
+            if (userId > 0)
+            {
+                User deletingData = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == userId);
+                deletingData.DeletedAt = DateTime.Now;
+                _unitOfWork.User.Update(deletingData);
+                _unitOfWork.Save();
+
+                return RedirectToAction("AdminUserDetails");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminUserDetails");
+        }
+        #endregion
 
         //---------------------- CMS --------------------------//
 
@@ -28,7 +60,7 @@ namespace CI_platform.Controllers
         //CMS lists
         public IActionResult AdminCMSPage()
         {
-            IEnumerable<CmsPage> cmsLists = _unitOfWork.CMSPage.GetAll();
+            IEnumerable<CmsPage> cmsLists = _unitOfWork.CMSPage.GetAccToFilter(m => m.DeletedAt == null);
             adminCMSPageDetails obj = new()
             {
                 CMSLists = cmsLists
@@ -78,20 +110,63 @@ namespace CI_platform.Controllers
             return RedirectToAction("AdminCMSPage");
         }
 
+        [HttpPost]
+        public IActionResult GetCMSData(long CMSId)
+        {
+            CmsPage cmsPageData = _unitOfWork.CMSPage.GetFirstOrDefault(m => m.CmsPageId == CMSId);
+            return Json(cmsPageData);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCMSData(long CMSId)
+        {
+            if (CMSId > 0)
+            {
+                CmsPage deletingData = _unitOfWork.CMSPage.GetFirstOrDefault(m => m.CmsPageId == CMSId);
+                deletingData.DeletedAt = DateTime.Now;
+                _unitOfWork.CMSPage.Update(deletingData);
+                _unitOfWork.Save();
+
+                return RedirectToAction("AdminCMSPage");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminCMSPage");
+        }
         #endregion
 
         //---------------------- Mission --------------------------//
 
+        #region Mission
         //Mission lists
         public IActionResult AdminMissionDetails()
         {
-            IEnumerable<Mission> missionLists = _unitOfWork.Mission.GetAll();
+            IEnumerable<Mission> missionLists = _unitOfWork.Mission.GetAccToFilter(m => m.DeletedAt == null);
             adminMissionDetails obj = new()
             {
                 MissionLists = missionLists
             };
             return View(obj);
         }
+
+
+        [HttpPost]
+        public IActionResult DeleteMissionData(long missionId)
+        {
+            if (missionId > 0)
+            {
+                Mission deletingData = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionId);
+                deletingData.DeletedAt = DateTime.Now;
+                _unitOfWork.Mission.Update(deletingData);
+                _unitOfWork.Save();
+
+                return RedirectToAction("AdminMissionDetails");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminMissionDetails");
+        }
+        #endregion
 
         //---------------------- Mission Theme --------------------------//
 
@@ -301,7 +376,6 @@ namespace CI_platform.Controllers
                     {
                         missionData.ApprovalStatus = "DECLINE";
                         TempData["success"] = "Data Declined successfully!";
-                        TempData["success"] = "Data Declined successfully!";
                     }
                     _unitOfWork.MissionApplication.Update(missionData);
                     _unitOfWork.Save();
@@ -315,16 +389,61 @@ namespace CI_platform.Controllers
 
         //---------------------- Story --------------------------//
 
+        #region Story
         //Story lists
+        [HttpGet]
         public IActionResult AdminStoryDetails()
         {
             IEnumerable<Story> storyLists = _unitOfWork.Story.GetAllStory();
+            IEnumerable<Story> storyListsByFilter = storyLists.Where(m => m.Status == "PENDING").ToList();
             adminStoryDetails obj = new()
             {
-                StoryLists = storyLists,
+                StoryLists = storyListsByFilter,
             };
             return View(obj);
         }
+
+        [HttpPost]
+        public IActionResult ApproveAndDeclineStory(long storyId, int flag)
+        {
+            if (storyId > 0)
+            {
+                Story storyData = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId);
+
+                if (storyData != null)
+                {
+                    if (flag == 1)
+                    {
+                        storyData.Status = "PUBLISHED";
+                        TempData["success"] = "Story published successfully!";
+                    }
+                    else
+                    {
+                        storyData.Status = "DECLINED";
+                        TempData["success"] = "Data Declined successfully!";
+                    }
+                    _unitOfWork.Story.Update(storyData);
+                    _unitOfWork.Save();
+                    return RedirectToAction("AdminStoryDetails");
+                }
+            }
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminStoryDetails");
+        }
+
+        [HttpPost]
+        public IActionResult GetStoryDetails(long storyId)
+        {
+            User? FindingStoryCreator = _repo.UserOfStory(storyId);
+
+            adminStoryDetails storyDetails = new()
+            {
+                UserOfStory = FindingStoryCreator,
+            };
+
+            return Json(storyDetails);
+        }
+        #endregion
 
         //---------------------- Banner --------------------------//
 

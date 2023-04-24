@@ -62,7 +62,7 @@
                                     </a>
                                 </span>
                                 <span>
-                                    <a asp-controller="Admin" asp-action="DeleteUser" asp-route-userId="@item.UserId" class="btn border-0 bg-transparent del-btn">
+                                    <a class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForUser(@item.UserId);">
                                         <i class="bi bi-trash3"></i>
                                     </a>
                                 </span>

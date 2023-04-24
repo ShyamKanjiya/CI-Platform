@@ -102,7 +102,7 @@
 
                                 <!-- Modal for CMS -->
                                 <div class="modal fade" id="editBtnForCMS" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered modal-md modal-dialog-scrollable">
+                                    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title" id="exampleModalLabel">Edit CMS</h5>
@@ -118,13 +118,13 @@
 
                                                     <div class="form-group mb-3">
                                                         <label class="form-label">CMS Title</label>
-                                                        <input type="text" asp-for="CMSTitle" class="form-control" placeholder="Enter CMS Title" id="CMSTitleEdit" value="">
+                                                        <input type="text" asp-for="CMSTitle" class="form-control" placeholder="Enter CMS Title" id="CMSTitleForEdit" value="">
                                                         <span class="text-danger" asp-validation-for="CMSTitle"></span>
                                                     </div>
 
                                                     <div class="form-group mb-3" id="textarea">
                                                         <label class="mb-1" for="CMSDescription">CMS Description</label>
-                                                        <textarea style="min-height: 300px" asp-for="CMSDescription" id="CMSDescriptionEdit"></textarea>
+                                                        <textarea style="min-height: 300px" asp-for="CMSDescription" id="CMSDescription"></textarea>
                                                         <span class="text-danger" asp-validation-for="CMSDescription"></span>
                                                     </div>
 
@@ -155,7 +155,7 @@
 
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent del-btn">
+                                <button class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForCMS(@item.CmsPageId)">
                                     <i class="bi bi-trash3"></i>
                                 </button>
                             </span>

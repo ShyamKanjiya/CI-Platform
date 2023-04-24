@@ -135,18 +135,30 @@ function deleteAlertForSkill(skillId) {
 
 //---------------------- Mission Application --------------------------//
 
-function approveAndDeclineMissionApplication(MaId,flag) {
-    $.ajax({
-        type: 'POST',
-        url: '/Admin/ApproveAndDeclineMissionApplication',
-        data: { "missionApplicationId": MaId, "flag": flag },
-        success: function (data) {
-            location.reload();
-        },
-        error: function () {
-            console.log('error');
-        },
-    });
+function approveAndDeclineMissionApplication(MaId, flag) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to make changes!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, change it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/ApproveAndDeclineMissionApplication',
+                data: { "missionApplicationId": MaId, "flag": flag },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
 }
 
 //---------------------- CMS --------------------------//
@@ -168,16 +180,18 @@ tinymce.init({
 });
 
 function getCMSData(CMSId) {
-    if (skillId > 0) {
+    if (CMSId > 0) {
         $.ajax({
             type: 'POST',
-            url: '/Admin/GetSkillData',
-            data: { "CMSIdId": CMSId },
+            url: '/Admin/GetCMSData',
+            data: { "CMSId": CMSId },
             success: function (data) {
-                console.log(data);
-                $("#editBtnForSkill").modal("toggle");
-                $('#skillIdForEdit').val(data.skillId);
-                $("#skillNameEdit").val(data.skillName);
+                console.log(data.description);
+                $("#editBtnForCMS").modal("toggle");
+                $('#CMSIdForEdit').val(data.CMSId);
+                $("#CMSTitleForEdit").val(data.title);
+                tinyMCE.activeEditor.setContent(data.description);
+                $("#CMSSlugEdit").val(data.slug);
                 if (data.status == 1) {
                     statusInput = document.getElementById("Active");
                 }
@@ -197,4 +211,157 @@ function getCMSData(CMSId) {
             'error'
         )
     }
+}
+
+function deleteAlertForCMS(CMSId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to delete!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/DeleteCMSData',
+                data: { "CMSId": CMSId },
+                success: function () {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
+}
+
+//---------------------- Story --------------------------//
+
+function approveAndDeclineStory(SId, flag) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to make changes!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, change it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/ApproveAndDeclineStory',
+                data: { "storyId": SId, "flag": flag },
+                success: function (data) {
+                    location.reload();
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
+}
+
+function getStoryDetails(SId) {
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/GetStoryDetails',
+        data: { "storyId": SId, },
+        success: function (data) {
+            console.log(data);
+            $("#viewStory").modal("toggle");
+            $("#userAvatar").attr("src", data.userOfStory.avatar);
+            $("#userFName").html(data.userOfStory.firstName);
+            $("#userLName").html(data.userOfStory.lastName);
+            $("#userVolunteer").html(data.userOfStory.whyIVolunteer);
+        },
+        error: function () {
+            console.log('error');
+        },
+    });
+}
+
+//---------------------- Mission --------------------------//
+
+function deleteAlertForMission(MId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to delete!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/DeleteMissionData',
+                data: { "missionId": MId },
+                success: function () {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
+}
+
+//---------------------- Mission --------------------------//
+
+function deleteAlertForUser(UId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to delete!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/DeleteUserData',
+                data: { "userId": UId },
+                success: function () {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
 }

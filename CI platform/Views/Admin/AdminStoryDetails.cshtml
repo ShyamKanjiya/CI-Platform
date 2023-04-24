@@ -6,16 +6,16 @@
 }
 
 <style type="text/css">
-    .view-btn{
+    .view-btn {
         border: 1px solid #F88634;
         color: #F88634;
         padding: 0px 10px;
     }
 
-    .view-btn:hover {
-        color: white;
-        background-color: #F88634;
-    }
+        .view-btn:hover {
+            color: white;
+            background-color: #F88634;
+        }
 </style>
 
 
@@ -46,19 +46,135 @@
                         <td>@item.Title</td>
                         <td>@item.User.FirstName @item.User.LastName</td>
                         <td>@item.Mission.Title</td>
+
                         <td class="d-flex justify-content-center align-items-center">
                             <small>
-                                <button class="btn rounded-pill view-btn">
+                                <button class="btn rounded-pill view-btn" onclick="getStoryDetails(@item.StoryId);">
                                     <small>View</small>
                                 </button>
+
+                                <div class="modal fade" id="viewStory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Story detail</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+
+                                                <div class="me-2 justify-content-center ">
+                                                    <!-- Container for the image gallery -->
+                                                    <div class="container px-0 d-flex ">
+                                                        <div class=" w-100 px-3">
+
+                                                            <!-- Full-width images with number text -->
+                                                            <div class="mySlides">
+                                                                <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                                                            </div>
+
+                                                            <div class="mySlides">
+                                                                <img src="~/images/img1.png" style="width:100%">
+                                                            </div>
+
+                                                            <div class="mySlides">
+                                                                <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png">
+                                                            </div>
+
+                                                            <div class="mySlides">
+                                                                <img src="~/images/img11.png">
+                                                            </div>
+
+                                                            <div class="mySlides">
+                                                                <img src="~/images/img1.png">
+                                                            </div>
+
+                                                            <div class="mySlides">
+                                                                <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                                                            </div>
+
+                                                            <!-- Thumbnail images -->
+                                                            <div class="row mt-4 position-relative " style="height:10%">
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
+                                                                </div>
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                                                                </div>
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
+                                                                </div>
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/img11.png" style="width:100%" onclick="currentSlide(4)">
+                                                                </div>
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(5)">
+                                                                </div>
+                                                                <div class="column mx-auto">
+                                                                    <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="ms-2 mt-5" style="position:relative;">
+                                                    <div class="row" style="max-width:100%">
+                                                        <div class="d-flex justify-content-center" id="owner-img">
+                                                            <img class="rounded-circle" height="100" width="100" id="userAvatar" src="" />
+                                                        </div>
+
+                                                        <div class="owner-name--story-views d-flex justify-content-center align-items-center my-2 ms-2" style="font-size:2.75vh">
+                                                            <span id="userFName"></span>
+                                                            <span class="ms-2" id="userLName"></span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="my-2 mx-1" id="userVolunteer" style="font-size:1.5vh">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="story-title border-bottom mt-4 mx-3" style="font-size:2.75vh">
+                                                    <p>@item.Title</p>
+                                                </div>
+
+                                                <div class="story-desc mx-3" style="font-size:1.75vh">
+                                                    <div class="mt-1">
+                                                        @Html.Raw(@item.Description)
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group mt-3 d-flex justify-content-end">
+                                                    <span>
+                                                        <button class="btn border-0 bg-transparent approve-btn d-flex" onclick="approveAndDeclineStory(@item.StoryId,1)">
+                                                            <i class="bi bi-check-circle text-success"></i>
+                                                            <span class="ms-2">Accept</span>
+                                                        </button>
+                                                    </span>
+                                                    <span>
+                                                        <button class="btn border-0 bg-transparent decline-btn d-flex" onclick="approveAndDeclineStory(@item.StoryId,1)">
+                                                            <i class="bi bi-x-circle text-danger"></i>
+                                                            <span class="ms-2"> Decline</span>
+                                                        </button>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                <button type="button" class="btn btn-warning" onclick="sendMail(@item.MissionId)">Send Mail</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </small>
                             <span>
-                                <button class="btn border-0 bg-transparent approve-btn">
+                                <button class="btn border-0 bg-transparent approve-btn" onclick="approveAndDeclineStory(@item.StoryId,1)">
                                     <i class="bi bi-check-circle text-success"></i>
                                 </button>
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent decline-btn">
+                                <button class="btn border-0 bg-transparent decline-btn" onclick="approveAndDeclineStory(@item.StoryId,1)">
                                     <i class="bi bi-x-circle text-danger"></i>
                                 </button>
                             </span>
@@ -95,3 +211,5 @@
         });
     });
 </script>
+
+<script src="~/js/Carousel.js"></script>
