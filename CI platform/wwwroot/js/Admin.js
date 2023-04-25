@@ -186,9 +186,9 @@ function getCMSData(CMSId) {
             url: '/Admin/GetCMSData',
             data: { "CMSId": CMSId },
             success: function (data) {
-                console.log(data.description);
+                console.log(data);
                 $("#editBtnForCMS").modal("toggle");
-                $('#CMSIdForEdit').val(data.CMSId);
+                $('#CMSIdForEdit').val(data.cmsPageId);
                 $("#CMSTitleForEdit").val(data.title);
                 tinyMCE.activeEditor.setContent(data.description);
                 $("#CMSSlugEdit").val(data.slug);
@@ -330,7 +330,7 @@ function deleteAlertForMission(MId) {
     })
 }
 
-//---------------------- Mission --------------------------//
+//---------------------- User --------------------------//
 
 function deleteAlertForUser(UId) {
     Swal.fire({
@@ -347,6 +347,53 @@ function deleteAlertForUser(UId) {
                 type: 'POST',
                 url: '/Admin/DeleteUserData',
                 data: { "userId": UId },
+                success: function () {
+                    Swal.fire(
+                        'Deleted!',
+                        'Your data has been deleted.',
+                        'success'
+                    ).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function () {
+                    console.log('error');
+                },
+            });
+        }
+    })
+}
+
+function loadImg(image) {
+    if (image.files && image.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#showImg').attr("src", e.target.result);
+        };
+        reader.readAsDataURL(image.files[0]);
+        $('#showImg').show();
+    }
+}
+
+//---------------------- Banner --------------------------//
+
+function deleteAlertForBanner(BannerId) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't to delete!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ffc44f',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                type: 'POST',
+                url: '/Admin/DeleteBannerData',
+                data: { "bannerId": BannerId },
                 success: function () {
                     Swal.fire(
                         'Deleted!',

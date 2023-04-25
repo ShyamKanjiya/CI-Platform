@@ -10,5 +10,7 @@ namespace CI_platform.Entities.ViewModels
     public class adminMissionApplicationDetails
     {
         public IEnumerable<MissionApplication> MissionAppLists { get; set; } = new List<MissionApplication>();
+
+        public User UserDetails { get; set; }
     }
 }

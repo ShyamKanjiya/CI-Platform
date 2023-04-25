@@ -10,5 +10,7 @@ namespace CI_platform.Entities.ViewModels
     public class adminBannerDetails
     {
         public IEnumerable<Banner> BannerLists { get; set; } = new List<Banner>();
+
+        public User UserDetails { get; set; }
     }
 }

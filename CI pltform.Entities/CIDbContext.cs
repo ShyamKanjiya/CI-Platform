@@ -182,7 +182,7 @@ public partial class CIDbContext : DbContext
                 .HasColumnType("text")
                 .HasColumnName("description");
             entity.Property(e => e.Slug)
-                .HasMaxLength(1)
+                .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("slug");
             entity.Property(e => e.Status)

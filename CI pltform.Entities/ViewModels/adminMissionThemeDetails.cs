@@ -12,6 +12,8 @@ namespace CI_platform.Entities.ViewModels
     {
         public IEnumerable<MissionTheme> MissionThemeLists { get; set; } = new List<MissionTheme>();
 
+        public User UserDetails { get; set; }
+
         [Required(ErrorMessage = "Required!")]
         public string? MissionThemeTitle { get; set; }
 

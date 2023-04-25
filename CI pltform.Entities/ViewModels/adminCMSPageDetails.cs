@@ -11,6 +11,8 @@ namespace CI_platform.Entities.ViewModels
     {
         public IEnumerable<CmsPage> CMSLists { get; set; } = new List<CmsPage>();
 
+        public User UserDetails { get; set; }
+
         public string? CMSTitle { get; set; }
 
         public string? CMSDescription { get; set; }

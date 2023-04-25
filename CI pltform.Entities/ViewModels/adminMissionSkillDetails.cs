@@ -12,6 +12,8 @@ namespace CI_platform.Entities.ViewModels
     {
         public IEnumerable<Skill> SkillLists { get; set; } = new List<Skill>();
 
+        public User UserDetails { get; set; }
+
         [Required(ErrorMessage = "Required!")]
         public string? SkillName { get; set; }
 

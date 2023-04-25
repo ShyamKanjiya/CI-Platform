@@ -185,6 +185,52 @@ th {
     object-fit: cover;
 }
 
-    .active,
-    .demo:hover {
-        opaci
+.profile-div {
+    height: 20%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 20px;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+#profileImage {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+}
+
+@media (max-width: 991px) {
+    .profile-div {
+        height: 270px;
+        flex-direction: row;
+        justify-content: center;
+    }
+
+        .profile-div p {
+            margin-right: 20px;
+        }
+}
+
+#profileDiv {
+    height: 150px;
+    width: 150px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    border-radius: 50%;
+}
+
+/*upload avatar button*/
+.upload-avatar {
+    color: #F88634;
+    background: white;
+    border: 1px solid #F88634;
+}
+
+    .upload-avatar:hover {
+        color: white;
+        background: #F88634;
+        transition: 0.5s;
+    }

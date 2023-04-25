@@ -33,7 +33,7 @@ namespace CI_platform.Entities.ViewModels
 
         [Required(ErrorMessage = " Required!")]
         [RegularExpression("^([0-9]{10})$", ErrorMessage = "Invalid Mobile Number.")]
-        public long PhoneNumber { get; set; }
+        public long? PhoneNumber { get; set; }
 
         public string? EmployeeId { get; set; }
 
@@ -62,5 +62,6 @@ namespace CI_platform.Entities.ViewModels
         public IEnumerable<User> UserLists { get; set; } = new List<User>();
         public IEnumerable<Country> CountryList { get; set; } = new List<Country>();
 
+        public User UserDetails { get; set; }
     }
 }

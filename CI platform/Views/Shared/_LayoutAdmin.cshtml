@@ -1,4 +1,11 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims;
+@{
+    var identity = User.Identity as ClaimsIdentity;
+    var name = identity?.FindFirst(ClaimTypes.Name)?.Value;
+    var surname = identity?.FindFirst(ClaimTypes.Surname)?.Value;
+} 
+
+<!DOCTYPE html>
 
 <html>
 <head>
@@ -141,25 +148,28 @@
                     </div>
 
                     <!-- Topbar Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
 
-                            <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
+                                <a class="nav-link" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown"
                                aria-expanded="false" style="width:auto">
-                                <img src="~/images//default-user-icon.png" class="rounded-circle" height="35" width="35" alt="Profile pic"
+                                    <img src="@Model.UserDetails.Avatar" class="rounded-circle" height="35" width="35" alt="Profile pic"
                                      loading="lazy" />
-                                <span class="px-2">Evan Donohue</span>
-                                <img src="/images/drop-down.png" alt="">
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                <li><a class="dropdown-item btn">My Profile</a></li>
-                                <li><a class="dropdown-item btn">Volunteering Timesheet</a></li>
-                                <li><a class="dropdown-item btn">Logout</a></li>
-                                <li><a class="dropdown-item btn">Dashboard</a></li>
-                            </ul>
+                                    <span class="px-2">@name @surname</span>
+                                    <img class="me-4" src="/images/drop-down.png" alt="">
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                    <li><a class="dropdown-item btn">My Profile</a></li>
+                                    <li><a class="dropdown-item btn">Volunteering Timesheet</a></li>
+                                    <li><a class="dropdown-item btn">Logout</a></li>
+                                    <li><a class="dropdown-item btn">Dashboard</a></li>
+                                </ul>
 
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    }
 
                 </nav>
                 <!-- End of Topbar -->
@@ -201,8 +211,8 @@
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous" asp-append-version="true"></script>
-    <script src="~/js/Admin.js"></script>
     <script src="~/js/sb-admin-2.js"></script>
+    <script src="~/js/Admin.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

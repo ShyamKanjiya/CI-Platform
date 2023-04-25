@@ -116,8 +116,8 @@ namespace CI_platform.Controllers
             {
                 userAddStoryModel.MissionApplication = draftMissAppList;
                 userAddStoryModel.Story = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.Status == "DRAFT");
-                userAddStoryModel.StoryMedium = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == userAddStoryModel.Story.StoryId);
                 userAddStoryModel.UserDetails = user;
+                userAddStoryModel.StoryMedium = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == userAddStoryModel.Story.StoryId);
             }
             catch
             {

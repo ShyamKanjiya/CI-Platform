@@ -11,6 +11,8 @@ namespace CI_platform.Entities.ViewModels
     {
         public IEnumerable<Story> StoryLists { get; set; } = new List<Story>();
 
+        public User UserDetails { get; set; }
+
         public User? UserOfStory { get; set; }
     }
 }

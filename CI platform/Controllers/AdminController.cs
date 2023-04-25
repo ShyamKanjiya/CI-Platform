@@ -3,6 +3,7 @@ using CI_platform.Entities.ViewModels;
 using CI_platform.Repositories.GenericRepository.Interface;
 using CI_platform.Repositories.MethodRepository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CI_platform.Controllers
 {
@@ -10,10 +11,21 @@ namespace CI_platform.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStoryMethodRepository _repo;
-        public AdminController(IUnitOfWork unitOfWork, IStoryMethodRepository storyMethodRepository)
+        private readonly IWebHostEnvironment _iweb;
+        public AdminController(IUnitOfWork unitOfWork, IStoryMethodRepository storyMethodRepository, IWebHostEnvironment iweb)
         {
             _unitOfWork = unitOfWork;
             _repo = storyMethodRepository;
+            _iweb = iweb;
+        }
+
+        public User GetThisUser()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
+
+            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
+            return user;
         }
 
         //---------------------- User --------------------------//
@@ -24,17 +36,85 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult AdminUserDetails()
         {
+            User user = GetThisUser();
             IEnumerable<User> userLists = _unitOfWork.User.GetAccToFilter(m => m.DeletedAt == null);
             adminUserDetails obj = new();
             obj.UserLists = userLists;
+            obj.UserDetails = user;
             return View(obj);
+        }
+
+        #region Add 
+        [HttpPost]
+        public JsonResult CascadeCity(long countryId)
+        {
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(cities => cities.CountryId == countryId);
+            return new JsonResult(cityList);
         }
 
         [HttpGet]
         public IActionResult AdminAddUser()
         {
-            return View();
+            IEnumerable<Country> Countries = _unitOfWork.Country.GetAll();
+            adminUserDetails obj = new()
+            {
+                CountryList = Countries
+            };
+            return View(obj);
         }
+
+        [HttpPost]
+        public IActionResult AdminAddUser(adminUserDetails obj, IFormFile userAvatar)
+        {
+            User? status = _unitOfWork.User.GetFirstOrDefault(m => m.Email.ToLower() == obj.Email.Trim().ToLower());
+
+            if (status == null)
+            {
+                User user = new()
+                {
+                    FirstName = obj.FirstName,
+                    LastName = obj.LastName,
+                    PhoneNumber = obj.PhoneNumber,
+                    Email = obj.Email,
+                    Password = obj.Password,
+                    CountryId = obj.CountryId,
+                    CityId = obj.CityId,
+                    EmployeeId = obj.EmployeeId,
+                    Department = obj.Department
+                };
+                _unitOfWork.User.Add(user);
+                _unitOfWork.Save();
+
+                if (userAvatar != null)
+                {
+                    User userForAvatar = _unitOfWork.User.GetFirstOrDefault(m => m.Email.Trim().ToLower() == obj.Email.Trim().ToLower());
+                    string imgExt = Path.GetExtension(userAvatar.FileName);
+                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                    {
+                        string ImageName = user.UserId + Path.GetFileName(userAvatar.FileName);
+                        var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Avatars/", ImageName);
+                        string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                        using (FileStream stream = new(finalPath, FileMode.Create))
+                        {
+                            userAvatar.CopyTo(stream);
+                        }
+                        user.Avatar = imgSaveTo;
+                        user.UpdatedAt = DateTime.Now;
+                        _unitOfWork.User.Update(user);
+                        _unitOfWork.Save();
+                    }
+                }
+                TempData["success"] = "User added successfully!";
+                return RedirectToAction("AdminUserDetails");
+
+            }
+            TempData["error"] = "Email Already Exists!";
+            IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
+            obj.CountryList = countryList;
+            return View(obj);
+        }
+        #endregion
 
         [HttpPost]
         public IActionResult DeleteUserData(long userId)
@@ -52,6 +132,124 @@ namespace CI_platform.Controllers
             TempData["error"] = "Opps! something went wrong";
             return RedirectToAction("AdminUserDetails");
         }
+
+        #region Edit
+
+        [HttpPost]
+        public JsonResult CascadeCityForEdit(long countryId, int userId)
+        {
+            User user = new();
+            long cityId = 0;
+            if (userId > 0)
+            {
+                user = _unitOfWork.User.GetFirstOrDefault(user => user.UserId == userId);
+                if (user != null)
+                {
+                    cityId = user.CityId;
+                }
+            }
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(city => city.CountryId == countryId);
+            return new JsonResult(new { CityId = cityId, Cities = cityList });
+        }
+
+        [HttpGet]
+        public IActionResult AdminEditUser(long userId)
+        {
+            IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
+            adminUserDetails obj = new();
+            if (userId > 0)
+            {
+                User user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == userId);
+                if (User != null)
+                {
+                    obj.UserId = user.UserId;
+                    obj.Avatar = user.Avatar;
+                    obj.FirstName = user.FirstName;
+                    obj.LastName = user.LastName;
+                    obj.PhoneNumber = user.PhoneNumber;
+                    obj.Email = user.Email;
+                    obj.EmployeeId = user.EmployeeId;
+                    obj.Department = user.Department;
+                    obj.CityId = user.CityId;
+                    obj.CountryId = user.CountryId;
+                }
+            }
+            obj.CountryList = countryList;
+            return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult AdminEditUser(adminUserDetails obj, IFormFile userAvatar)
+        {
+            if (obj.UserId > 0)
+            {
+                User user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == obj.UserId);
+                user.FirstName = obj.FirstName;
+                user.LastName = obj.LastName;
+                user.PhoneNumber = obj.PhoneNumber;
+                user.Email = obj.Email;
+                user.EmployeeId = obj.EmployeeId;
+                user.Department = obj.Department;
+                user.CityId = obj.CityId;
+                user.CountryId = obj.CountryId;
+
+                if (user != null && userAvatar != null)
+                {
+                    string imgExt = Path.GetExtension(userAvatar.FileName);
+                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                    {
+                        if (user.Avatar != null)
+                        {
+                            string ImageName = user.UserId + Path.GetFileName(userAvatar.FileName);
+                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Avatars/", ImageName);
+                            string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                            if (!imgSaveTo.Equals(user.Avatar))
+                            {
+                                string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + user.Avatar);
+                                if (System.IO.File.Exists(alrExists))
+                                {
+                                    System.IO.File.Delete(alrExists);
+                                }
+
+                                using (FileStream stream = new(finalPath, FileMode.Create))
+                                {
+                                    userAvatar.CopyTo(stream);
+                                }
+                                user.Avatar = imgSaveTo;
+                                user.UpdatedAt = DateTime.Now;
+                                _unitOfWork.User.Update(user);
+                            }
+                        }
+                        else
+                        {
+                            string ImageName = user.UserId + Path.GetFileName(userAvatar.FileName);
+                            var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Avatars/", ImageName);
+                            string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                            using (FileStream stream = new(finalPath, FileMode.Create))
+                            {
+                                userAvatar.CopyTo(stream);
+                            }
+                            user.Avatar = imgSaveTo;
+                            user.UpdatedAt = DateTime.Now;
+                            _unitOfWork.User.Update(user);
+                        }
+                    }
+                }
+
+
+                _unitOfWork.User.Update(user);
+                _unitOfWork.Save();
+                TempData["success"] = "User edited successfully!";
+                return RedirectToAction("AdminUserDetails");
+            }
+            TempData["error"] = "Something went wrong";
+            return View(obj);
+        }
+
+        #endregion
+
         #endregion
 
         //---------------------- CMS --------------------------//
@@ -60,10 +258,12 @@ namespace CI_platform.Controllers
         //CMS lists
         public IActionResult AdminCMSPage()
         {
+            User user = GetThisUser();
             IEnumerable<CmsPage> cmsLists = _unitOfWork.CMSPage.GetAccToFilter(m => m.DeletedAt == null);
             adminCMSPageDetails obj = new()
             {
-                CMSLists = cmsLists
+                CMSLists = cmsLists,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -141,10 +341,12 @@ namespace CI_platform.Controllers
         //Mission lists
         public IActionResult AdminMissionDetails()
         {
+            User user = GetThisUser();
             IEnumerable<Mission> missionLists = _unitOfWork.Mission.GetAccToFilter(m => m.DeletedAt == null);
             adminMissionDetails obj = new()
             {
-                MissionLists = missionLists
+                MissionLists = missionLists,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -175,10 +377,12 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult AdminMissionThemeDetails()
         {
+            User user = GetThisUser();
             IEnumerable<MissionTheme> missionThemeLists = _unitOfWork.MissionTheme.GetAccToFilter(m => m.DeletedAt == null);
             adminMissionThemeDetails obj = new()
             {
                 MissionThemeLists = missionThemeLists,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -261,10 +465,12 @@ namespace CI_platform.Controllers
         //Skill Lists
         public IActionResult AdminMissionSkillDetails()
         {
+            User user = GetThisUser();
             IEnumerable<Skill> SkillLists = _unitOfWork.Skill.GetAccToFilter(m => m.DeletedAt == null);
             adminMissionSkillDetails obj = new()
             {
                 SkillLists = SkillLists,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -350,10 +556,12 @@ namespace CI_platform.Controllers
         {
             IEnumerable<MissionApplication> missionAppLists = _unitOfWork.MissionApplication.GetAllMissAppList();
             IEnumerable<MissionApplication> missionAppListsByFilter = missionAppLists.Where(m => m.ApprovalStatus == "PENDING").ToList();
+            User user = GetThisUser();
 
             adminMissionApplicationDetails obj = new()
             {
                 MissionAppLists = missionAppListsByFilter,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -396,9 +604,12 @@ namespace CI_platform.Controllers
         {
             IEnumerable<Story> storyLists = _unitOfWork.Story.GetAllStory();
             IEnumerable<Story> storyListsByFilter = storyLists.Where(m => m.Status == "PENDING").ToList();
+            User user = GetThisUser();
+
             adminStoryDetails obj = new()
             {
                 StoryLists = storyListsByFilter,
+                UserDetails = user
             };
             return View(obj);
         }
@@ -447,16 +658,38 @@ namespace CI_platform.Controllers
 
         //---------------------- Banner --------------------------//
 
+        #region Banner
         //Banner Lists
         public IActionResult AdminBannerDetails()
         {
             IEnumerable<Banner> bannerLists = _unitOfWork.Banner.GetAll();
+            User user = GetThisUser();
             adminBannerDetails obj = new()
             {
                 BannerLists = bannerLists,
+                UserDetails= user
             };
             return View(obj);
         }
 
+        [HttpPost]
+        public IActionResult DeleteBannerData(long bannerId)
+        {
+            if (bannerId > 0)
+            {
+                Banner deletingData = _unitOfWork.Banner.GetFirstOrDefault(m => m.BannerId == bannerId);
+                deletingData.DeletedAt = DateTime.Now;
+                _unitOfWork.Banner.Update(deletingData);
+                _unitOfWork.Save();
+
+                return RedirectToAction("AdminBannerDetails");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminBannerDetails");
+        }
+        #endregion
+
+        //---------------------- END --------------------------//
     }
 }
