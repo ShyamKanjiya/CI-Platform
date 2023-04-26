@@ -85,9 +85,8 @@ namespace CI_platform.Controllers
                 user.WhyIVolunteer = obj.WhyIVolunteer;
                 user.LinkedInUrl = obj.LinkedInUrl;
                 user.UpdatedAt = DateTime.Now;
-
                 _unitOfWork.User.Update(user);
-
+                obj.UserDetails = user;
                 if (finalSkillList.Any())
                 {
                     var AddSkills = finalSkillList.Except(idOfUserSkills);
@@ -192,7 +191,6 @@ namespace CI_platform.Controllers
             var cityId = user.CityId;
             IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(m => m.CountryId == countryId);
             return new JsonResult(new { CityId = cityId, Cities = cityList });
-
         }
 
         #endregion
@@ -220,6 +218,15 @@ namespace CI_platform.Controllers
             obj.Cities = _unitOfWork.City.GetAll();
 
             return View(obj);
+        }
+
+        public bool CheckEnterdTime(int Minutes, int Hours)
+        {
+            if(Hours == 0 && Minutes == 0)
+            {
+                return false;
+            }
+            return true;
         }
 
         [HttpPost]
@@ -252,7 +259,6 @@ namespace CI_platform.Controllers
                 Timesheet updatedData = _unitOfWork.Timesheet.GetFirstOrDefault(timeSheetData => timeSheetData.TimesheetId == obj.TimeSheetId);
                 if (updatedData != null)
                 {
-                    updatedData.MissionId = obj.MissionId;
                     updatedData.Action = obj.Action;
                     updatedData.Time = time;
                     updatedData.Notes = obj.Notes;

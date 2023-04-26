@@ -256,9 +256,15 @@
                             </div>
                         }
                         <div>
-                            @if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now)
+                            @if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now && (thisMissApp?.ApprovalStatus == "APPROVE" || thisMissApp?.ApprovalStatus == "PENDING"))
                             {
-
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-4 text-warning h6">Applied</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
+                            else if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now)
+                            {
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
                                     <p class="mb-0 pe-4 text-warning h6">Apply</p>
                                     <img src="/images/right-arrow.png" alt="">

@@ -275,28 +275,7 @@ namespace CI_platform.Controllers
                 }
             }
 
-            userAddStoryModel model = new userAddStoryModel();
-
-            List<MissionApplication> draftMissAppList = new List<MissionApplication>();
-            List<MissionApplication> usersAppMission = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE");
-            foreach (var mission in usersAppMission)
-            {
-                var story = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
-                if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
-                {
-                    draftMissAppList.Add(mission);
-                }
-                else if (story == null)
-                {
-                    draftMissAppList.Add(mission);
-                }
-
-            }
-
-            model.MissionApplication = draftMissAppList;
-            model.Missions = (List<Mission>)_unitOfWork.Mission.GetAll();
-            return View("StoryAddPage", model);
-
+            return RedirectToAction("StoryAddPage");
         }
 
 

@@ -47,15 +47,6 @@ namespace CI_platform.Entities.ViewModels
         [Required(ErrorMessage = " Required!")]
         public long CountryId { get; set; }
 
-        //Password change
-        [Required(ErrorMessage = "Required!")]
-        public string OldPassword { get; set; } = null!;
-
-        [Required(ErrorMessage = "Required!")]
-        [DataType(DataType.Password)]
-        [RegularExpression("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,15}$", ErrorMessage = "Minimum 8 and maximum 15 characters, at least one uppercase letter, one lowercase letter, one number and one special character")]
-        public string NewPassword { get; set; } = null!;
-
         [Required(ErrorMessage = "Required!")]
         [Compare("NewPassword")]
         public string ConfirmPasswordEdit { get; set; } = null!;

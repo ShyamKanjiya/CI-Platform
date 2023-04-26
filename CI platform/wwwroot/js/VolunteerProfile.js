@@ -184,12 +184,16 @@ function Alert(message) {
 
 $(document).ready(function () {
     var cId = $('#countryOfUser').val();
-    cascadeCity(cId);
+    if (cId > 0) {
+        cascadeCity(cId);
+    }
 });
 
 $('#countryOfUser').change(function () {
     var cId = $('#countryOfUser').val();
-    cascadeCity(cId);
+    if (cId > 0) {
+        cascadeCity(cId);
+    }
 });
 
 function cascadeCity(cId) {

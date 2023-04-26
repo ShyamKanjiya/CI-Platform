@@ -162,7 +162,7 @@
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <label class="form-label" for="CountryId">Country<span class="text-danger"> *</span></label>
                         <select asp-for="@Model.CountryId" class="form-select" value="" aria-label="Default select example" id="countryOfUser">
-                            <option selected>Select Your Country</option>
+                            <option value="">Select Your Country</option>
                             @foreach (Country country in Model.Countries)
                             {
                                 <option value="@country.CountryId">@country.Name</option>
@@ -172,7 +172,9 @@
                     </div>
                     <div class="col-sm-6 col-12 mb-sm-4 mb-3">
                         <label class="form-label" for="CityId">City<span class="text-danger"> *</span></label>
+
                         <select asp-for="@Model.CityId" class="form-select" aria-label="Default select example" id="cityOfUser">
+                            <option value="">Select Country First</option>
                         </select>
                         <span class="text-danger" asp-validation-for="CityId"></span>
                     </div>

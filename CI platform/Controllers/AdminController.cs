@@ -3,6 +3,7 @@ using CI_platform.Entities.ViewModels;
 using CI_platform.Repositories.GenericRepository.Interface;
 using CI_platform.Repositories.MethodRepository.Interface;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using System.Security.Claims;
 
 namespace CI_platform.Controllers
@@ -55,9 +56,11 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult AdminAddUser()
         {
+            User user = GetThisUser();
             IEnumerable<Country> Countries = _unitOfWork.Country.GetAll();
             adminUserDetails obj = new()
             {
+                UserDetails = user,
                 CountryList = Countries
             };
             return View(obj);
@@ -122,6 +125,10 @@ namespace CI_platform.Controllers
             if (userId > 0)
             {
                 User deletingData = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == userId);
+
+                string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + deletingData.Avatar);
+                System.IO.File.Delete(alrExists);
+
                 deletingData.DeletedAt = DateTime.Now;
                 _unitOfWork.User.Update(deletingData);
                 _unitOfWork.Save();
@@ -155,6 +162,7 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult AdminEditUser(long userId)
         {
+            User userDetail = GetThisUser();
             IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
             adminUserDetails obj = new();
             if (userId > 0)
@@ -162,6 +170,7 @@ namespace CI_platform.Controllers
                 User user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == userId);
                 if (User != null)
                 {
+                    obj.UserDetails = userDetail;
                     obj.UserId = user.UserId;
                     obj.Avatar = user.Avatar;
                     obj.FirstName = user.FirstName;
@@ -237,7 +246,6 @@ namespace CI_platform.Controllers
                         }
                     }
                 }
-
 
                 _unitOfWork.User.Update(user);
                 _unitOfWork.Save();
@@ -351,6 +359,22 @@ namespace CI_platform.Controllers
             return View(obj);
         }
 
+        [HttpGet]
+        public IActionResult AdminAddMission()
+        {
+            User user = GetThisUser();
+            IEnumerable<Country> Countries = _unitOfWork.Country.GetAll();
+            IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAll();
+            IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAll();
+            adminMissionDetails obj = new()
+            {
+                UserDetails = user,
+                CountryList = Countries,
+                ThemeList = themeList,
+                SkillList = skillList,
+            };
+            return View(obj);
+        }
 
         [HttpPost]
         public IActionResult DeleteMissionData(long missionId)
@@ -662,14 +686,124 @@ namespace CI_platform.Controllers
         //Banner Lists
         public IActionResult AdminBannerDetails()
         {
-            IEnumerable<Banner> bannerLists = _unitOfWork.Banner.GetAll();
+            IEnumerable<Banner> bannerLists = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null);
             User user = GetThisUser();
             adminBannerDetails obj = new()
             {
                 BannerLists = bannerLists,
-                UserDetails= user
+                UserDetails = user
             };
             return View(obj);
+        }
+
+        [HttpPost]
+        public IActionResult AddAndUpdateBanner(adminBannerDetails obj, IFormFile banner)
+        {
+            var Bdata = _unitOfWork.Banner.GetFirstOrDefault(m => m.DeletedAt == null && m.BannerId != obj.BannerId);
+
+            if (obj.BannerId == 0)
+            {
+                Banner data = new()
+                {
+                    Text = obj.BannerText,
+                    SortOrder = obj.BannerNumber
+                };
+
+                if (banner != null)
+                {
+                    string imgExt = Path.GetExtension(banner.FileName);
+                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                    {
+                        string ImageName = Path.GetFileName(banner.FileName);
+                        var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Banners/", ImageName);
+                        string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                        using (FileStream stream = new(finalPath, FileMode.Create))
+                        {
+                            banner.CopyTo(stream);
+                        }
+                        data.Image = imgSaveTo;
+                    }
+                }
+
+                _unitOfWork.Banner.Add(data);
+                _unitOfWork.Save();
+
+                TempData["success"] = "Data added successfully!";
+                return RedirectToAction("AdminBannerDetails");
+
+            }
+            else
+            {
+                if (Bdata == null)
+                {
+                    Banner updatedData = _unitOfWork.Banner.GetFirstOrDefault(m => m.BannerId == obj.BannerId);
+                    if (updatedData != null)
+                    {
+                        updatedData.BannerId = obj.BannerId;
+                        updatedData.Text = obj.BannerText;
+                        updatedData.SortOrder = obj.BannerNumber;
+
+                        if (updatedData != null && banner != null)
+                        {
+                            string imgExt = Path.GetExtension(banner.FileName);
+                            if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                            {
+                                if (updatedData.Image != null)
+                                {
+                                    string ImageName = Path.GetFileName(banner.FileName);
+                                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Banners/", ImageName);
+                                    string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                                    if (!imgSaveTo.Equals(updatedData.Image))
+                                    {
+                                        string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + updatedData.Image);
+                                        if (System.IO.File.Exists(alrExists))
+                                        {
+                                            System.IO.File.Delete(alrExists);
+                                        }
+
+                                        using (FileStream stream = new(finalPath, FileMode.Create))
+                                        {
+                                            banner.CopyTo(stream);
+                                        }
+                                        updatedData.Image = imgSaveTo;
+                                        updatedData.UpdatedAt = DateTime.Now;
+                                    }
+                                }
+                                else
+                                {
+                                    string ImageName = Path.GetFileName(banner.FileName);
+                                    var imgSaveTo = Path.Combine(_iweb.WebRootPath, "/Banners/", ImageName);
+                                    string finalPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + imgSaveTo);
+
+                                    using (FileStream stream = new(finalPath, FileMode.Create))
+                                    {
+                                        banner.CopyTo(stream);
+                                    }
+                                    updatedData.Image = imgSaveTo;
+                                    updatedData.UpdatedAt = DateTime.Now;
+                                }
+                            }
+                        }
+
+                        _unitOfWork.Banner.Update(updatedData);
+                        _unitOfWork.Save();
+
+                        TempData["success"] = "Data updated successfully!";
+                        return RedirectToAction("AdminBannerDetails");
+                    }
+                }
+            }
+            TempData["success"] = "Data added successfully!";
+            return RedirectToAction("AdminBannerDetails");
+        }
+
+        [HttpPost]
+        public IActionResult GetBannerData(long bannerId)
+        {
+            Banner bannerData = _unitOfWork.Banner.GetFirstOrDefault(m => m.BannerId == bannerId);
+            return Json(bannerData);
         }
 
         [HttpPost]
@@ -679,6 +813,10 @@ namespace CI_platform.Controllers
             {
                 Banner deletingData = _unitOfWork.Banner.GetFirstOrDefault(m => m.BannerId == bannerId);
                 deletingData.DeletedAt = DateTime.Now;
+
+                string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + deletingData.Image);
+                System.IO.File.Delete(alrExists);
+
                 _unitOfWork.Banner.Update(deletingData);
                 _unitOfWork.Save();
 

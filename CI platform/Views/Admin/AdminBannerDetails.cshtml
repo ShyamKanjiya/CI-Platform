@@ -5,6 +5,19 @@
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
+<style>
+    .display-banner {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+    }
+
+        .display-banner img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+        }
+</style>
 
 
 <div class="container-fluid">
@@ -17,10 +30,61 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <button class="btn add-btn rounded-pill">
+            <button class="btn add-btn rounded-pill" data-bs-toggle="modal" data-bs-target="#addBanner">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
             </button>
+
+            <!--Popup for Banner-->
+            <div class="modal fade" id="addBanner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+                    <div class="modal-content">
+                        <div id="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Banner</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="formForAddBanner" asp-controller="Admin" asp-action="AddAndUpdateBanner" method="post" enctype="multipart/form-data">
+                                <div class="modal-body">
+                                    <div class="row my-3 align-items-center">
+                                        <div class="col-sm-3 avatar-div">
+                                            <div class="display-banner mx-auto">
+                                                <img src="~/images/default-user-icon.png" id="showImg" />
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-9">
+                                            <div class="form-group">
+                                                <label class="form-label" for="banner">Add Banner</label>
+                                                <input type="file" class="form-control" name="banner" id="banner"
+                                                       placeholder="Choose banner" accept="image/jpg,image/jpeg,image/png" onchange="loadImg(this)">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Banner Text</label>
+                                        <input type="text" asp-for="BannerText" class="form-control" placeholder="Enter Banner Name" value="">
+                                        <span class="text-danger" asp-validation-for="BannerText"></span>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="form-label" asp-for="BannerNumber" class="form-label">Banner Number</label>
+                                        <input asp-for="BannerNumber" type="number" class="form-control" id="number" value=""
+                                               placeholder="Enter Banner number">
+                                        <span asp-validation-for="BannerNumber" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="table-div">
@@ -40,9 +104,64 @@
                         <td>@item.Text</td>
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent edit-btn">
+                                <button class="btn border-0 bg-transparent edit-btn" onclick="getBannerData(@item.BannerId);">
                                     <i class="bi bi-pencil-square"></i>
                                 </button>
+
+                                <!-- Modal for Edit Banner -->
+                                <div class="modal fade" id="editBtnForBanner" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Edit Banner</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <form id="forBannerId" asp-controller="Admin" asp-action="AddAndUpdateBanner" method="post" enctype="multipart/form-data">
+                                                <div class="modal-body">
+
+                                                    <div hidden>
+                                                        <label for="bannerIdForEdit" class="form-label">Banner</label>
+                                                        <input asp-for="BannerId" class="form-control" id="bannerIdForEdit" type="text" value="" />
+                                                    </div>
+
+                                                    <div class="row my-3 align-items-center">
+                                                        <div class="col-sm-3 avatar-div">
+                                                            <div class="display-banner mx-auto">
+                                                                <img id="bannerImg" src="" />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-9">
+                                                            <div class="form-group">
+                                                                <label class="form-label" for="banner">Add Banner</label>
+                                                                <input type="file" class="form-control" name="banner" id="banner"
+                                                                   placeholder="Choose banner" accept="image/jpg,image/jpeg,image/png" onchange="loadImgForBanner(this)">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div class="form-group mb-3">
+                                                        <label class="form-label">Banner Text</label>
+                                                        <input type="text" asp-for="BannerText" class="form-control" placeholder="Enter Banner Txt" id="bannerTextForEdit" value="">
+                                                        <span class="text-danger" asp-validation-for="BannerText"></span>
+                                                    </div>
+
+                                                    <div class="form-group">
+                                                        <label class="form-label">Banner Number</label>
+                                                        <input asp-for="BannerNumber" type="number" class="form-control" id="bannerNumberForEdit" value="" placeholder="Enter Banner number">
+                                                        <span asp-validation-for="BannerNumber" class="text-danger"></span>
+                                                    </div>
+
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
+                                                    <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </span>
                             <span>
                                 <button class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForBanner(@item.BannerId)">

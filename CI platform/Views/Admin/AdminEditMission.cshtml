@@ -1,19 +1,22 @@
 ﻿@model adminMissionDetails;
 
 @{
-    ViewData["Title"] = "adminMissionDetails";
+    ViewData["Title"] = "AddMissionDetail";
     Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/AdminAddEditMission.css">
+<link rel="stylesheet" href="~/css/AdminAddEditMission.css" />
 
 <div class="container-fluid p-0">
     <div class="border-bottom add-edit-heading">
-        <h5 class="heading">Add Mission</h5>
+        <h5 class="heading">Edit Mission</h5>
     </div>
     <div class="form">
-        <form class="needs-validation" asp-controller="Admin" asp-action="AddMission" method="post" enctype="multipart/form-data">
+        <form class="needs-validation" asp-controller="Admin" asp-action="EditMission" method="post" enctype="multipart/form-data">
             <div class="form-content">
+                <div hidden>
+                    <input asp-for="MissionId" type="text" class="form-control" id="missionId">
+                </div>
                 <div class="form-group">
                     <label class="form-label" for="missionTitle">Mission Title</label>
                     <input asp-for="Title" type="text" class="form-control" id="missionTitle"
@@ -38,7 +41,6 @@
                         <div class="form-group">
                             <label class="form-label" for="missCountry">Country</label>
                             <select asp-for="CountryId" class="form-select select" id="missCountry">
-                                <option value="">Select Country</option>
                                 @foreach (var country in Model.CountryList)
                                 {
                                     <option value="@country.CountryId">@country.Name</option>
@@ -50,8 +52,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="casCityAddMission">City</label>
-                            <select asp-for="CityId" class="form-select select" id="casCityAddMission">
-                                <option value="">Please Select Country First</option>
+                            <select asp-for="CityId" class="form-select select" id="casCityEditMission">
                             </select>
                             <span asp-validation-for="CityId" class="text-danger"></span>
                         </div>
@@ -73,14 +74,14 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="mb-1" for="startDate">Select StartDate</label>
-                            <input asp-for="StartDate" value="" type="date" class="form-control" id="startDate">
+                            <input asp-for="StartDate" type="date" class="form-control" id="startDate">
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="mb-1" for="endDate">Select EndDate</label>
-                            <input asp-for="EndDate" value="" type="date" class="form-control" id="endDate">
+                            <input asp-for="EndDate" type="date" class="form-control" id="endDate">
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -121,8 +122,8 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="mb-1" for="missionDeadline">Select Mission Deadline</label>
-                            <input asp-for="MissionDeadline" value="" type="date" class="form-control" id="missionDeadline">
+                            <label class="form-label" for="missionDeadline">Select Mission Deadline</label>
+                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline">
                             <span asp-validation-for="MissionDeadline" class="text-danger"></span>
                         </div>
                     </div>
@@ -159,8 +160,16 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="mission-skills">Mission Skills</label>
+                    <label class="form-label" for="selMissSkills">Mission Skills</label>
                     <div class="border px-3 py-2 d-flex flex-column" id="selMissSkills">
+                    </div>
+                    <div hidden>
+                        <ul id="mission-skills">
+                            @foreach (var missionSkills in Model.MissionSkillList)
+                            {
+                                <li value="@missionSkills.SkillId">@missionSkills.Skill.SkillName</li>
+                            }
+                        </ul>
                     </div>
                     <a class="btn rounded-pill mt-3 px-3 addMissSkillsbtn" data-bs-toggle="modal" data-bs-target="#addMissSkills">Add Mission Skills</a>
                     <div class="modal fade" id="addMissSkills" tabindex="-1" aria-labelledby="e" aria-hidden="true">
@@ -248,37 +257,99 @@
 <script src="~/js/AdminAddEditMission.js"></script>
 <script src="~/js/AdminAddEditDocument.js"></script>
 <script type="text/javascript">
+
+    $('#mission').addClass('active');
+
     $(document).ready(function () {
-        var countryId = $('#missCountry').val();
-        if (countryId > 0) {
-            addMissCityCascade(countryId);
-        }
-        $(".preview-mission-image").imageUploader({});
-        $(".preview-mission-docs").docsUploader({});
+        var cId = $('#missCountry').val();
+        var mId = $('#missionId').val();
+        editMissCasCity(cId, mId);
     });
 
     $('#missCountry').change(function () {
-        var countryId = $('#missCountry').val();
-        console.log(countryId);
-        addMissCityCascade(countryId);
+        var cId = $('#missCountry').val();
+        editMissCasCity(cId, 0);
     });
 
-    function addMissCityCascade(cId) {
+    function editMissCasCity(cId, mId) {
         $.ajax({
             type: 'POST',
-            url: '/Admin/AddMissCityCascade',
-            data: { "countryId": cId },
+            url: '/Admin/EditMissCasCity',
+            data: { "countryId": cId, "missionId": mId },
             success: function (data) {
-                $('#casCityAddMission').empty();
-                $('#casCityAddMission').append('<option value="">Select City</option>');
-                $.each(data, function (i, city) {
-                    $('#casCityAddMission').append('<option value=' + city.cityId + '>' + city.name + '</option>');
+                $('#casCityEditMission').empty();
+                $.each(data.cities, function (i, city) {
+                    $('#casCityEditMission').append('<option value=' + city.cityId + '>' + city.name + '</option>');
                 });
+                var IsExists = false;
+                $('#casCityEditMission option').each(function () {
+                    if (this.value == data.cityId) {
+                        IsExists = true;
+                        return 1;
+                    }
+                });
+                if (IsExists == true) {
+                    $("#casCityEditMission").val(data.cityId).change();
+                }
             },
             error: function (e) {
                 console.log(e);
             }
         });
     }
-    $('#mission').addClass('active');
+
+    //for mission images
+    if (@Model.MissionMediumList.Count() == 0) {
+        debugger;
+        $('.preview-mission-image').html("");
+        $(".preview-mission-image").imageUploader({});
+    }
+    else {
+        $('.preview-mission-image').html("");
+        var i = 1;
+        let preloadedimages = [];
+        var media = @Html.Raw(Json.Serialize(@Model.MissionMediumList));
+        for (let j = 0; j < media.length; j++) {
+            if (media[j].mediaType != 'video') {
+                let imgPath = media[j].mediaPath;
+                var content = {
+                    id: i, src: "/MissionMedia/" + imgPath
+                };
+                i++;
+                preloadedimages.push(content);
+            }
+            else {
+                $("#videoUrl").val(media[j].mediaPath);
+            }
+        }
+        $('.preview-mission-image').imageUploader({
+            preloadedimage: preloadedimages
+        });
+    }
+
+    //for missions documents
+    if (@Model.MissionDocumentList.Count() == 0) {
+        $('.preview-mission-docs').html("");
+        $(".preview-mission-docs").docsUploader({});
+    }
+    else {
+
+        $('.preview-mission-docs').html("");
+        var y = 1;
+        let preloadeddocument = [];
+        var docs = @Html.Raw(Json.Serialize(@Model.MissionDocumentList));
+
+        for (let x = 0; x < docs.length; x++) {
+            let docPath = docs[x].documentPath;
+            var content = {
+                id: y, src: "/MissionDocuments/" + docPath
+            };
+            y++;
+            preloadeddocument.push(content);
+        }
+        $('.preview-mission-docs').docsUploader({
+            preloadeddocs: preloadeddocument
+        });
+    }
+
 </script>

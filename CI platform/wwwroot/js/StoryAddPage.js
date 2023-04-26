@@ -113,7 +113,22 @@ function validateYouTubeUrl() {
             alert("YoutubeURL");
         }
         else {
-            alert("WrongURL")
+            let timerInterval
+            Swal.fire({
+                title: "Enter valid URL",
+                timer: 500,
+                timerProgressBar: true,
+                didOpen: () => {
+                    Swal.showLoading()
+                },
+                willClose: () => {
+                    clearInterval(timerInterval)
+                }
+            }).then((result) => {
+                if (result.dismiss === Swal.DismissReason.timer) {
+                    console.log("I was closed");
+                }
+            })
         }
     }
     return false;

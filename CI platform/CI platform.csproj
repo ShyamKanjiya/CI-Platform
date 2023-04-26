@@ -34,6 +34,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\Documents\" />
     <Folder Include="wwwroot\Avatars\" />
+    <Folder Include="wwwroot\Banners\" />
     <Folder Include="wwwroot\StoryImages\" />
   </ItemGroup>
 

@@ -11,6 +11,9 @@ namespace CI_pltform.Entities.ViewModels
 {
     public class userProfileModel
     {
+        private string firstName;
+        private string lastName;
+
         [Required]
         public string? OldPassword { get; set; }
 
@@ -25,10 +28,29 @@ namespace CI_pltform.Entities.ViewModels
 
         //User details
         [Required]
-        public string? FirstName { get; set; }
+        public string? FirstName
+        {
+            get
+            {
+                return firstName?.Trim();
+            }
+            set
+            {
+                firstName = value;
+            }
+        }
 
         [Required]
-        public string? LastName { get; set; }
+        public string? LastName {
+            get
+            {
+                return lastName?.Trim();
+            }
+            set
+            {
+                lastName = value;
+            }
+        }
 
         public string? WhyIVolunteer { get; set; }
 

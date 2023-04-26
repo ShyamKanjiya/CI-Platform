@@ -412,3 +412,41 @@ function deleteAlertForBanner(BannerId) {
         }
     })
 }
+
+function getBannerData(bannerId) {
+    if (bannerId > 0) {
+        $.ajax({
+            type: 'POST',
+            url: '/Admin/GetBannerData',
+            data: { "bannerId": bannerId },
+            success: function (data) {
+                console.log(data);
+                $("#editBtnForBanner").modal("toggle");
+                $('#bannerIdForEdit').val(data.bannerId);
+                $("#bannerTextForEdit").val(data.text);
+                $("#bannerNumberForEdit").val(data.sortOrder);
+                $("#bannerImg").attr("src", data.image);
+            },
+            error: function () {
+                console.log('error');
+            },
+        });
+    }
+    else {
+        Swal.fire(
+            'Something Went Wrong',
+            'error'
+        )
+    }
+}
+
+function loadImgForBanner(image) {
+    if (image.files && image.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            $('#bannerImg').attr("src", e.target.result);
+        };
+        reader.readAsDataURL(image.files[0]);
+        $('#bannerImg').show();
+    }
+}

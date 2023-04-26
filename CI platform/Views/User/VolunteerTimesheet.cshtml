@@ -118,7 +118,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="missForTimeMissEdit" class="form-label">Mission</label>
-                                                                <select asp-for="MissionId" id="missForTimeMissEdit" class="form-select" onchange="getDate('#missForTimeMissEdit')">
+                                                                <select asp-for="MissionId" id="missForTimeMissEdit" class="form-select" disabled>
                                                                     <option value="">Select Mission</option>
                                                                     @foreach (var mission in Model.MissionApplicationForTime)
                                                                     {
@@ -143,7 +143,7 @@
                                                                 <div class="col-sm-6">
                                                                     <div class="mb-3">
                                                                         <label for="minForTimeMissEdit" class="form-label">Minutes</label>
-                                                                        <input asp-for="Minutes" id="minForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Minutes..." value="" />
+                                                                        <input asp-for="Minutes" id="minForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Minutes..." value=""  />
                                                                         <span class="text-danger" asp-validation-for="Minutes"></span>
                                                                     </div>
                                                                 </div>
@@ -264,7 +264,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="missForGoalMissEdit" class="form-label">Mission</label>
-                                                                <select asp-for="MissionId" id="missForGoalMissEdit" class="form-select" onchange="getDate('#missForGoalMissEdit')">
+                                                                <select asp-for="MissionId" id="missForGoalMissEdit" class="form-select" disabled>
                                                                     <option value="">Select Mission</option>
                                                                     @foreach (var mission in Model.MissionApplicationForGoal)
                                                                     {
@@ -312,3 +312,7 @@
 
 
 <script src="~/js/VolunteerTimesheet.js"></script>
+
+<script>
+
+</script>

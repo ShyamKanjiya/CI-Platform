@@ -1,4 +1,5 @@
 ﻿using CI_platform.Entities.DataModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -15,10 +16,13 @@ namespace CI_platform.Entities.ViewModels
         [Required(ErrorMessage = "Required!")]
         public long MissionId { get; set; }
 
+        [Remote("CheckEnterdTime", "User", AdditionalFields = "Minutes", ErrorMessage = "Please, Enter valid time")]
         [Required(ErrorMessage = "Required!")]
         public int Hours { get; set; }
 
         [Required(ErrorMessage = "Required!")]
+        [Range(00, 59, ErrorMessage = "Minutes must between 00 to 59")]
+        [Remote("CheckEnterdTime", "User",AdditionalFields = "Hours", ErrorMessage = "Please, Enter valid time")]
         public int Minutes { get; set; }
 
         [Required(ErrorMessage = "Required!")]
