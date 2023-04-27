@@ -17,6 +17,7 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IMissionInviteRepository MissionInvite { get; }
         IMissionRepository Mission { get; }
         IMissionThemeRepository MissionTheme { get; }
+        IMissionMediaRepository MissionMedia { get; }
         IPasswordResetRepository PasswordReset { get; }
         IStoryMediaRepository StoryMedia { get; }
         IStoryRepository Story { get; }
@@ -24,7 +25,7 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IMissionRatingRepository MissionRating { get; }
         IStoryInviteRepository StoryInvite { get; }
         IGoalMissionRepository GoalMission { get; }
-        IMissionDocumentRepositoy MissionDocument { get; }
+        IMissionDocumentRepository MissionDocument { get; }
         ISkillRepository Skill { get; }
         IUserSkillsRepository UserSkill { get; }
         IContectUsRepository ContectUs { get; }

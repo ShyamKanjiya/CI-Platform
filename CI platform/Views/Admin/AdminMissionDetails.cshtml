@@ -17,10 +17,10 @@
             <span class="search-icon"><i class="bi bi-search"></i></span>
         </div>
         <div>
-            <button class="btn add-btn rounded-pill" asp-controller="Admin" asp-action="AdminAddMission">
+            <a class="btn add-btn rounded-pill" asp-controller="Admin" asp-action="AdminAddMission">
                 <i class="bi bi-plus"></i>
                 <span>Add</span>
-            </button>
+            </a>
         </div>
     </div>
     <div class="table-div">
@@ -44,14 +44,14 @@
                         <td>@item.EndDate.Value.ToShortDateString()</td>
                         <td class="d-flex justify-content-center align-items-center">
                             <span>
-                                <button class="btn border-0 bg-transparent edit-btn">
+                                <a class="btn border-0 bg-transparent edit-btn" asp-controller="Admin" asp-action="AdminEditMission" asp-route-missionId="@item.MissionId">
                                     <i class="bi bi-pencil-square"></i>
-                                </button>
+                                </a>
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForMission(@item.MissionId);">
+                                <a class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForMission(@item.MissionId);">
                                     <i class="bi bi-trash3"></i>
-                                </button>
+                                </a>
                             </span>
                         </td>
                     </tr>

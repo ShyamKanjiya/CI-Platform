@@ -40,6 +40,7 @@ namespace CI_platform.Repositories.GenericRepository
             MissionSkills = new MissionSkillsRepository(_db);
             CMSPage = new CMSPageRepository(_db);
             Banner = new BannerRepository(_db);
+            MissionMedia = new MissionMediaRepository(_db);
         }
         public ICityRepository City { get; private set; }
 
@@ -57,6 +58,8 @@ namespace CI_platform.Repositories.GenericRepository
 
         public IMissionThemeRepository MissionTheme { get; private set; }
 
+        public IMissionMediaRepository MissionMedia { get; private set; }
+
         public IPasswordResetRepository PasswordReset { get; private set; }
 
         public IStoryMediaRepository StoryMedia { get; private set; }
@@ -71,7 +74,7 @@ namespace CI_platform.Repositories.GenericRepository
 
         public IGoalMissionRepository GoalMission { get; private set; }
 
-        public IMissionDocumentRepositoy MissionDocument { get; private set; }
+        public IMissionDocumentRepository MissionDocument { get; private set; }
 
         public ISkillRepository Skill { get; private set; }
 

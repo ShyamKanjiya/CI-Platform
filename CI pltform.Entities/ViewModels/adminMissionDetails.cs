@@ -65,7 +65,6 @@ namespace CI_platform.Entities.ViewModels
         public IEnumerable<MissionMedium> MissionMediumList { get; set; } = new List<MissionMedium>();
         public IEnumerable<MissionDocument> MissionDocumentList { get; set; } = new List<MissionDocument>();
         public IEnumerable<MissionSkill> MissionSkillList { get; set; } = new List<MissionSkill>();
-
         public User UserDetails { get; set; }
     }
 }

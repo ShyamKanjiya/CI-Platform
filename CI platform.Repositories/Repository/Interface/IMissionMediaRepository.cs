@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CI_platform.Repositories.Repository.Interface
 {
-    public interface IMissionDocumentRepositoy : IGenericRepository<MissionDocument>
+    public interface IMissionMediaRepository : IGenericRepository<MissionMedium>
     {
     }
 }

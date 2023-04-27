@@ -376,6 +376,243 @@ namespace CI_platform.Controllers
             return View(obj);
         }
 
+        public JsonResult AdminAddMissCityCascade(long countryId)
+        {
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(cities => cities.CountryId == countryId);
+            return new JsonResult(cityList);
+        }
+
+        [HttpPost]
+        public IActionResult AdminAddMission(adminMissionDetails obj, List<long> finalMissSkillList, List<IFormFile> MissionDocFiles, List<IFormFile> MissionImageFiles, string[] preloadedmissimage, string[] preloadedmissdocs)
+        {
+            if (obj != null)
+            {
+                Mission mission = new()
+                {
+                    Title = obj.Title,
+                    ShortDescription = obj.ShortDescription,
+                    Description = obj.Description,
+                    CityId = obj.CityId,
+                    CountryId = obj.CountryId,
+                    OrganizationName = obj.OrganizationName,
+                    OrganizationDetail = obj.OrganizationDetail,
+                    StartDate = obj.StartDate,
+                    EndDate = obj.EndDate,
+                    MissionType = obj.MissionType,
+                    MissionThemeId = obj.MissionThemeId,
+                    Seats = obj.TotalSeats,
+                    Deadline = obj.MissionDeadline,
+                    Availability = obj.Availability,
+                };
+
+                _unitOfWork.Mission.Add(mission);
+                _unitOfWork.Save();
+                long addedMissionId = mission.MissionId;
+                IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == addedMissionId);
+                IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == addedMissionId);
+                SaveMissionMediaAndDocs(addedMissionId, obj.VideoUrl, missionMediaList, missionDocumentList, MissionDocFiles, MissionImageFiles, preloadedmissdocs, preloadedmissimage);
+                var MissionSkillsId = _unitOfWork.MissionSkills.GetAccToFilter(missionSkill => missionSkill.MissionId == addedMissionId).Select(missionSkill => missionSkill.MissionId);
+
+                AddMissionSkills(addedMissionId, MissionSkillsId, finalMissSkillList);
+
+                return RedirectToAction("AdminMissionDetails");
+            }
+            return View(obj);
+        }
+
+        [HttpPost]
+        public void SaveMissionMediaAndDocs(long addedMissionId, string? videoUrl, IEnumerable<MissionMedium> missionMediaList, IEnumerable<MissionDocument> missionDocumentList, List<IFormFile> missionDocFiles, List<IFormFile> missionImageFiles, string[] preloadedmissdocs, string[] preloadedmissimage)
+        {
+            if (videoUrl != null)
+            {
+                foreach (var video in missionMediaList)
+                {
+                    if (video != null && video.MediaType == "video")
+                    {
+                        _unitOfWork.MissionMedia.Remove(video);
+                    }
+                }
+                MissionMedium missMedForVid = new()
+                {
+                    MissionId = addedMissionId,
+                    MediaName = "youtube viedo",
+                    MediaType = "video",
+                    MediaPath = videoUrl,
+                };
+                _unitOfWork.MissionMedia.Add(missMedForVid);
+            }
+
+            //for images
+            foreach (var missionMedia in missionMediaList)
+            {
+                if (missionMedia.MediaType != "video")
+                {
+                    if (preloadedmissimage.Length < 1)
+                    {
+                        string missImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/", missionMedia.MediaPath);
+
+                        if (System.IO.File.Exists(missImagePath))
+                        {
+                            System.IO.File.Delete(missImagePath);
+                        }
+
+                        _unitOfWork.MissionMedia.Remove(missionMedia);
+                    }
+                    else
+                    {
+                        bool flag = false;
+                        for (int i = 0; i < preloadedmissimage.Length; i++)
+                        {
+                            string imgName = preloadedmissimage[i][14..];
+
+                            if (imgName.Equals(missionMedia.MediaPath))
+                            {
+                                flag = true;
+                            }
+                        }
+                        if (!flag)
+                        {
+                            string imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/", missionMedia.MediaPath);
+
+                            if (System.IO.File.Exists(imagePath))
+                            {
+                                System.IO.File.Delete(imagePath);
+                            }
+
+                            _unitOfWork.MissionMedia.Remove(missionMedia);
+                        }
+                    }
+                }
+            }
+
+            if (missionImageFiles?.Count > 0)
+            {
+                foreach (var image in missionImageFiles)
+                {
+                    string imgExt = Path.GetExtension(image.FileName);
+                    if (imgExt == ".jpg" || imgExt == ".png" || imgExt == ".jpeg")
+                    {
+                        string imageName = Guid.NewGuid().ToString() + Path.GetExtension(image.FileName);
+                        string imageNameForDb = image.FileName;
+                        string imgSaveTo = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/" + imageName);
+                        using (FileStream stream = new(imgSaveTo, FileMode.Create))
+                        {
+                            image.CopyTo(stream);
+                        }
+                        MissionMedium missionMed = new()
+                        {
+                            MissionId = addedMissionId,
+                            MediaName = imageNameForDb,
+                            MediaType = imgExt,
+                            MediaPath = imageName,
+                        };
+                        _unitOfWork.MissionMedia.Add(missionMed);
+                    }
+                }
+            }
+
+            //for documents
+            foreach (var missionDoc in missionDocumentList)
+            {
+                if (preloadedmissdocs.Length < 1)
+                {
+                    string missDocPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/", missionDoc.DocumentPath);
+
+                    if (System.IO.File.Exists(missDocPath))
+                    {
+                        System.IO.File.Delete(missDocPath);
+                    }
+
+                    _unitOfWork.MissionDocument.Remove(missionDoc);
+                }
+                else
+                {
+                    bool flag = false;
+                    for (int i = 0; i < preloadedmissdocs.Length; i++)
+                    {
+                        string docName = preloadedmissdocs[i][18..];
+
+                        if (docName.Equals(missionDoc.DocumentPath))
+                        {
+                            flag = true;
+                        }
+                    }
+                    if (!flag)
+                    {
+                        string docPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/", missionDoc.DocumentPath);
+
+                        if (System.IO.File.Exists(docPath))
+                        {
+                            System.IO.File.Delete(docPath);
+                        }
+
+                        _unitOfWork.MissionDocument.Remove(missionDoc);
+                    }
+                }
+            }
+
+            if (missionDocFiles?.Count > 0)
+            {
+                foreach (var docs in missionDocFiles)
+                {
+                    string docExt = Path.GetExtension(docs.FileName);
+                    if (docExt == ".docx" || docExt == ".pdf" || docExt == ".xlsx")
+                    {
+                        string docName = docs.FileName;
+                        string docSaveTo = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + docName);
+                        using (FileStream stream = new(docName, FileMode.Create))
+                        {
+                            docs.CopyTo(stream);
+                        }
+                        MissionDocument missionDoc = new()
+                        {
+                            MissionId = addedMissionId,
+                            DocumentName = docName,
+                            DocumentType = docExt,
+                            DocumentPath = docName,
+                        };
+                        _unitOfWork.MissionDocument.Add(missionDoc);
+                    }
+                }
+            }
+
+            _unitOfWork.Save();
+        }
+
+        //add edit mission skills
+        public void AddMissionSkills(long missionId, IEnumerable<long> missionSkillsId, List<long> finalMissSkillList)
+        {
+            if (finalMissSkillList.Count == 0)
+            {
+                foreach (var mId in missionSkillsId)
+                {
+                    MissionSkill deleteSkill = _unitOfWork.MissionSkills.GetFirstOrDefault(missionSkill => missionSkill.MissionId == mId);
+                    _unitOfWork.MissionSkills.Remove(deleteSkill);
+                }
+            }
+            else
+            {
+                var skillToBeAdded = finalMissSkillList.Except(missionSkillsId);
+                foreach (var skillId in skillToBeAdded)
+                {
+                    MissionSkill missSkills = new()
+                    {
+                        MissionId = missionId,
+                        SkillId = skillId,
+                    };
+                    _unitOfWork.MissionSkills.Add(missSkills);
+                }
+
+                var skillToBeDeleted = missionSkillsId.Except(finalMissSkillList);
+                foreach (var skillid in skillToBeDeleted)
+                {
+                    MissionSkill deleteSkill = _unitOfWork.MissionSkills.GetFirstOrDefault(missionSkill => missionSkill.SkillId == skillid);
+                    _unitOfWork.MissionSkills.Remove(deleteSkill);
+                }
+            }
+            _unitOfWork.Save();
+        }
+
         [HttpPost]
         public IActionResult DeleteMissionData(long missionId)
         {
@@ -392,6 +629,117 @@ namespace CI_platform.Controllers
             TempData["error"] = "Opps! something went wrong";
             return RedirectToAction("AdminMissionDetails");
         }
+
+        [HttpGet]
+        public IActionResult AdminEditMission(long missionId)
+        {
+            if (missionId > 0)
+            {
+                User user = GetThisUser();
+                Mission thisMissionDetails = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
+                if (thisMissionDetails != null)
+                {
+                    IEnumerable<MissionSkill> missionSkillList = _unitOfWork.MissionSkills.GetAccToFilter(missionSkills => missionSkills.MissionId == missionId);
+                    IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(missionMedia => missionMedia.MissionId == missionId);
+                    IEnumerable<MissionDocument> missionDocList = _unitOfWork.MissionDocument.GetAccToFilter(missionDoc => missionDoc.MissionId == missionId);
+                    IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
+                    IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAll();
+                    IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAll();
+                    adminMissionDetails obj = new()
+                    {
+                        MissionId = thisMissionDetails.MissionId,
+                        Title = thisMissionDetails.Title,
+                        ShortDescription = thisMissionDetails.ShortDescription,
+                        Description = thisMissionDetails.Description,
+                        CountryId = thisMissionDetails.CountryId,
+                        CityId = thisMissionDetails.CityId,
+                        OrganizationName = thisMissionDetails.OrganizationName,
+                        OrganizationDetail = thisMissionDetails.OrganizationDetail,
+                        StartDate = thisMissionDetails.StartDate,
+                        EndDate = thisMissionDetails.EndDate,
+                        MissionType = thisMissionDetails.MissionType,
+                        TotalSeats = thisMissionDetails.Seats,
+                        MissionDeadline = thisMissionDetails.Deadline,
+                        MissionThemeId = thisMissionDetails.MissionThemeId,
+                        Availability = thisMissionDetails.Availability,
+                        UserDetails = user
+                    };
+
+                    obj.CountryList = countryList;
+                    obj.ThemeList = themeList;
+                    obj.SkillList = skillList;
+                    obj.MissionSkillList = missionSkillList;
+                    obj.MissionMediumList = missionMediaList;
+                    obj.MissionDocumentList = missionDocList;
+
+                    return View(obj);
+                }
+            }
+
+            return RedirectToAction("AdminMissionDetails");
+        }
+
+        //Edit mission post method 
+        [HttpPost]
+        public IActionResult AdminEditMission(adminMissionDetails obj, List<long> finalMissSkillList, List<IFormFile> MissionDocFiles, List<IFormFile> MissionImageFiles, string[] preloadedmissimage, string[] preloadedmissdocs)
+        {
+            if (obj != null)
+            {
+                if (obj?.MissionId != null)
+                {
+                    Mission editThisMission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == obj.MissionId);
+                    if (editThisMission != null)
+                    {
+                        editThisMission.Title = obj.Title;
+                        editThisMission.ShortDescription = obj.ShortDescription;
+                        editThisMission.Description = obj.Description;
+                        editThisMission.CountryId = obj.CountryId;
+                        editThisMission.CityId = obj.CityId;
+                        editThisMission.OrganizationName = obj.OrganizationName;
+                        editThisMission.OrganizationDetail = obj.OrganizationDetail;
+                        editThisMission.StartDate = obj.StartDate;
+                        editThisMission.EndDate = obj.EndDate;
+                        editThisMission.MissionType = obj.MissionType;
+                        editThisMission.Seats = obj.TotalSeats;
+                        editThisMission.Deadline = obj.MissionDeadline;
+                        editThisMission.MissionThemeId = obj.MissionThemeId;
+                        editThisMission.Availability = obj.Availability;
+
+                        _unitOfWork.Mission.Update(editThisMission);
+
+                        IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
+                        IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
+                        SaveMissionMediaAndDocs(editThisMission.MissionId, obj.VideoUrl, missionMediaList, missionDocumentList, MissionDocFiles, MissionImageFiles, preloadedmissdocs, preloadedmissimage);
+                        var MissionSkillsId = _unitOfWork.MissionSkills.GetAccToFilter(missionSkill => missionSkill.MissionId == obj.MissionId).Select(missionSkill => missionSkill.SkillId);
+
+                        AddMissionSkills(obj.MissionId, MissionSkillsId, finalMissSkillList);
+
+                        _unitOfWork.Save();
+                        return RedirectToAction("AdminMissionDetails");
+
+                    }
+                }
+            }
+            return View(obj);
+        }
+
+        //cascade city for mission edit get method
+        public JsonResult AdminEditMissCasCity(long countryId, long missionId)
+        {
+            Mission mission = new();
+            long cityId = 0;
+            if (missionId > 0)
+            {
+                mission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
+                if (mission != null)
+                {
+                    cityId = mission.CityId;
+                }
+            }
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(city => city.CountryId == countryId);
+            return new JsonResult(new { CityId = cityId, Cities = cityList });
+        }
+
         #endregion
 
         //---------------------- Mission Theme --------------------------//

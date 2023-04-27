@@ -21,14 +21,12 @@
                 tinyMCE.triggerSave();
 
                 $("#" + ed.id).valid();
-
-
             }
             );
         },
         setup: function (ed) {
             ed.on('keyUp', function (e) {
-                var max = 40000;
+                var max = 4000;
                 var count = CountCharacters();
                 if (count >= max) {
                     if (e.keyCode != 8 && e.keyCode != 46)

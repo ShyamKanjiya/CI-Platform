@@ -12,7 +12,7 @@
         <h5 class="heading">Add Mission</h5>
     </div>
     <div class="form">
-        <form class="needs-validation" asp-controller="Admin" asp-action="AddMission" method="post" enctype="multipart/form-data">
+        <form class="needs-validation" asp-controller="Admin" asp-action="AdminAddMission" method="post" enctype="multipart/form-data">
             <div class="form-content">
                 <div class="form-group">
                     <label class="form-label" for="missionTitle">Mission Title</label>
@@ -90,8 +90,8 @@
                         <div class="form-group">
                             <label class="form-label" for="missionType">Mission Type</label>
                             <select asp-for="MissionType" class="form-select select" id="missionType">
-                                <option value="Time">Time Based</option>
-                                <option value="Goal">Goal Based</option>
+                                <option value="TIME">Time Based</option>
+                                <option value="GOAL">Goal Based</option>
                             </select>
                             <span class="text-danger" asp-validation-for="MissionType"></span>
                         </div>
@@ -188,10 +188,10 @@
                                                         </div>
                                                     </div>
                                                     <ul class="list-group w-100" id="available" multiple>
-                                                       @* @foreach (Skill skillList in @Model.SkillList)
+                                                        @foreach (var skillList in @Model.SkillList)
                                                         {
                                                             <li class="list-group-item" value="@skillList.SkillId">@skillList.SkillName</li>
-                                                        }*@
+                                                        }
                                                     </ul>
                                                 </div>
                                             </div>
@@ -266,7 +266,7 @@
     function addMissCityCascade(cId) {
         $.ajax({
             type: 'POST',
-            url: '/Admin/AddMissCityCascade',
+            url: '/Admin/AdminAddMissCityCascade',
             data: { "countryId": cId },
             success: function (data) {
                 $('#casCityAddMission').empty();

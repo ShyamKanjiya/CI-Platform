@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace CI_platform.Repositories.Repository
 {
-    public class MissionDocumentRepository : GenericRepository<MissionDocument>, IMissionDocumentRepository
+    public class MissionMediaRepository : GenericRepository<MissionMedium>, IMissionMediaRepository
     {
-        public MissionDocumentRepository(CIDbContext db) : base(db)
+        public MissionMediaRepository(CIDbContext db) : base(db)
         {
 
         }
