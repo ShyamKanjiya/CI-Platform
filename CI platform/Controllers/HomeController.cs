@@ -77,7 +77,7 @@ namespace CI_platform.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(userLoginModel obj)
+        public async Task<IActionResult> Login(userLoginModel obj)
         {
             var status = _unitOfWork.User.GetFirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password);
             if (status == null)
@@ -91,11 +91,22 @@ namespace CI_platform.Controllers
                 identity.AddClaim(new Claim(ClaimTypes.Name, status.FirstName));
                 identity.AddClaim(new Claim(ClaimTypes.Surname, status.LastName));
                 identity.AddClaim(new Claim(ClaimTypes.Email, status.Email));
+                identity.AddClaim(new Claim(ClaimTypes.Role, status.Role));
                 var principle = new ClaimsPrincipal(identity);
-                HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principle);
+                var authProperties = new AuthenticationProperties
+                {
+                    IsPersistent = false,
+                };
+                await HttpContext.SignInAsync(principle, authProperties);
                 HttpContext.Session.SetString("Email", status.Email);
-
-                return RedirectToAction("platformLandingPage", "Pages");
+                if (status.Role == "USER")
+                {
+                    return RedirectToAction("platformLandingPage", "Pages");
+                }
+                else
+                {
+                    return RedirectToAction("AdminUserDetails", "Admin");
+                }
             }
             return View(obj);
         }

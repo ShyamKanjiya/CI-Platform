@@ -161,10 +161,11 @@
                                     <img class="me-4" src="/images/drop-down.png" alt="">
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                                    <li><a class="dropdown-item btn">My Profile</a></li>
-                                    <li><a class="dropdown-item btn">Volunteering Timesheet</a></li>
-                                    <li><a class="dropdown-item btn">Logout</a></li>
-                                    <li><a class="dropdown-item btn">Dashboard</a></li>
+                                    <li><a class="dropdown-item btn" asp-controller="Admin" asp-action="AdminUserDetails">Admin Dashboard</a></li>
+                                    <li><a class="dropdown-item btn" asp-controller="Pages" asp-action="platformLandingPage">Platform landing</a></li>
+                                    <li><a class="dropdown-item btn" asp-controller="User" asp-action="VolunteerProfile">My Profile</a></li>
+                                    <li><a class="dropdown-item btn" asp-controller="User" asp-action="VolunteerTimesheet">Volunteering Timesheet</a></li>
+                                    <li><a class="dropdown-item btn" asp-controller="Home" asp-action="Logout">Logout</a></li>
                                 </ul>
 
                             </li>

@@ -8,9 +8,6 @@ using CI_platform.Repositories.MethodRepository;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-/*builder.Services.AddControllersWithViews();
-*/
 builder.Services.AddControllersWithViews()
     .AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -22,6 +19,12 @@ builder.Services.AddDbContext<CIDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IStoryMethodRepository, StoryMethodRepository>();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+    options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+});
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).
     AddCookie(option =>

@@ -927,6 +927,10 @@ public partial class CIDbContext : DbContext
             entity.Property(e => e.WhyIVolunteer)
                 .HasColumnType("text")
                 .HasColumnName("why_i_volunteer");
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("('USER')")
+                .HasColumnName("role");
 
             entity.HasOne(d => d.City).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CityId)

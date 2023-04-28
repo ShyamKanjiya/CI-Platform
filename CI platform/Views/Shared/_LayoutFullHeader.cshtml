@@ -64,9 +64,12 @@
                                 <img src="~/images/drop-down.png" style="margin-left:5px" />
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                                @if (Model.UserDetails.Role == "ADMIN")
+                                {
+                                    <li><a class="dropdown-item btn" asp-controller="Admin" asp-action="AdminUserDetails">Admin Dashboard</a></li>
+                                }
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerProfile">Profile</a></li>
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerTimesheet">Volunteering Timesheet</a></li>
-                                <li><a class="dropdown-item" asp-controller="Admin" asp-action="AdminUserDetails">Admin Panel</a></li>
                                 <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Logout</a></li>
                             </ul>
                         </li>

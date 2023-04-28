@@ -204,8 +204,8 @@ namespace CI_platform.Controllers
 
             IEnumerable<MissionApplication> draftMissAppListForTime = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "TIME");
             IEnumerable<MissionApplication> draftMissAppListForGoal = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "GOAL");
-            IEnumerable<Timesheet> dataOfTimeBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
-            IEnumerable<Timesheet> dataOfGoalBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
+            IEnumerable<Timesheet> dataOfTimeBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.UserId == user.UserId && timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
+            IEnumerable<Timesheet> dataOfGoalBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.UserId == user.UserId && goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
 
             userVolunteerTimesheetModel obj = new();
             obj.UserDetails = user;
