@@ -209,7 +209,7 @@ public partial class CIDbContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('PENDING')")
                 .HasColumnName("approval_status");
-            entity.Property(e => e.Comment1)
+            entity.Property(e => e.CommentText)
                 .IsUnicode(false)
                 .HasColumnName("comment");
             entity.Property(e => e.CreatedAt)

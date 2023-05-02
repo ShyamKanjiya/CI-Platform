@@ -57,7 +57,7 @@
 
 
 .card {
-    margin-bottom: 1rem;
+    margin-bottom: 1.5rem;
 }
 
 .list-view .row>[class*=col-] {
@@ -67,6 +67,7 @@
 
 .list-view .card {
     flex-direction: row;
+    width: 80vw;
 }
 
 @media (max-width: 575.98px) {
@@ -101,12 +102,12 @@
 
 #mission-img {
     object-fit: cover;
-    height: 100%;
-    
+    height: 300px;
 }
 
 .list-view #mission-img{
     width: 30vw;
+    min-height: 100%
 }
 
 .card-btn {

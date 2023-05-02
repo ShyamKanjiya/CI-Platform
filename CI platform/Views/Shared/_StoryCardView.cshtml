@@ -33,17 +33,28 @@
 <!-- Story List -->
 <div class="container card-container mt-5 " style="max-width:100vw;">
     <div class="row ">
-        @foreach(var story in  Model.Stories)
+        @foreach (var story in Model.Stories)
         {
             var Views = @story.Views + 1;
             <div class="col-12 col-md-6 col-lg-4">
                 <div class="card pb-3">
                     <div style="position: relative;" class="card-image-part">
-                        <img class="card-img-top" id="mission-img"
-                         src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity.png"
-                         alt="Card image caption">
+                        
+                        @{
+                            var media = story.StoryMedia.Where(m => m.Type != "video").FirstOrDefault();
+                        }
+                        @if (media != null)
+                        {
+                            <img class="card-img-top" id="mission-img" src="/StoryImages/@media.Path" alt="Card image cap">
+
+                        }
+                        else
+                        {
+                            <img class="card-img-top" id="mission-img" src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                        }
+
                         <div class="hidden-overlay-button-area">
-                             
+
                             <a class="hidden-overlay-button text-decoration-none px-4 py-1" style="width:max-content" asp-controller="Story" asp-action="VolunteeringStoryPage" asp-route-storyId="@story.StoryId" asp-route-views="@Views">View Details<span class="ps-2">⟶</span></a>
                         </div>
 
@@ -53,10 +64,10 @@
                     </div>
                     <div class="card-body p-0">
                         <h5 class="card-title mt-3 px-3">@story.Title</h5>
-                        <p class="card-text px-3" style="font-size:.875em">
-                            @story.Description
-                        </p>
-                        <div class="d-flex justify-content-between px-3">
+                        <div class="card-text px-3 mb-1" style="font-size: 1em; color: #a8a8a8; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
+                            @Html.Raw(story.Description)
+                        </div>
+                        <div class="d-flex justify-content-between mt-2 px-3">
                             <div>
                                 <img src="@story.User.Avatar" class="volunteer-img" />
                                 <small>@story.User.FirstName @story.User.LastName</small>

@@ -61,8 +61,7 @@ function sendMail(missionId) {
 
     $('#divLoader').removeClass('d-none');
     $('#modal-content').addClass('d-none');
-    console.log(recUsersList);
-    if (recUsersList.length > 0) {
+    if (recUsersList.length != 0) {
         $.ajax({
             type: 'POST',
             url: '/Pages/RecommandToCoworkers',
@@ -84,7 +83,8 @@ function sendMail(missionId) {
                     willClose: () => {
                         clearInterval(timerInterval)
                     }
-                })
+                });
+                $('#exampleModal').modal('hide');
             },
             error: function () {
                 $("#divLoader").addClass("d-none");

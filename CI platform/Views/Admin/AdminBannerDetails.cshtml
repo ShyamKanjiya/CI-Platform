@@ -69,22 +69,21 @@
 
                                     <div class="form-group">
                                         <label class="form-label" asp-for="BannerNumber" class="form-label">Banner Number</label>
-                                        <input asp-for="BannerNumber" type="number" class="form-control" id="number" value=""
+                                        <input asp-for="BannerNumber" type="number" class="form-control" id="bannerNumber" value=""
                                                placeholder="Enter Banner number">
                                         <span asp-validation-for="BannerNumber" class="text-danger"></span>
                                     </div>
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                    <button type="button" class="btn border px-4" style="border-radius:50px" id="cancelBanner" data-bs-dismiss="modal">Cancel</button>
+                                    <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="button" onclick="CheckAvailableNumber()">Submit</button>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
     <div class="table-div">
@@ -121,7 +120,7 @@
 
                                                     <div hidden>
                                                         <label for="bannerIdForEdit" class="form-label">Banner</label>
-                                                        <input asp-for="BannerId" class="form-control" id="bannerIdForEdit" type="text" value="" />
+                                                        <input asp-for="BannerId" class="form-control" id="bannerIdForEdit" type="text" value="" >
                                                     </div>
 
                                                     <div class="row my-3 align-items-center">
@@ -155,7 +154,7 @@
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
-                                                    <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                    <button type="submit"  class="btn border-warning text-warning rounded-pill px-3" >Submit</button>
                                                 </div>
                                             </form>
                                         </div>

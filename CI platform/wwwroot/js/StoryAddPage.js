@@ -12,7 +12,38 @@
     content_css: '//https://www.tiny.cloud/css/codepen.min.css',
     importcss_append: true,
     height: 300,
+    toolbar_mode: 'sliding',
+    setup: function (ed) {
+        //On change call
+        ed.on('change', function (e) {
+            //Validate tinyMCE on text change
+            tinyMCE.triggerSave();
+
+            $("#" + ed.id).valid();
+        }
+        );
+    },
+    setup: function (ed) {
+        ed.on('keyUp', function (e) {
+            var max = 40000;
+            var count = CountCharacters();
+            if (count >= max) {
+                if (e.keyCode != 8 && e.keyCode != 46)
+                    tinymce.dom.Event.cancel(e);
+                document.getElementById("character_count").innerHTML = "Maximun allowed character is: 40000";
+
+            } else {
+                document.getElementById("character_count").innerHTML = count;
+            }
+        });
+    },
 });
+
+function CountCharacters() {
+    var body = tinymce.get("myStory").getBody();
+    var content = tinymce.trim(body.innerText || body.textContent);
+    return content.length;
+};
 
 //----------------------------------------------------------------------------------------------------------------------//
 
@@ -44,11 +75,6 @@ function GetDraftedStory() {
                 console.log(data[0].publishedAt);
                 dt = dt.split('T')[0];
                 $("#story_date").val(dt);
-                var txt = data[0].description;
-
-
-
-                tinyMCE.activeEditor.setContent(txt);
 
 
                 $(".input-images").html("");
@@ -75,14 +101,18 @@ function GetDraftedStory() {
                     maxSize: 0.5 * 1024 * 1024,
                 });
 
-                if($("#submitStoryBtn").hasClass('disabled')) {
+                var txt = data[0].description;
+                tinyMCE.activeEditor.setContent(txt);
+
+
+                if ($("#submitStoryBtn").hasClass('disabled')) {
                     $("#submitStoryBtn").removeClass('disabled');
                 }
             }
         },
         error: function (error) {
             console.log(error);
-        }       
+        }
     });
 }
 
@@ -133,3 +163,5 @@ function validateYouTubeUrl() {
     }
     return false;
 }
+
+//----------------------------------------------------------------------------------------------------------------------//

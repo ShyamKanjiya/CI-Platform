@@ -26,7 +26,7 @@ namespace CI_platform.Repositories.Repository
         public IEnumerable<Story> GetAllStory()
         {
             IQueryable<Story> query = dbSet;
-            query = query.Include(story => story.User).Include(story => story.Mission);
+            query = query.Include(story => story.User).Include(story => story.Mission).Include(story => story.StoryMedia);
             return query.ToList();
         }
     }

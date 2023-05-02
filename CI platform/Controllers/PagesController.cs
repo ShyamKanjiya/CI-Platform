@@ -42,9 +42,8 @@ namespace CI_platform.Controllers
                 Countries = _unitOfWork.Country.GetAll(),
                 Cities = _unitOfWork.City.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll(),
-                Skills = _unitOfWork.Skill.GetAll()
+                Skills = _unitOfWork.Skill.GetAll(),
             };
-
             return View(viewModel);
         }
 
@@ -55,7 +54,7 @@ namespace CI_platform.Controllers
 
             userViewModel userView = new userViewModel
             {
-                Missions = _unitOfWork.Mission.GetAll(),
+                Missions = _unitOfWork.Mission.GetAllMissions(),
                 GoalMissions = _unitOfWork.GoalMission.GetAll(),
                 Countries = _unitOfWork.Country.GetAll(),
                 Cities = _unitOfWork.City.GetAll(),
@@ -66,7 +65,8 @@ namespace CI_platform.Controllers
                 MissionApplications = _unitOfWork.MissionApplication.GetAll(),
             };
 
-            List<Mission> missions = (List<Mission>)_unitOfWork.Mission.GetAll();
+            List<Mission> missions = (List<Mission>)_unitOfWork.Mission.GetAllMissions();
+
 
             if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0 || skill.Count() > 0)
             {
@@ -112,7 +112,6 @@ namespace CI_platform.Controllers
                 try
                 {
                     userView.RateMission = _unitOfWork.MissionRating.GetAccToFilter(r => r.MissionId == mission.MissionId);
-
                 }
                 catch
                 {
@@ -158,7 +157,7 @@ namespace CI_platform.Controllers
             }
         }
 
-        public List<Mission> filterMission(List<Mission> missions, string[] country, string[] cities, string[] theme, string[] skill)
+        public List<Mission> filterMission(List<Mission> missions, string[] country, string[] cities, string[] theme, string[] skills)
         {
             if (country.Length > 0)
             {
@@ -172,10 +171,10 @@ namespace CI_platform.Controllers
             {
                 missions = missions.Where(s => theme.Contains(s.MissionTheme.Title)).ToList();
             }
-           /* if (skill.Length > 0)
+            if (skills.Length > 0)
             {
-                missions = missions.Where(s => skill.Contains(s.)).ToList();
-            }*/
+                missions = missions.Where(mission => mission.MissionSkills.Any(skill => skills.Contains(skill.Skill.SkillName))).ToList();
+            }
             return missions.ToList();
         }
 
@@ -300,7 +299,7 @@ namespace CI_platform.Controllers
             var user = GetThisUser();
             Comment obj = new()
             {
-                Comment1 = comment_area,
+                CommentText = comment_area,
                 UserId = user.UserId,
                 MissionId = (long)missionId,
                 CreatedAt = DateTime.UtcNow
@@ -318,7 +317,7 @@ namespace CI_platform.Controllers
             {
                 foreach (var id in userIds)
                 {
-                    var inviteLink = Url.Action("volunteeringMissionPage", "Home", new { id = missionId }, Request.Scheme);
+                    var inviteLink = Url.Action("volunteeringMissionPage", "Pages", new { id = missionId }, Request.Scheme);
                     var user = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == id);
 
 
@@ -349,7 +348,7 @@ namespace CI_platform.Controllers
                     var smtpClient = new SmtpClient("smtp.gmail.com", 587)
                     {
                         UseDefaultCredentials = false,
-                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "mbxfpwtiaztubcng"),
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "nfuugkmtxtjcnect"),
                         EnableSsl = true
                     };
                     smtpClient.Send(message);
@@ -403,13 +402,16 @@ namespace CI_platform.Controllers
         {
             var thisUser = GetThisUser();
             var status = _unitOfWork.MissionApplication.GetFirstOrDefault(m => m.MissionId == missionId && m.UserId == thisUser.UserId);
-            if (status.ApprovalStatus == "DECLINE")
+            if (status != null)
             {
-                status.ApprovalStatus = "PENDING";
-                status.AppliedAt = DateTime.Now;
-                status.UpdatedAt = DateTime.Now;
-                _unitOfWork.MissionApplication.Update(status);
-                _unitOfWork.Save();
+                if (status.ApprovalStatus == "DECLINE")
+                {
+                    status.ApprovalStatus = "PENDING";
+                    status.AppliedAt = DateTime.Now;
+                    status.UpdatedAt = DateTime.Now;
+                    _unitOfWork.MissionApplication.Update(status);
+                    _unitOfWork.Save();
+                }
             }
             else
             {

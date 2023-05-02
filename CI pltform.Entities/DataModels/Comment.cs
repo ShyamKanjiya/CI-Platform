@@ -19,7 +19,7 @@ public partial class Comment
 
     public DateTime? DeletedAt { get; set; }
 
-    public string? Comment1 { get; set; }
+    public string? CommentText { get; set; }
 
     public virtual Mission Mission { get; set; } = null!;
 

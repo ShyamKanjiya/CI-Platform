@@ -156,64 +156,38 @@ Copyright (c) 2019 Christian Bayer; Licensed MIT */
             f = function (e) {
                 return (
                     !(e.size > a.settings.maxSize) ||
-                    (let timerInterval
-                        Swal.fire({
-                            title: "The file exceeds the maximum size of 4 Mb",
-                            timer: 1000,
-                            timerProgressBar: true,
-                            didOpen: () => {
-                                Swal.showLoading()
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval)
-                            }
-                        }).then((result) => {
-                            if (result.dismiss === Swal.DismissReason.timer) {
-                                console.log("I was closed");
-                            }
-                        })
+                    (alert(
+                        `The file "${e.name}" exceeds the maximum size of ${a.settings.maxSize / 1024 / 1024
+                        }Mb`
                     ),
-        !1)
+                        !1)
                 );
-    },
-        m = function (e, t) {
-            return (
-                !(
-                    e + s.items.length + a.settings.preloaded.length >=
-                    a.settings.maxFiles
-                ) ||
-                (let timerInterval
-            Swal.fire({
-                title: "The file could not be added because the limit of 20 files was reached.",
-                timer: 1000,
-                timerProgressBar: true,
-                didOpen: () => {
-                    Swal.showLoading()
-                },
-                willClose: () => {
-                    clearInterval(timerInterval)
-                }
-            }).then((result) => {
-                if (result.dismiss === Swal.DismissReason.timer) {
-                    console.log("I was closed");
-                }
-            })
-                    )
+            },
+            m = function (e, t) {
+                return (
+                    !(
+                        e + s.items.length + a.settings.preloaded.length >=
+                        a.settings.maxFiles
+                    ) ||
+                    (alert(
+                        `The file "${t.name}" could not be added because the limit of ${a.settings.maxFiles} files was reached`
+                    ),
+                        !1)
                 );
-        },
-        u = function (t, n) {
-            t.addClass("has-files");
-            let i = t.find(".uploaded"),
-                a = t.find('input[type="file"]');
-            e(n).each(function (e, t) {
-                s.items.add(t),
-                    i.append(l(URL.createObjectURL(t), s.items.length - 1), !1);
-            }),
-                a.prop("files", s.files);
-        },
-        h = function () {
-            return Date.now() + Math.floor(100 * Math.random() + 1);
-        };
-    return this.init(), this;
-};
-}) (jQuery);
+            },
+            u = function (t, n) {
+                t.addClass("has-files");
+                let i = t.find(".uploaded"),
+                    a = t.find('input[type="file"]');
+                e(n).each(function (e, t) {
+                    s.items.add(t),
+                        i.append(l(URL.createObjectURL(t), s.items.length - 1), !1);
+                }),
+                    a.prop("files", s.files);
+            },
+            h = function () {
+                return Date.now() + Math.floor(100 * Math.random() + 1);
+            };
+        return this.init(), this;
+    };
+})(jQuery);

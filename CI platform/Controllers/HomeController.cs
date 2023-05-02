@@ -32,7 +32,11 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult Registration()
         {
-            return View();
+            userRegisterModel userRegisterModel = new()
+            {
+                banners = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null)
+            };
+            return View(userRegisterModel);
         }
 
         [HttpPost]
@@ -73,16 +77,26 @@ namespace CI_platform.Controllers
         public IActionResult Login()
         {
             HttpContext.Session.Clear();
-            return View();
+
+            userLoginModel userLoginModel = new()
+            {
+                banners = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null)
+            };
+            return View(userLoginModel);
         }
 
         [HttpPost]
         public async Task<IActionResult> Login(userLoginModel obj)
         {
-            var status = _unitOfWork.User.GetFirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password);
+            var status = _unitOfWork.User.GetFirstOrDefault(m => m.Email == obj.Email && m.Password == obj.Password && m.DeletedAt == null);
             if (status == null)
-            {
-                ViewBag.LoginStatus = 0;
+            { 
+                TempData["Error"] = "Invalid Credentials";
+                userLoginModel userLoginModel = new()
+                {
+                    banners = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null)
+                };
+                return View(userLoginModel);
             }
             else
             {
@@ -129,7 +143,11 @@ namespace CI_platform.Controllers
         [HttpGet]
         public IActionResult forgotPassword()
         {
-            return View();
+            userForgotPasswordModel userForgotPassword = new()
+            {
+                banners = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null)
+            };
+            return View(userForgotPassword);
         }
 
         [HttpPost]
@@ -169,7 +187,7 @@ namespace CI_platform.Controllers
             var smtpClient = new SmtpClient("smtp.gmail.com", 587)
             {
                 UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "mbxfpwtiaztubcng"),
+                Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "nfuugkmtxtjcnect"),
                 EnableSsl = true
             };
             smtpClient.Send(message);
@@ -194,6 +212,7 @@ namespace CI_platform.Controllers
 
             var changePasswordModel = new userChangePasswordModel
             {
+                banners = _unitOfWork.Banner.GetAccToFilter(m => m.DeletedAt == null),
                 Email = Email,
                 Token = Token
             };

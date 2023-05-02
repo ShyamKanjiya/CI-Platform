@@ -51,12 +51,12 @@ namespace CI_platform.Controllers
 
         public IActionResult bringStories(int pg = 1)
         {
-            List<Story> stories = (List<Story>)_unitOfWork.Story.GetAll();
+            List<Story> stories = (List<Story>)_unitOfWork.Story.GetAccToFilter(m => m.Status == "PUBLISHED");
 
             userStoryListModel userStory = new userStoryListModel
             {
                 UserDetails = GetThisUser(),
-                Stories = _unitOfWork.Story.GetAll(),
+                Stories = _unitOfWork.Story.GetAllStory(),
                 Missions = _unitOfWork.Mission.GetAll(),
                 Users = _unitOfWork.User.GetAll(),
                 MissionThemes = _unitOfWork.MissionTheme.GetAll()

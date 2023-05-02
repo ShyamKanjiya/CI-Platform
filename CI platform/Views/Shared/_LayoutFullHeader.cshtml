@@ -20,6 +20,9 @@
     @*<link rel="stylesheet" href="~/CI_platform.styles.css" asp-append-version="true" />*@
     <link rel="stylesheet" href="~/css/plateformLandingPage.css" />
     <link rel="stylesheet" href="~/css/storyListingPage.css" asp-append-version="true" />
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 
@@ -58,8 +61,14 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link profile-link-part" href="#" id="navbarScrollingDropdown " role="button"
                            data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="@Model.UserDetails.Avatar" class="rounded-circle" height="35" width="35" alt="Profile pic"
-                                 loading="lazy" />
+                                @if (Model.UserDetails.Avatar != null)
+                                {
+                                    <img src="@Model.UserDetails.Avatar" class="rounded-circle" height="35" width="35" alt="Profile pic"/>
+                                }
+                                else
+                                {
+                                    <img src="~/images/default-user-icon.png" class="rounded-circle" height="35" width="35" alt="Profile pic" />
+                                }
                                 <span style="margin-left:5px;">@name @surname</span>
                                 <img src="~/images/drop-down.png" style="margin-left:5px" />
                             </a>
@@ -68,6 +77,7 @@
                                 {
                                     <li><a class="dropdown-item btn" asp-controller="Admin" asp-action="AdminUserDetails">Admin Dashboard</a></li>
                                 }
+                                <li><a class="dropdown-item btn" asp-controller="Pages" asp-action="platformLandingPage">Platform landing</a></li>
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerProfile">Profile</a></li>
                                 <li><a class="dropdown-item" asp-controller="User" asp-action="VolunteerTimesheet">Volunteering Timesheet</a></li>
                                 <li><a class="dropdown-item" asp-controller="Home" asp-action="Logout">Logout</a></li>
@@ -103,12 +113,12 @@
 
 
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="~/js/platfromLandingPage.js"></script>
     <script src="~/js/cardView.js"></script>
     <script src="~/js/volunteeringMissionPage.js"></script>

@@ -18,6 +18,7 @@
     }
 }
 
+
 <!--Recent volunteer-->
 <div class="col-12 border pt-3 px-4 mt-3">
 
@@ -26,16 +27,26 @@
     </div>
 
     <div class="row align-items-center justify-content-center my-3">
-        @if(@Model.MissionApp != null)
+        @if (@Model.MissionApp != null)
         {
             @foreach (var volunteer in @Model.MissionApp)
             {
-                <div class="col-md-4 col-sm-6">
-                    <div class="d-flex justify-content-center">
-                        <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+                @if(volunteer != null)
+                {
+                    <div class="col-md-4 col-sm-6">
+                        <div class="d-flex justify-content-center">
+                            @if (volunteer.User.Avatar != null)
+                            {
+                                <img src="@volunteer.User.Avatar" class="rounded-circle" height="70" width="70" />
+                            }
+                            else
+                            {
+                                <img src="~/images/default-user-icon.png" class="rounded-circle" height="70" width="70" />
+                            }
+                        </div>
+                        <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
                     </div>
-                    <p class="d-flex justify-content-center" style="font-size: 13px">@volunteer.User.FirstName</p>
-                </div>
+                }
             }
         }
         else

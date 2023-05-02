@@ -52,7 +52,8 @@ Copyright (c) 2019 Christian Bayer; Licensed MIT */
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        border: 1px solid gray
+        border: 0.25px solid #dee2e6;
+        border-radius: 0.375rem;
     }
 
         .image-uploader .upload-text i {
@@ -62,7 +63,8 @@ Copyright (c) 2019 Christian Bayer; Licensed MIT */
         }
 
         .image-uploader .upload-text span {
-            display: block
+            display: block;
+            color: #999;
         }
 
     .image-uploader .uploaded {
@@ -155,4 +157,8 @@ Copyright (c) 2019 Christian Bayer; Licensed MIT */
             padding-bottom: calc(50% - .4rem);
             margin: .2rem
         }
+}
+
+.bi-plus-lg::before {
+    color: #999;
 }

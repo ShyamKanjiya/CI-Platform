@@ -10,5 +10,8 @@ namespace CI_platform.Repositories.Repository.Interface
 {
     public interface IMissionRepository : IGenericRepository<Mission>
     {
+    IEnumerable<Mission> GetAllMissions();
     }
+
+
 }

@@ -9,6 +9,7 @@
 @{
     ViewData["Title"] = "volunteeringMissionPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var error = TempData["Error"]; 
 }
 
 
@@ -36,76 +37,81 @@
 
 <body>
     <div class="container-fluid">
-
+        <input hidden id="error" value="@error" />
         <div class="row">
 
-            <div id="carouselExampleIndicators" class="carousel slide col-lg-8" data-ride="carousel">
+            <div id="carouselExampleIndicators" class="carousel slide carousel-fade col-lg-8" data-ride="carousel">
                 <div class="carousel-indicators">
-                    <button type="button" id="indi" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" id="indi" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" id="indi" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    @foreach (var banner in Model.banners)
+                    {
+                        if (banner.SortOrder == 1)
+                        {
+                            <button type="button" id="indi" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@banner.SortOrder - 1" class="active" aria-current="true" aria-label="Slide @banner.SortOrder"></button>
+                        }
+                        else
+                        {
+                            <button type="button" id="indi" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="@banner.SortOrder - 1" aria-label="Slide @banner.SortOrder"></button>
+                        }
+                    }
                 </div>
                 <ol class="carousel-indicators">
-                    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                    @foreach (var banner in Model.banners)
+                    {
+                        if (banner.SortOrder == 1)
+                        {
+                            <li data-target="#carouselExampleIndicators" data-bs-slide-to="@banner.SortOrder - 1" class="active"></li>
+                        }
+                        else
+                        {
+                            <li data-target="#carouselExampleIndicators" data-bs-slide-to="@banner.SortOrder - 1"></li>
+                        }
+                    }
                 </ol>
 
                 <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png"
-                             alt="First slide">
-                        <div class="carousel-caption d-block d-none d-sm-block">
-                            <h5>First</h5>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos possimus, dolor modi
-                                autem vitae alias vero fugit a tempore eaque quia enim nihil facere? Voluptatum dolorem
-                                fugit culpa nihil vero?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="carousel-item" >
-                        <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png"
-                             alt="Second slide">
-                        <div class="carousel-caption d-block d-none d-sm-block">
-                            <h5>Second</h5>
-                            <p>
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nisi ratione culpa suscipit quo
-                                est quod consequuntur temporibus velit sunt amet repellat, repudiandae explicabo
-                                reiciendis facere ea architecto. Inventore, iure qui?
-                            </p>
-                        </div>
-                    </div>
-                    <div class="carousel-item" >
-                        <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-login.png"
-                             alt="Third slide">
-                        <div class="carousel-caption d-block d-none d-sm-block">
-                            <h5>Third</h5>
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Officiis quae sunt ut voluptate
-                                ratione excepturi esse recusandae consequuntur corporis nisi blanditiis omnis qui
-                                asperiores expedita, laborum autem saepe. Enim, corrupti?
-                            </p>
-                        </div>
-                    </div>
+                    @foreach (var banner in Model.banners)
+                    {
+                        if (banner.SortOrder == 1)
+                        {
+                            <div class="carousel-item active">
+                                <img src="@banner.Image" alt="Active slide">
+                                <div class="carousel-caption d-block d-none d-sm-block">
+                                    <p>
+                                        @banner.Text
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="carousel-item">
+                                <img src="@banner.Image" alt="Slide">
+                                <div class="carousel-caption d-block d-none d-sm-block">
+                                    <p>
+                                        @banner.Text
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    }
                 </div>
             </div>
 
 
             <div id="form" class="col-lg-4">
                 <form asp-controller="Home" asp-action="login" class="my-auto">
-                    @if (ViewBag.loginStatus != null)
+                    @*@if (ViewBag.loginStatus != null)
                     {
                         @if (ViewBag.loginStatus == 0)
                         {
                             <div class="alert alert-danger">Invalid Credentials</div>
                         }
-                    }
+                    }*@
                     <div class="form-group">
                         <label class="form-label">Email address</label>
                         <input asp-for="Email" type="email" class="form-control" id="InputEmail1" aria-describedby="emailHelp"
                                placeholder="evan.donohue@gmail.com">
-                               <span asp-validation-for="Email" class="text-danger"></span>
+                        <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label class="form-label mt-2">Password</label>
@@ -127,6 +133,19 @@
         </div>
 
     </div>
+
+    <script>
+        var error = $("#error").val();
+        if(error != null)
+        {
+            Swal.fire({
+                icon: 'error',
+                title: 'User not exists',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        }
+    </script>
 
 </body>
 

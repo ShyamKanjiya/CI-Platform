@@ -4,6 +4,7 @@ using CI_platform.Repositories.GenericRepository.Interface;
 using CI_platform.Repositories.MethodRepository.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using System.Net.WebSockets;
 using System.Security.Claims;
 
 namespace CI_platform.Controllers
@@ -305,7 +306,7 @@ namespace CI_platform.Controllers
                     updatedData.Description = obj.CMSDescription;
                     updatedData.Slug = obj.CMSSlug;
                     updatedData.Status = (byte)obj.Status;
-
+                    updatedData.UpdatedAt = DateTime.Now;
                     _unitOfWork.CMSPage.Update(updatedData);
                     _unitOfWork.Save();
 
@@ -560,7 +561,7 @@ namespace CI_platform.Controllers
                     {
                         string docName = docs.FileName;
                         string docSaveTo = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + docName);
-                        using (FileStream stream = new(docName, FileMode.Create))
+                        using (FileStream stream = new(docSaveTo, FileMode.Create))
                         {
                             docs.CopyTo(stream);
                         }
@@ -619,9 +620,102 @@ namespace CI_platform.Controllers
             if (missionId > 0)
             {
                 Mission deletingData = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionId);
-                deletingData.DeletedAt = DateTime.Now;
-                _unitOfWork.Mission.Update(deletingData);
+                if (deletingData != null)
+                {
+                    deletingData.DeletedAt = DateTime.Now;
+                    _unitOfWork.Mission.Update(deletingData);
+                }
+
+                var deletingComments = _unitOfWork.Comment.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingComments != null)
+                {
+                    foreach (var comment in deletingComments)
+                    {
+                        _unitOfWork.Comment.Remove(comment);
+                    }
+                }
+
+                var favrouiteMission = _unitOfWork.FavouriteMission.GetAccToFilter(m => m.MissionId == missionId);
+                if (favrouiteMission != null)
+                {
+                    foreach (var mission in favrouiteMission)
+                    {
+                        _unitOfWork.FavouriteMission.Remove(mission);
+                    }
+                }
+
+                var goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == missionId);
+                if (goalMission != null)
+                {
+                    _unitOfWork.GoalMission.Remove(goalMission);
+                }
+
+                var missionDoc = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == missionId);
+                if(missionDoc != null)
+                {
+                    foreach(var doc in missionDoc)
+                    {
+                        string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + doc.DocumentPath);
+                        System.IO.File.Delete(alrExists);
+                        _unitOfWork.MissionDocument.Remove(doc);
+                    }
+                }
+
+                var missionMedia = _unitOfWork.MissionMedia.GetAccToFilter(m => m.MissionId == missionId);
+                if (missionMedia != null)
+                {
+                    foreach (var media in missionMedia)
+                    {
+                        if(media.MediaType != "video")
+                        {
+                            string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/" + media.MediaPath);
+                            System.IO.File.Delete(alrExists);
+                        }
+                        _unitOfWork.MissionMedia.Remove(media);
+                    }
+                }
+
+                var inviteMission = _unitOfWork.MissionInvite.GetAccToFilter(m => m.MissionId == missionId);
+                if (inviteMission != null)
+                {
+                    foreach (var mission in inviteMission)
+                    {
+                        _unitOfWork.MissionInvite.Remove(mission);
+                    }
+                }
+
+                var deletingRating = _unitOfWork.MissionRating.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingRating != null)
+                {
+                    foreach (var rate in deletingRating)
+                    {
+                        rate.UpdatedAt = DateTime.Now;
+                        _unitOfWork.MissionRating.Update(rate);
+                    }
+                }
+
+                var deletingSkill = _unitOfWork.MissionSkills.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingSkill != null)
+                {
+                    foreach (var del in deletingSkill)
+                    {
+                        _unitOfWork.MissionSkills.Remove(del);
+                    }
+                }
+
+                var deletingMissionApplication = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingMissionApplication != null)
+                {
+                    foreach (var app in deletingMissionApplication)
+                    {
+                        app.ApprovalStatus = "DECLINE";
+                        app.UpdatedAt = DateTime.Now;
+                        _unitOfWork.MissionApplication.Update(app);
+                    }
+                }
+
                 _unitOfWork.Save();
+
 
                 return RedirectToAction("AdminMissionDetails");
             }
@@ -767,7 +861,7 @@ namespace CI_platform.Controllers
 
             if (obj.MissionThemeId == 0)
             {
-                if (Edata1 == null)
+                if (Edata1.Count == 0)
                 {
                     MissionTheme data = new()
                     {
@@ -792,7 +886,7 @@ namespace CI_platform.Controllers
                         updatedData.MissionThemeId = obj.MissionThemeId;
                         updatedData.Title = obj.MissionThemeTitle;
                         updatedData.Status = (byte)obj.Status;
-
+                        updatedData.UpdatedAt = DateTime.Now;
                         _unitOfWork.MissionTheme.Update(updatedData);
                         _unitOfWork.Save();
 
@@ -816,18 +910,21 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult DeleteMissionThemeData(long missionThemeId)
         {
-            if (missionThemeId > 0)
+            var status = _unitOfWork.Mission.GetAccToFilter(m => m.MissionThemeId == missionThemeId);
+            if (status.Count == 0)
             {
-                MissionTheme deletingData = _unitOfWork.MissionTheme.GetFirstOrDefault(m => m.MissionThemeId == missionThemeId);
-                deletingData.DeletedAt = DateTime.Now;
-                _unitOfWork.MissionTheme.Update(deletingData);
-                _unitOfWork.Save();
+                if (missionThemeId > 0)
+                {
+                    MissionTheme deletingData = _unitOfWork.MissionTheme.GetFirstOrDefault(m => m.MissionThemeId == missionThemeId);
+                    deletingData.DeletedAt = DateTime.Now;
+                    _unitOfWork.MissionTheme.Update(deletingData);
+                    _unitOfWork.Save();
 
-                return RedirectToAction("AdminMissionThemeDetails");
+                    return Json(true);
+                }
             }
-
             TempData["error"] = "Opps! something went wrong";
-            return RedirectToAction("AdminMissionThemeDetails");
+            return Json(false);
         }
         #endregion
 
@@ -1047,7 +1144,7 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult AddAndUpdateBanner(adminBannerDetails obj, IFormFile banner)
         {
-            var Bdata = _unitOfWork.Banner.GetFirstOrDefault(m => m.DeletedAt == null && m.BannerId != obj.BannerId);
+            var Bdata = _unitOfWork.Banner.GetFirstOrDefault(m => m.DeletedAt == null && m.BannerId == obj.BannerId);
 
             if (obj.BannerId == 0)
             {
@@ -1083,7 +1180,7 @@ namespace CI_platform.Controllers
             }
             else
             {
-                if (Bdata == null)
+                if (Bdata != null)
                 {
                     Banner updatedData = _unitOfWork.Banner.GetFirstOrDefault(m => m.BannerId == obj.BannerId);
                     if (updatedData != null)
@@ -1173,6 +1270,18 @@ namespace CI_platform.Controllers
 
             TempData["error"] = "Opps! something went wrong";
             return RedirectToAction("AdminBannerDetails");
+        }
+
+        [HttpPost]
+        public IActionResult CheckNumber(int bannerNumber)
+        {
+            var status = _unitOfWork.Banner.GetFirstOrDefault(m => m.SortOrder == bannerNumber && m.DeletedAt == null);
+
+            if (status == null)
+            {
+                return Json(true);
+            }
+            return Json(false);
         }
         #endregion
 

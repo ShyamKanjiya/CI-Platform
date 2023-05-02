@@ -58,7 +58,7 @@
             <!-- mission card -->
             <div class="col-12 col-md-6 col-lg-4 mission d-flex align-items-stretch justify-content-center">
                 <div class="card">
-                    <div style="position: relative;">
+                    <div style="position: relative; ">
                         @{
                             var thisMissApp = Model?.MissionApplications?.Where(m => m.UserId == Model?.UserDetails?.UserId && m.MissionId == item.MissionId).FirstOrDefault();
                         }
@@ -94,7 +94,21 @@
                             </div>
                         }
 
-                        <img class="card-img-top" id="mission-img" src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                        @{
+                            var media = item.MissionMedia.Where(m => m.MediaType != "video").FirstOrDefault();
+                        }
+                        @if (media != null)
+                        {
+                            <img class="card-img-top" id="mission-img" src="/MissionMedia/@media.MediaPath" alt="Card image cap">
+
+                        }
+                        else
+                        {
+                            <img class="card-img-top" id="mission-img" src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                        }
+
+
+
                         <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
                          id="location" style="width: 7rem">
                             <img class="ms-auto pe-2" src="/images/pin.png" alt="" height="20">

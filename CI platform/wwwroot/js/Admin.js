@@ -46,16 +46,32 @@ function deleteAlertForMissionTheme(MtId) {
                 type: 'POST',
                 url: '/Admin/DeleteMissionThemeData',
                 data: { "missionThemeId": MtId },
-                success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
-                    });
+                success: function (status) {
+                    if (status == true) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: 'Your data has been deleted.',
+                            showConfirmButton: false,
+                            timer: 1000
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
+                    else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'you can not delete this theme because mission is ongoing related to this theme',
+                            showConfirmButton: false,
+                            timer: 2500
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    }
                 },
                 error: function () {
                     console.log('error');
@@ -449,4 +465,40 @@ function loadImgForBanner(image) {
         reader.readAsDataURL(image.files[0]);
         $('#bannerImg').show();
     }
+}
+
+function CheckAvailableNumber() {
+    var bannerNumber = $("#bannerNumber").val();
+    $.ajax({
+        type: 'POST',
+        url: '/Admin/CheckNumber',
+        data: { "bannerNumber": bannerNumber },
+        success: function (data) {
+            console.log(data);
+            if (data == false) {
+                Swal.fire({
+                    title: "Enter valid sort number",
+                    timer: 1000,
+                    timerProgressBar: true,
+                    didOpen: () => {
+                        Swal.showLoading()
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.timer) {
+                        console.log("I was closed");
+                    }
+                })
+                $("#cancelBanner").click();
+            }
+            else {
+                $("#formForAddBanner").submit();
+            }
+        },
+        error: function () {
+            console.log('error');
+        },
+    });
 }

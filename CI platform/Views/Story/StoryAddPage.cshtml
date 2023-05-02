@@ -28,24 +28,30 @@
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="missionDropDownList">Select Mission</label>
                 <select class="form-select select" asp-for="MissionId" onchange="GetDraftedStory();" required>
-                    <option value="Select Mission">Select Mission</option>
+                    <option value="">Select Mission</option>
                     @foreach (var mission in Model.MissionApplication)
                     {
                         <option value=@mission.MissionId>@mission.Mission.Title</option>
                     }
                 </select>
+                <span class="text-danger" asp-validation-for="MissionId"></span>
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="exampleInputEmail1">My Story Title</label>
-                <input type="text" id="story_title" name="storyTitle" class="form-control" placeholder="Enter Story Title">
+                <input type="text" id="story_title" class="form-control" asp-for="storyTitle" placeholder="Enter Story Title">
+                <span class="text-danger" asp-validation-for="storyTitle"></span>
             </div>
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="story_date">Date</label>
-                <input type="date" name="storyDate" class="form-control" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")'>
+                <input type="date" class="form-control" asp-for="storyDate" placeholder="Select Date" id="story_date" max='@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")' value="">
+                <span class="text-danger" asp-validation-for="storyDate"></span>
             </div>
             <div class="col-12 my-4" id="textarea">
                 <label class="mb-1" for="myStory">My Story</label>
                 <textarea class="w-100" name="storyDesc" style="min-height: 300px" id="myStory"></textarea>
+                <div class="d-flex flex-row justify-content-between align-items-center">
+                    <p id="" class="ps-3"><span id="character_count"></span>/40000</p>
+                </div>
             </div>
             <div class="col-12">
                 <label class="mb-1" for="exampleInputEmail1">Enter Video URL</label>
@@ -54,7 +60,7 @@
         </div>
 
         <div class="uploadphoto mt-3">
-            <div>
+            <div class="mb-1">
                 <label for="uploadphoto">Upload your photos</label>
             </div>
             <div>
@@ -67,7 +73,7 @@
         <div class="col-12">
             <div class="row">
                 <div class="col-12 col-sm-6">
-                    <button class="btn border rounded-pill px-4 mt-2" asp-action="storyListingPage" asp-controller="Story">Cancel</button>
+                    <a class="btn border rounded-pill px-4 mt-2" asp-action="storyListingPage" asp-controller="Story">Cancel</a>
                 </div>
                 <div class="col-12 col-sm-6 text-sm-end">
                     <button class="btn border-warning text-warning rounded-pill px-4 mt-2" type="submit" id="saveStoryBtn">Save</button>

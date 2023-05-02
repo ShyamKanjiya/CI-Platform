@@ -586,6 +586,7 @@ table.dataTable {
             border: 1px solid transparent;
             background: transparent;
             box-shadow: none;
+            display: none;
         }
 
         .dataTables_wrapper .dataTables_paginate .paginate_button:hover {

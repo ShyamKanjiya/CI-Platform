@@ -31,7 +31,7 @@
                 if (count >= max) {
                     if (e.keyCode != 8 && e.keyCode != 46)
                         tinymce.dom.Event.cancel(e);
-                    document.getElementById("character_count").innerHTML = "Maximun allowed character is: 40000";
+                    document.getElementById("character_count").innerHTML = "Maximun allowed character is: 4000";
 
                 } else {
                     document.getElementById("character_count").innerHTML = count;
@@ -47,6 +47,8 @@ function CountCharacters() {
     var content = tinymce.trim(body.innerText || body.textContent);
     return content.length;
 };
+
+//--------------------------------------------------------------------------------------------------------------------------------------------//
 
 //initializing the arrays
 var missSkillList = [];

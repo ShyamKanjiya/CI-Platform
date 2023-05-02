@@ -21,11 +21,11 @@
 
                     <!-- Full-width images with number text -->
                     <div class="mySlides">
-                        <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
+                        <img src="~/images/img1.png" style="width:100%">
                     </div>
 
                     <div class="mySlides">
-                        <img src="~/images/img1.png" style="width:100%">
+                        <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
                     </div>
 
                     <div class="mySlides">
@@ -49,10 +49,10 @@
                     <!-- Thumbnail images -->
                     <div class="row mt-4 position-relative " style="height:10%">
                         <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
+                            <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
                         </div>
                         <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
+                            <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
                         </div>
                         <div class="column mx-auto">
                             <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
@@ -208,7 +208,7 @@
                                 {
                                     if (Model.MissionApplications != null && Model.MissionApplications.ApprovalStatus == "APPROVE")
                                     {
-                                        if (@Model.Missionrate != 0)
+                                        if (@Model.Missionrate != 0 && Model.RateMission != null)
                                         {
                                             var userrate = @Model.RateMission.Rating;
 
@@ -381,33 +381,33 @@
                             <!--Mission section-->
                             <div class="tab-pane fade show active" id="nav-mission" role="tabpanel" aria-labelledby="nav-home-tab">
                                 <h3 class="pb-2">Introduction</h3>
-                                <p>@Model.MissionDetail.Description</p>
+                                <p>@Html.Raw(Model.MissionDetail.Description)</p>
                                 <h3 class="pb-2">Documents</h3>
                                 <div class="d-flex me-5" id="documentSmall">
                                     @foreach (var documents in Model.MissionDocuments)
                                     {
                                         if (documents.MissionId == Model.MissionDetail.MissionId)
                                         {
-                                            if (documents.DocumentType == "DOC")
+                                            if (documents.DocumentType == ".doc")
                                             {
                                                 <div class="d-flex me-5 mt-2 me-3">
-                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="\MissionDocuments\@documents.DocumentPath" target="_blank">
                                                         <img src="~/images/doc.png" alt="like" target="pdf-frame" /> @documents.DocumentName
                                                     </a>
                                                 </div>
                                             }
-                                            else if (documents.DocumentType == "PDF")
+                                            else if (documents.DocumentType == ".pdf")
                                             {
                                                 <div class="d-flex mt-2 me-3">
-                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="\MissionDocuments\@documents.DocumentPath" target="_blank">
                                                         <img src="~/images/pdf.png" alt="like" target="pdf-frame" /> @documents.DocumentName
                                                     </a>
                                                 </div>
                                             }
-                                            else if (documents.DocumentType == "EXCEL")
+                                            else if (documents.DocumentType == ".xlsx")
                                             {
                                                 <div class="d-flex mt-2 me-3">
-                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="@documents.DocumentPath" target="_blank">
+                                                    <a class="btn btn-outline-dark rounded-pill py-2" href="\MissionDocuments\@documents.DocumentPath" target="_blank">
                                                         <img src="~/images/xlsx.png" alt="like" target="pdf-frame" /> @documents.DocumentName
                                                     </a>
                                                 </div>
@@ -452,7 +452,7 @@
                                                                 <div class="col">
                                                                     <p class="mb-1">@item.User.FirstName @item.User.LastName</p>
                                                                     <small class="d-block">@dt.ToString("dddd, MMMM dd, yyyy, hh:mm tt")</small>
-                                                                    @*<p>@item.CommentText</p>*@
+                                                                    <p>@item.CommentText</p>
                                                                 </div>
                                                             </div>
                                                         </div>

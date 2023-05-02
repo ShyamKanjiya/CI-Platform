@@ -20,29 +20,34 @@ function ContectUsGetData() {
 function ContectUsPostData() {
     var subject = $("#contectSubject").val();
     var message = $("#contectMessage").val();
-    $.ajax({
-        url: "/User/ContectUs",
-        method: "POST",
-        data: { 'subject': subject, 'message': message },
-        success: function (data) {
-            $('#contectUs').modal('hide');
-            Swal.fire({
-                title: 'Your message has been sent.',
-                timer: 2000,
-                didOpen: () => {
-                    Swal.showLoading()
-                    const b = Swal.getHtmlContainer().querySelector('b')
-                    timerInterval = setInterval(() => {
-                        b.textContent = Swal.getTimerLeft()
-                    }, 100)
-                },
-                willClose: () => {
-                    clearInterval(timerInterval)
-                }
-            })
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
+    if (subject != '' && message != '') {
+        $.ajax({
+            url: "/User/ContectUs",
+            method: "POST",
+            data: { 'subject': subject, 'message': message },
+            success: function (data) {
+                $('#contectUs').modal('hide');
+                Swal.fire({
+                    title: 'Your message has been sent.',
+                    timer: 2000,
+                    didOpen: () => {
+                        Swal.showLoading()
+                        const b = Swal.getHtmlContainer().querySelector('b')
+                        timerInterval = setInterval(() => {
+                            b.textContent = Swal.getTimerLeft()
+                        }, 100)
+                    },
+                    willClose: () => {
+                        clearInterval(timerInterval)
+                    }
+                })
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+    else {
+        Swal.fire('Please first fill the form');
+    }
 }
