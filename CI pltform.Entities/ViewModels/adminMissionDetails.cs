@@ -55,7 +55,6 @@ namespace CI_platform.Entities.ViewModels
 
         public int? TotalSeats { get; set; }
 
-        [Required(ErrorMessage = "Required!")]
         [RegularExpression("^((?:https?:)?\\/\\/)?((?:www|m)\\.)?((?:youtube(-nocookie)?\\.com|youtu.be))(\\/(?:[\\w\\-]+\\?v=|embed\\/|v\\/)?)([\\w\\-]+)(\\S+)?$", ErrorMessage = "Enter valid youtube link!")]
         public string? VideoUrl { get; set; }
         public IEnumerable<Mission> MissionLists { get; set; } = new List<Mission>();

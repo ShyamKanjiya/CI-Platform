@@ -134,10 +134,10 @@ namespace CI_platform.Controllers
         {
             switch (sortBy)
             {
-                case "Newest":
+                case "Oldest":
                     return missions.OrderBy(m => m.StartDate).ToList();
 
-                case "Oldest":
+                case "Newest":
                     return missions.OrderByDescending(m => m.StartDate).ToList();
 
                 case "AZ":
@@ -461,6 +461,5 @@ namespace CI_platform.Controllers
 
         #endregion Volunteering Mission Page
 
-        
     }
 }

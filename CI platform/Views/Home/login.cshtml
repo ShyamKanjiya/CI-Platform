@@ -9,8 +9,9 @@
 @{
     ViewData["Title"] = "volunteeringMissionPage";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var error = TempData["Error"]; 
+    var error = TempData["Error"];
 }
+
 
 
 <!DOCTYPE html>
@@ -37,7 +38,10 @@
 
 <body>
     <div class="container-fluid">
+        @if (TempData["Error"] != null)
+        {
         <input hidden id="error" value="@error" />
+        }
         <div class="row">
 
             <div id="carouselExampleIndicators" class="carousel slide carousel-fade col-lg-8" data-ride="carousel">
@@ -102,10 +106,10 @@
                 <form asp-controller="Home" asp-action="login" class="my-auto">
                     @*@if (ViewBag.loginStatus != null)
                     {
-                        @if (ViewBag.loginStatus == 0)
-                        {
-                            <div class="alert alert-danger">Invalid Credentials</div>
-                        }
+                    @if (ViewBag.loginStatus == 0)
+                    {
+                    <div class="alert alert-danger">Invalid Credentials</div>
+                    }
                     }*@
                     <div class="form-group">
                         <label class="form-label">Email address</label>
@@ -136,11 +140,10 @@
 
     <script>
         var error = $("#error").val();
-        if(error != null)
-        {
+        if (error != null) {
             Swal.fire({
                 icon: 'error',
-                title: 'User not exists',
+                title: 'Invalid Credentials',
                 showConfirmButton: false,
                 timer: 1500
             })

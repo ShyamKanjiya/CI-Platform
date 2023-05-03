@@ -39,6 +39,7 @@ namespace CI_platform.Entities.ViewModels
 
         public string? Department { get; set; }
 
+        public int Status { get; set; }
         public string? ProfileText { get; set; }
 
         [Required(ErrorMessage = " Required!")]

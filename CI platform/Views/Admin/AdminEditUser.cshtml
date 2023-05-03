@@ -54,7 +54,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group" >
-                            <label class="form-label" for="firstName">First Name</label>
+                            <label class="form-label" for="firstName">First Name<span class="text-danger"> * </span></label>
                             <input asp-for="FirstName" type="text" class="form-control" id="firstName"
                                    placeholder="Enter your FirstName" readonly>
                             <span class="text-danger" asp-validation-for="FirstName"></span>
@@ -62,7 +62,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="lastName">Last Name</label>
+                            <label class="form-label" for="lastName">Last Name<span class="text-danger"> * </span></label>
                             <input asp-for="LastName" type="text" class="form-control" id="lastName"
                                    placeholder="Enter your LastName" readonly>
                             <span class="text-danger" asp-validation-for="LastName"></span>
@@ -72,15 +72,15 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="emailId">Email</label>
+                            <label class="form-label" for="emailId">Email<span class="text-danger"> * </span></label>
                             <input asp-for="Email" type="email" class="form-control" id="emailId"
-                                   placeholder="Enter your Email" readonly>
+                                   placeholder="Enter your Email">
                             <span class="text-danger" asp-validation-for="Email"></span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" asp-for="PhoneNumber" class="form-label">Number</label>
+                            <label class="form-label" asp-for="PhoneNumber" class="form-label">Number<span class="text-danger"> * </span></label>
                             <input asp-for="PhoneNumber" type="number" class="form-control" id="number"
                                    aria-describedby="emailHelp" placeholder="Enter your number">
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
@@ -106,7 +106,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label">Country</label>
+                            <label class="form-label">Country<span class="text-danger"> * </span></label>
                             <select asp-for="CountryId" class="form-select select" id="userCountry">
                                 <option value="">Select Country</option>
                                 @foreach (var country in Model.CountryList)
@@ -119,14 +119,22 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label">City</label>
+                            <label class="form-label">City<span class="text-danger"> * </span></label>
                             <select asp-for="CityId" class="form-select select" id="userEditCity">
                             </select>
                             <span asp-validation-for="CityId" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
-
+                <div class="form-group mb-3">
+                    <label class="form-label">User Status</label>
+                    <div>
+                        <input type="radio" asp-for="Status" id="Active" value="1">
+                        <label for="Active">Active</label><br>
+                        <input type="radio" asp-for="Status" id="Inactive" value="0">
+                        <label for="Inactive">Inactive</label><br>
+                    </div>
+                </div>
             </div>
             <div class="d-flex justify-content-end align-items-center mt-3">
                 <a asp-controller="Admin" asp-action="AdminUserDetails" class="btn px-4 mb-5 cancel-btn rounded-pill me-4">Cancel</a>

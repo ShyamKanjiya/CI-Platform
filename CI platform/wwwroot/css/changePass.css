@@ -93,50 +93,27 @@ form {
     margin: 10px;
 }
 
-@media screen and (max-width : 991px) {
-    label {
-        font-size: 20px;
-    }
-
-    .carousel-item img {
-        height: 100%;
-    }
-
-    p, a {
-        font-size: 16px;
-    }
-
-    .carousel-caption p {
-        font-size: 15px;
-    }
-
-    #ChangeBtn{
-        font-size:15px;
-    }
-
-    #form {
-        grid-template-rows: 40vh 5vh;
-        align-items: center;
-    }
-
-    .PP{
-        align-items: flex-end;
-    }
-}
-
 @media screen and (max-width : 576px) {
     .carousel-indicators {
         display: none;
     }
+
+    .carousel-item img {
+        height: 40vh;
+    }
 }
 
-@media screen and (max-width : 500px) {
+@media screen and (max-width : 991px) {
+    label {
+        font-size: 15px;
+    }
+
     form {
         padding-top: 10%;
     }
 
-    label {
-        font-size: 15px;
+    .carousel-item img {
+        height: 50vh;
     }
 
     p, a {
@@ -147,15 +124,15 @@ form {
         font-size: 10px;
     }
 
-    #InputPassword {
+    #InputEmail1 {
         height: auto;
     }
 
-    #InputCheckPassword {
+    #InputPassword1 {
         height: auto;
     }
 
-    #ChangeBtn {
+    #LoginBtn {
         height: auto;
         margin-top: 2rem;
     }

@@ -21,7 +21,7 @@ namespace CI_platform.Entities.ViewModels
         public string Email { get; set; } = null!;
 
         [Required]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$", ErrorMessage = "Enter Valid Password")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,15}$", ErrorMessage = "Minimum 8 characters and maximum 15, at least one uppercase letter, one lowercase letter, one number and one special character")]
         public string Password { get; set; } = null!;
 
         [NotMapped]

@@ -18,19 +18,19 @@
                     <input asp-for="MissionId" type="text" class="form-control" id="missionId">
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="missionTitle">Mission Title</label>
+                    <label class="form-label" for="missionTitle">Mission Title<span class="text-danger"> * </span></label>
                     <input asp-for="Title" type="text" class="form-control" id="missionTitle"
                            placeholder="Enter mission title">
                     <span class="text-danger" asp-validation-for="Title"></span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="missionShortDesc">Short Description</label>
+                    <label class="form-label" for="missionShortDesc">Short Description<span class="text-danger"> * </span></label>
                     <textarea asp-for="ShortDescription" rows="3" class="form-control" id="missionShortDesc"
                               placeholder="Enter short description"></textarea>
                     <span class="text-danger" asp-validation-for="ShortDescription"></span>
                 </div>
                 <div class="form-group">
-                    <label class="mb-1" for="description">Description</label>
+                    <label class="mb-1" for="description">Description<span class="text-danger"> * </span></label>
                     <textarea asp-for="Description" class="w-100 hidden-by-tinymce" style="min-height: 300px" id="missionDescription"></textarea>
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <p id="" class="ps-3"><span id="character_count"></span>/40000</p>
@@ -39,7 +39,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="missCountry">Country</label>
+                            <label class="form-label" for="missCountry">Country<span class="text-danger"> * </span></label>
                             <select asp-for="CountryId" class="form-select select" id="missCountry">
                                 @foreach (var country in Model.CountryList)
                                 {
@@ -51,7 +51,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="casCityAddMission">City</label>
+                            <label class="form-label" for="casCityAddMission">City<span class="text-danger"> * </span></label>
                             <select asp-for="CityId" class="form-select select" id="casCityEditMission">
                             </select>
                             <span asp-validation-for="CityId" class="text-danger"></span>
@@ -59,13 +59,13 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="organizationName">Organization Name</label>
+                    <label class="form-label" for="organizationName">Organization Name<span class="text-danger"> * </span></label>
                     <input asp-for="OrganizationName" type="text" class="form-control" id="organizationName"
                            placeholder="Enter organization name">
                     <span class="text-danger" asp-validation-for="OrganizationName"></span>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="organizationDetail">Organization Detail</label>
+                    <label class="form-label" for="organizationDetail">Organization Detail<span class="text-danger"> * </span></label>
                     <textarea asp-for="OrganizationDetail" rows="3" class="form-control" id="organizationDetail"
                               placeholder="Enter organization detail"></textarea>
                     <span class="text-danger" asp-validation-for="OrganizationDetail"></span>
@@ -73,15 +73,15 @@
                 <div class="row my-3">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="mb-1" for="startDate">Select StartDate</label>
-                            <input asp-for="StartDate" type="date" class="form-control" id="startDate">
+                            <label class="mb-1" for="startDate">Select StartDate<span class="text-danger"> * </span></label>
+                            <input asp-for="StartDate" type="date" class="form-control" id="startDate" min="@Convert.ToDateTime(@DateTime.Now).ToString("yyyy-MM-dd")" onchange="setEndDate()">
                             <span asp-validation-for="StartDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="mb-1" for="endDate">Select EndDate</label>
-                            <input asp-for="EndDate" type="date" class="form-control" id="endDate">
+                            <label class="mb-1" for="endDate">Select EndDate<span class="text-danger"> * </span></label>
+                            <input asp-for="EndDate" type="date" class="form-control" id="endDate" onchange="getDeadline()">
                             <span asp-validation-for="EndDate" class="text-danger"></span>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="missionType">Mission Type</label>
+                            <label class="form-label" for="missionType">Mission Type<span class="text-danger"> * </span></label>
                             <select asp-for="MissionType" class="form-select select" id="missionType">
                                 <option value="TIME">Time Based</option>
                                 <option value="GOAL">Goal Based</option>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="form-label" for="missionTheme">Mission Theme</label>
+                            <label class="form-label" for="missionTheme">Mission Theme<span class="text-danger"> * </span></label>
                             <select asp-for="MissionThemeId" class="form-select select" id="missionTheme">
                                 <option value="">Select Mission Theme</option>
                                 @foreach (var theme in Model.ThemeList)
@@ -123,13 +123,13 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="missionDeadline">Select Mission Deadline</label>
-                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline">
+                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline" min="" max="" value="">
                             <span asp-validation-for="MissionDeadline" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
                 <div class="form-group">
-                    <label class="form-label" for="missAvailabilty">Mission Availability</label>
+                    <label class="form-label" for="missAvailabilty">Mission Availability<span class="text-danger"> * </span></label>
                     <select asp-for="Availability" class="form-select select" id="missAvailabilty">
                         <option value="daily">Daily</option>
                         <option value="weekly">Weekly</option>
@@ -264,6 +264,8 @@
         var cId = $('#missCountry').val();
         var mId = $('#missionId').val();
         editMissCasCity(cId, mId);
+        setEndDate();
+        getDeadline();
     });
 
     $('#missCountry').change(function () {
@@ -300,7 +302,6 @@
 
     //for mission images
     if (@Model.MissionMediumList.Count() == 0) {
-        debugger;
         $('.preview-mission-image').html("");
         $(".preview-mission-image").imageUploader({});
     }

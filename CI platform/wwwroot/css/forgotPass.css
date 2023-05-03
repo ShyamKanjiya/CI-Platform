@@ -77,50 +77,27 @@ form {
     margin: 10px;
 }
 
-@media screen and (max-width : 991px) {
-    label {
-        font-size: 20px;
+@media screen and (max-width : 576px) {
+    .carousel-indicators {
+        display: none;
     }
 
     .carousel-item img {
-        height: 100%;
-    }
-
-    p, a {
-        font-size: 16px;
-    }
-
-    .carousel-caption p {
-        font-size: 15px;
-    }
-
-    #ResetBtn{
-        font-size: 15px;
-    }
-
-    #form {
-        grid-template-rows: 40vh 5vh;
-        align-items: center;
-    }
-
-    .PP {
-        align-items: flex-end;
+        height: 40vh;
     }
 }
 
-@media screen and (max-width : 576px) {
-    .carousel-indicators{
-        display: none;
+@media screen and (max-width : 991px) {
+    label {
+        font-size: 15px;
     }
-}
 
-@media screen and (max-width : 500px) {
     form {
         padding-top: 10%;
     }
 
-    label {
-        font-size: 15px;
+    .carousel-item img {
+        height: 50vh;
     }
 
     p, a {
@@ -135,7 +112,11 @@ form {
         height: auto;
     }
 
-    #ResetBtn {
+    #InputPassword1 {
+        height: auto;
+    }
+
+    #LoginBtn {
         height: auto;
         margin-top: 2rem;
     }
@@ -147,5 +128,3 @@ form {
     .PP {
         margin: 5% 0;
     }
-}
-

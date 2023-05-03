@@ -54,19 +54,17 @@
                             }
                         </td>
                         <td class="text-center">
-                            @if (item.Status != 0)
-                            {
-                                <span>
-                                    <a class="btn border-0 bg-transparent edit-btn" asp-controller="Admin" asp-action="AdminEditUser" asp-route-userId="@item.UserId">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                </span>
-                                <span>
-                                    <a class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForUser(@item.UserId);">
-                                        <i class="bi bi-trash3"></i>
-                                    </a>
-                                </span>
-                            }
+                            <span>
+                                <a class="btn border-0 bg-transparent edit-btn" asp-controller="Admin" asp-action="AdminEditUser" asp-route-userId="@item.UserId">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                            </span>
+                            <span>
+                                <a class="btn border-0 bg-transparent del-btn" onclick="deleteAlertForUser(@item.UserId);">
+                                    <i class="bi bi-trash3"></i>
+                                </a>
+                            </span>
+
                         </td>
                     </tr>
                 }

@@ -314,10 +314,10 @@
                             {
                                 if (Model.MissionApplications != null)
                                 {
-                                    if (@Model.MissionDetail.EndDate < DateTime.Now)
+                                    if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0)
                                     {
                                         <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
-                                            <p class="mb-0 pe-4 text-warning h6">MIssion Closed</p>
+                                            <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
                                         </a>
                                     }
                                     else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
@@ -348,7 +348,13 @@
                                     </a>
                                 }
                             }
-
+                            else if (Model.MissionDetail.Seats == 0)
+                            {
+                                <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                    <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
                             else
                             {
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " asp-action="Login" asp-controller="Home" style="border-radius:50px;">

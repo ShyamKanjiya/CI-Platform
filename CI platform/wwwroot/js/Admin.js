@@ -53,12 +53,9 @@ function deleteAlertForMissionTheme(MtId) {
                             title: 'Deleted!',
                             text: 'Your data has been deleted.',
                             showConfirmButton: false,
-                            timer: 1000
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                location.reload();
-                            }
+                            timer: 1000,
                         });
+                        location.reload();
                     }
                     else {
                         Swal.fire({
@@ -131,15 +128,14 @@ function deleteAlertForSkill(skillId) {
                 url: '/Admin/DeleteSkillData',
                 data: { "skillId": skillId },
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your data has been deleted.',
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
+                    location.reload();
                 },
                 error: function () {
                     console.log('error');
@@ -245,15 +241,14 @@ function deleteAlertForCMS(CMSId) {
                 url: '/Admin/DeleteCMSData',
                 data: { "CMSId": CMSId },
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your data has been deleted.',
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
+                    location.reload();
                 },
                 error: function () {
                     console.log('error');
@@ -328,15 +323,14 @@ function deleteAlertForMission(MId) {
                 url: '/Admin/DeleteMissionData',
                 data: { "missionId": MId },
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your data has been deleted.',
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
+                    location.reload();
                 },
                 error: function () {
                     console.log('error');
@@ -344,6 +338,19 @@ function deleteAlertForMission(MId) {
             });
         }
     })
+}
+
+function setEndDate() {
+    var start = $("#startDate").val();
+    $("#endDate").attr("min", start);
+}
+
+function getDeadline() {
+    var start = $("#startDate").val();
+    var end = $("#endDate").val();
+
+    $("#missionDeadline").attr("min", start);
+    $("#missionDeadline").attr("max", end);
 }
 
 //---------------------- User --------------------------//
@@ -364,15 +371,14 @@ function deleteAlertForUser(UId) {
                 url: '/Admin/DeleteUserData',
                 data: { "userId": UId },
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your data has been deleted.',
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
+                    location.reload();
                 },
                 error: function () {
                     console.log('error');
@@ -411,15 +417,14 @@ function deleteAlertForBanner(BannerId) {
                 url: '/Admin/DeleteBannerData',
                 data: { "bannerId": BannerId },
                 success: function () {
-                    Swal.fire(
-                        'Deleted!',
-                        'Your data has been deleted.',
-                        'success'
-                    ).then((result) => {
-                        if (result.isConfirmed) {
-                            location.reload();
-                        }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Deleted!',
+                        text: 'Your data has been deleted.',
+                        showConfirmButton: false,
+                        timer: 1000,
                     });
+                    location.reload();
                 },
                 error: function () {
                     console.log('error');

@@ -58,6 +58,7 @@
 
 .card {
     margin-bottom: 1.5rem;
+    width:50vw;
 }
 
 .list-view .row>[class*=col-] {
@@ -144,9 +145,16 @@
     background-color: white;
 }
 
+
 .rating-star {
     width: 20px;
     height: 20px;
+}
+
+.progress {
+    min-width: 100px;
+    width: 11vw;
+    height: 15px;
 }
 
 #missionPeriod {
@@ -182,11 +190,20 @@
         margin: 0 1rem;
     }
 
-
     #search-inp {
         margin-left: 0rem;
     }
 
+    .progress {
+        min-width: 100px;
+        width: 30vw;
+        height: 15px;
+    }
+
+    .card {
+        margin-bottom: 1.5rem;
+        width: 70vw;
+    }
 }
 
 @media (max-width: 575px) {

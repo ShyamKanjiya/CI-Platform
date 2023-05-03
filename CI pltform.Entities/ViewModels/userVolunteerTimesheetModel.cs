@@ -17,6 +17,7 @@ namespace CI_platform.Entities.ViewModels
         public long MissionId { get; set; }
 
         [Remote("CheckEnterdTime", "User", AdditionalFields = "Minutes", ErrorMessage = "Please, Enter valid time")]
+        [Range(00, 23, ErrorMessage = "Hours must between 00 to 23")]
         [Required(ErrorMessage = "Required!")]
         public int Hours { get; set; }
 

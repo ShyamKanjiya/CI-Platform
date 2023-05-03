@@ -71,14 +71,14 @@
                                     <i class="bi bi-patch-check text-white"></i>
                                 </div>
                             }
-                            else if (thisMissApp?.ApprovalStatus == "PENDING" && item.EndDate > systemDate)
+                            else if (thisMissApp?.ApprovalStatus == "PENDING" && item.EndDate > systemDate )
                             {
                                 <div class="d-flex bg-primary px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
                                     <small class="mb-0 me-2 text-white">Pending Approval</small>
                                     <i class="bi bi-patch-exclamation text-white"></i>
                                 </div>
                             }
-                            else if (item.EndDate < systemDate)
+                            else if (item.EndDate < systemDate || item.Seats == 0)
                             {
                                 <div class="d-flex bg-warning px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
                                     <small class="mb-0 me-2 text-white">Closed</small>
@@ -86,7 +86,7 @@
                                 </div>
                             }
                         }
-                        else if (item.EndDate < systemDate)
+                        else if (item.EndDate < systemDate || item.Seats == 0)
                         {
                             <div class="d-flex bg-warning px-2 py-1 mt-3 position-absolute opacity-75" id="ApprovalStatus" style=" border-radius: 0px 50px 50px 0px;">
                                 <small class="mb-0 me-2 text-white">Closed</small>
@@ -259,7 +259,7 @@
                                             @foreach (var goal in Model.GoalMissions.Where(x => x.MissionId == item.MissionId))
                                             {
                                                 int percentComplete = (int)Math.Round((double)(100 * @goal.GoalValue) / (double)@goal.TotalValue);
-                                                <div class="progress" style="min-width:100px; width: 11vw; height: 15px;">
+                                                <div class="progress">
                                                     <div class="progress-bar bg-warning" role="progressbar" style="width: @percentComplete%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                                 </div>
                                                 <small><span>@goal.GoalValue</span> achieved</small>
@@ -274,6 +274,13 @@
                             {
                                 <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
                                     <p class="mb-0 pe-4 text-warning h6">Applied</p>
+                                    <img src="/images/right-arrow.png" alt="">
+                                </a>
+                            }
+                            else if (item.EndDate > DateTime.Now && item.Seats == 0)
+                            {
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-4 text-warning h6">Fulled</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }

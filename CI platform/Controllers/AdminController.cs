@@ -2,6 +2,7 @@
 using CI_platform.Entities.ViewModels;
 using CI_platform.Repositories.GenericRepository.Interface;
 using CI_platform.Repositories.MethodRepository.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Net.WebSockets;
@@ -9,6 +10,7 @@ using System.Security.Claims;
 
 namespace CI_platform.Controllers
 {
+    [Authorize(Roles = "ADMIN")]
     public class AdminController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -84,7 +86,8 @@ namespace CI_platform.Controllers
                     CountryId = obj.CountryId,
                     CityId = obj.CityId,
                     EmployeeId = obj.EmployeeId,
-                    Department = obj.Department
+                    Department = obj.Department,
+                    Status = 1
                 };
                 _unitOfWork.User.Add(user);
                 _unitOfWork.Save();
@@ -182,6 +185,7 @@ namespace CI_platform.Controllers
                     obj.Department = user.Department;
                     obj.CityId = user.CityId;
                     obj.CountryId = user.CountryId;
+                    obj.Status = (int)user.Status;
                 }
             }
             obj.CountryList = countryList;
@@ -202,6 +206,7 @@ namespace CI_platform.Controllers
                 user.Department = obj.Department;
                 user.CityId = obj.CityId;
                 user.CountryId = obj.CountryId;
+                user.Status = obj.Status;
 
                 if (user != null && userAvatar != null)
                 {
@@ -1046,13 +1051,24 @@ namespace CI_platform.Controllers
                 {
                     if (flag == 1)
                     {
-                        missionData.ApprovalStatus = "APPROVE";
-                        TempData["success"] = "Data Approved successfully!";
+                        Mission data = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionData.MissionId);
+                        if(data.Seats > 0)
+                        {
+                            data.Seats = data.Seats - 1;
+                            missionData.ApprovalStatus = "APPROVE";
+                            TempData["success"] = "Application Approved successfully!";
+                            _unitOfWork.Mission.Update(data);
+                        }
+                        else
+                        {
+                            missionData.ApprovalStatus = "DECLINE";
+                            TempData["error"] = "Application can't be added";
+                        }
                     }
                     else
                     {
                         missionData.ApprovalStatus = "DECLINE";
-                        TempData["success"] = "Data Declined successfully!";
+                        TempData["success"] = "Application Declined successfully!";
                     }
                     _unitOfWork.MissionApplication.Update(missionData);
                     _unitOfWork.Save();
