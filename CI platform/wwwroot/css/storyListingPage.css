@@ -11,6 +11,11 @@
     background-size: cover;
 }
 
+.card {
+    margin-bottom: 1.5rem;
+    width: auto;
+}
+
 #share-story-button {
     background-color: transparent;
     border: 2px solid #ffffff;

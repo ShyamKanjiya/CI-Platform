@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Net.WebSockets;
 using System.Security.Claims;
+using System.Xml.Serialization;
 
 namespace CI_platform.Controllers
 {
@@ -129,14 +130,143 @@ namespace CI_platform.Controllers
             if (userId > 0)
             {
                 User deletingData = _unitOfWork.User.GetFirstOrDefault(m => m.UserId == userId);
+                if (deletingData != null)
+                {
+                    deletingData.DeletedAt = DateTime.Now;
+                    _unitOfWork.User.Update(deletingData);
+                    
+                    string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + deletingData.Avatar);
+                    System.IO.File.Delete(alrExists);
+                    _unitOfWork.User.Update(deletingData);
+                }
 
-                string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + deletingData.Avatar);
-                System.IO.File.Delete(alrExists);
+                var deletingComments = _unitOfWork.Comment.GetAccToFilter(m => m.UserId == userId);
+                if (deletingComments != null)
+                {
+                    foreach (var comment in deletingComments)
+                    {
+                        comment.DeletedAt = DateTime.Now;
+                        _unitOfWork.Comment.Update(comment);
+                    }
+                }
 
-                deletingData.DeletedAt = DateTime.Now;
-                _unitOfWork.User.Update(deletingData);
+                var deletingContectUs = _unitOfWork.ContectUs.GetAccToFilter(m => m.UserId == userId);
+                if (deletingContectUs != null)
+                {
+                    foreach (var contact in deletingContectUs)
+                    {
+                        contact.DeletedAt = DateTime.Now;
+                        _unitOfWork.ContectUs.Update(contact);
+                    }
+                }
+
+                var favrouiteMission = _unitOfWork.FavouriteMission.GetAccToFilter(m => m.UserId == userId);
+                if (favrouiteMission != null)
+                {
+                    foreach (var mission in favrouiteMission)
+                    {
+                        mission.DeletedAt = DateTime.Now;
+                        _unitOfWork.FavouriteMission.Update(mission);
+                    }
+                }
+
+                var deletingMissionApplication = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == userId);
+                if (deletingMissionApplication != null)
+                {
+                    foreach (var app in deletingMissionApplication)
+                    {
+                        app.ApprovalStatus = "DECLINE";
+                        app.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionApplication.Update(app);
+                    }
+                }
+
+                var deletingMissionInviteFrom = _unitOfWork.MissionInvite.GetAccToFilter(m => m.FromUserId == userId);
+                if (deletingMissionInviteFrom != null)
+                {
+                    foreach (var inviteFrom in deletingMissionInviteFrom)
+                    {
+                        inviteFrom.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionInvite.Update(inviteFrom);
+                    }
+                }
+
+                var deletingMissionInviteTo = _unitOfWork.MissionInvite.GetAccToFilter(m => m.ToUserId == userId);
+                if (deletingMissionInviteTo != null)
+                {
+                    foreach (var inviteTo in deletingMissionInviteTo)
+                    {
+                        inviteTo.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionInvite.Update(inviteTo);
+                    }
+                }
+
+                var deletingRating = _unitOfWork.MissionRating.GetAccToFilter(m => m.UserId == userId);
+                if (deletingRating != null)
+                {
+                    foreach (var rate in deletingRating)
+                    {
+                        rate.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionRating.Update(rate);
+                    }
+                }
+
+                var deletingRelatedStory = _unitOfWork.Story.GetAccToFilter(m => m.UserId == userId);
+                if (deletingRelatedStory != null)
+                {
+                    foreach (var story in deletingRelatedStory)
+                    {
+                        story.DeletedAt = DateTime.Now;
+                        _unitOfWork.Story.Update(story);
+
+                        var deletingStoryInvite = _unitOfWork.StoryInvite.GetFirstOrDefault(m => m.StoryId == story.StoryId);
+
+                        if (deletingStoryInvite != null)
+                        {
+                            deletingStoryInvite.DeletedAt = DateTime.Now;
+                            _unitOfWork.StoryInvite.Update(deletingStoryInvite);
+                        }
+
+                        var deletingStoryMedia = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == story.StoryId);
+
+                        if (deletingStoryMedia != null)
+                        {
+                            foreach (var media in deletingStoryMedia)
+                            {
+                                if (media.Type != "video")
+                                {
+                                    string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/" + media.Path);
+                                    System.IO.File.Delete(alrExists);
+                                }
+
+                                media.DeletedAt = DateTime.Now;
+                                _unitOfWork.StoryMedia.Update(media);
+                            }
+                        }
+                    }
+                }
+
+                var deletingTimesheet = _unitOfWork.Timesheet.GetAccToFilter(m => m.UserId == userId);
+                if (deletingTimesheet != null)
+                {
+                    foreach (var del in deletingTimesheet)
+                    {
+                        del.DeletedAt = DateTime.Now;
+                        _unitOfWork.Timesheet.Update(del);
+                    }
+                }
+
+                var deletingUserSkills = _unitOfWork.UserSkill.GetAccToFilter(m => m.UserId == userId);
+                if (deletingUserSkills != null)
+                {
+                    foreach (var del in deletingUserSkills)
+                    {
+                        del.DeletedAt = DateTime.Now;
+                        _unitOfWork.UserSkill.Update(del);
+                    }
+                }
+
                 _unitOfWork.Save();
-
                 return RedirectToAction("AdminUserDetails");
             }
 
@@ -365,6 +495,7 @@ namespace CI_platform.Controllers
             return View(obj);
         }
 
+        #region Add
         [HttpGet]
         public IActionResult AdminAddMission()
         {
@@ -425,7 +556,284 @@ namespace CI_platform.Controllers
             }
             return View(obj);
         }
+        #endregion
 
+        [HttpPost]
+        public IActionResult DeleteMissionData(long missionId)
+        {
+            if (missionId > 0)
+            {
+                Mission deletingData = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionId);
+                if (deletingData != null)
+                {
+                    deletingData.DeletedAt = DateTime.Now;
+                    _unitOfWork.Mission.Update(deletingData);
+                }
+
+                var deletingComments = _unitOfWork.Comment.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingComments != null)
+                {
+                    foreach (var comment in deletingComments)
+                    {
+                        comment.DeletedAt = DateTime.Now;
+                        _unitOfWork.Comment.Update(comment);
+                    }
+                }
+
+                var favrouiteMission = _unitOfWork.FavouriteMission.GetAccToFilter(m => m.MissionId == missionId);
+                if (favrouiteMission != null)
+                {
+                    foreach (var mission in favrouiteMission)
+                    {
+                        mission.DeletedAt = DateTime.Now;
+                        _unitOfWork.FavouriteMission.Update(mission);
+                    }
+                }
+
+                var goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == missionId);
+                if (goalMission != null)
+                {
+                    goalMission.DeletedAt = DateTime.Now;
+                    _unitOfWork.GoalMission.Update(goalMission);
+                }
+
+                var missionDoc = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == missionId);
+                if(missionDoc != null)
+                {
+                    foreach(var doc in missionDoc)
+                    {
+                        string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + doc.DocumentPath);
+                        System.IO.File.Delete(alrExists);
+
+                        doc.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionDocument.Update(doc);
+                    }
+                }
+
+                var missionMedia = _unitOfWork.MissionMedia.GetAccToFilter(m => m.MissionId == missionId);
+                if (missionMedia != null)
+                {
+                    foreach (var media in missionMedia)
+                    {
+                        if(media.MediaType != "video")
+                        {
+                            string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/" + media.MediaPath);
+                            System.IO.File.Delete(alrExists); 
+                        }
+
+                        media.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionMedia.Update(media);
+                    }
+                }
+
+                var inviteMission = _unitOfWork.MissionInvite.GetAccToFilter(m => m.MissionId == missionId);
+                if (inviteMission != null)
+                {
+                    foreach (var mission in inviteMission)
+                    {
+                        mission.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionInvite.Update(mission);
+                    }
+                }
+
+                var deletingRating = _unitOfWork.MissionRating.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingRating != null)
+                {
+                    foreach (var rate in deletingRating)
+                    {
+                        rate.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionRating.Update(rate);
+                    }
+                }
+
+                var deletingSkill = _unitOfWork.MissionSkills.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingSkill != null)
+                {
+                    foreach (var del in deletingSkill)
+                    {
+                        del.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionSkills.Update(del);
+                    }
+                }
+
+                var deletingMissionApplication = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingMissionApplication != null)
+                {
+                    foreach (var app in deletingMissionApplication)
+                    {
+                        app.ApprovalStatus = "DECLINE";
+                        app.DeletedAt = DateTime.Now;
+                        _unitOfWork.MissionApplication.Update(app);
+                    }
+                }
+
+                var deletingRelatedStory = _unitOfWork.Story.GetAccToFilter(m => m.MissionId == missionId);
+                if(deletingRelatedStory != null)
+                {
+                    foreach (var story in deletingRelatedStory)
+                    {
+                        story.DeletedAt = DateTime.Now;
+                        _unitOfWork.Story.Update(story);
+
+                        var deletingStoryInvite = _unitOfWork.StoryInvite.GetFirstOrDefault(m => m.StoryId == story.StoryId);
+
+                        if (deletingStoryInvite != null)
+                        {
+                            deletingStoryInvite.DeletedAt = DateTime.Now;
+                            _unitOfWork.StoryInvite.Update(deletingStoryInvite);
+                        }
+
+                        var deletingStoryMedia = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == story.StoryId);
+
+                        if (deletingStoryMedia != null)
+                        {
+                            foreach (var media in deletingStoryMedia)
+                            {
+                                if (media.Type != "video")
+                                {
+                                    string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/StoryImages/" + media.Path);
+                                    System.IO.File.Delete(alrExists);
+                                }
+
+                                media.DeletedAt = DateTime.Now;
+                                _unitOfWork.StoryMedia.Update(media);
+                            }
+                        }
+                    }
+                }
+
+                var deletingTimesheet = _unitOfWork.Timesheet.GetAccToFilter(m => m.MissionId == missionId);
+                if (deletingTimesheet != null)
+                {
+                    foreach (var del in deletingTimesheet)
+                    {
+                        del.DeletedAt = DateTime.Now;
+                        _unitOfWork.Timesheet.Update(del);
+                    }
+                }
+
+
+                _unitOfWork.Save();
+                return RedirectToAction("AdminMissionDetails");
+            }
+
+            TempData["error"] = "Opps! something went wrong";
+            return RedirectToAction("AdminMissionDetails");
+        }
+
+        #region Edit
+        [HttpGet]
+        public IActionResult AdminEditMission(long missionId)
+        {
+            if (missionId > 0)
+            {
+                User user = GetThisUser();
+                Mission thisMissionDetails = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
+                if (thisMissionDetails != null)
+                {
+                    IEnumerable<MissionSkill> missionSkillList = _unitOfWork.MissionSkills.GetAccToFilter(missionSkills => missionSkills.MissionId == missionId);
+                    IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(missionMedia => missionMedia.MissionId == missionId);
+                    IEnumerable<MissionDocument> missionDocList = _unitOfWork.MissionDocument.GetAccToFilter(missionDoc => missionDoc.MissionId == missionId);
+                    IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
+                    IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAll();
+                    IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAll();
+                    adminMissionDetails obj = new()
+                    {
+                        MissionId = thisMissionDetails.MissionId,
+                        Title = thisMissionDetails.Title,
+                        ShortDescription = thisMissionDetails.ShortDescription,
+                        Description = thisMissionDetails.Description,
+                        CountryId = thisMissionDetails.CountryId,
+                        CityId = thisMissionDetails.CityId,
+                        OrganizationName = thisMissionDetails.OrganizationName,
+                        OrganizationDetail = thisMissionDetails.OrganizationDetail,
+                        StartDate = thisMissionDetails.StartDate,
+                        EndDate = thisMissionDetails.EndDate,
+                        MissionType = thisMissionDetails.MissionType,
+                        TotalSeats = thisMissionDetails.Seats,
+                        MissionDeadline = thisMissionDetails.Deadline,
+                        MissionThemeId = thisMissionDetails.MissionThemeId,
+                        Availability = thisMissionDetails.Availability,
+                        UserDetails = user
+                    };
+
+                    obj.CountryList = countryList;
+                    obj.ThemeList = themeList;
+                    obj.SkillList = skillList;
+                    obj.MissionSkillList = missionSkillList;
+                    obj.MissionMediumList = missionMediaList;
+                    obj.MissionDocumentList = missionDocList;
+
+                    return View(obj);
+                }
+            }
+
+            return RedirectToAction("AdminMissionDetails");
+        }
+
+        //Edit mission post method 
+        [HttpPost]
+        public IActionResult AdminEditMission(adminMissionDetails obj, List<long> finalMissSkillList, List<IFormFile> MissionDocFiles, List<IFormFile> MissionImageFiles, string[] preloadedmissimage, string[] preloadedmissdocs)
+        {
+            if (obj != null)
+            {
+                if (obj?.MissionId != null)
+                {
+                    Mission editThisMission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == obj.MissionId);
+                    if (editThisMission != null)
+                    {
+                        editThisMission.Title = obj.Title;
+                        editThisMission.ShortDescription = obj.ShortDescription;
+                        editThisMission.Description = obj.Description;
+                        editThisMission.CountryId = obj.CountryId;
+                        editThisMission.CityId = obj.CityId;
+                        editThisMission.OrganizationName = obj.OrganizationName;
+                        editThisMission.OrganizationDetail = obj.OrganizationDetail;
+                        editThisMission.StartDate = obj.StartDate;
+                        editThisMission.EndDate = obj.EndDate;
+                        editThisMission.MissionType = obj.MissionType;
+                        editThisMission.Seats = obj.TotalSeats;
+                        editThisMission.Deadline = obj.MissionDeadline;
+                        editThisMission.MissionThemeId = obj.MissionThemeId;
+                        editThisMission.Availability = obj.Availability;
+
+                        _unitOfWork.Mission.Update(editThisMission);
+
+                        IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
+                        IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
+                        SaveMissionMediaAndDocs(editThisMission.MissionId, obj.VideoUrl, missionMediaList, missionDocumentList, MissionDocFiles, MissionImageFiles, preloadedmissdocs, preloadedmissimage);
+                        var MissionSkillsId = _unitOfWork.MissionSkills.GetAccToFilter(missionSkill => missionSkill.MissionId == obj.MissionId).Select(missionSkill => missionSkill.SkillId);
+
+                        AddMissionSkills(obj.MissionId, MissionSkillsId, finalMissSkillList);
+
+                        _unitOfWork.Save();
+                        return RedirectToAction("AdminMissionDetails");
+
+                    }
+                }
+            }
+            return View(obj);
+        }
+
+        //cascade city for mission edit get method
+        public JsonResult AdminEditMissCasCity(long countryId, long missionId)
+        {
+            Mission mission = new();
+            long cityId = 0;
+            if (missionId > 0)
+            {
+                mission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
+                if (mission != null)
+                {
+                    cityId = mission.CityId;
+                }
+            }
+            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(city => city.CountryId == countryId);
+            return new JsonResult(new { CityId = cityId, Cities = cityList });
+        }
+        #endregion
+
+        #region Media,docs,skills
         [HttpPost]
         public void SaveMissionMediaAndDocs(long addedMissionId, string? videoUrl, IEnumerable<MissionMedium> missionMediaList, IEnumerable<MissionDocument> missionDocumentList, List<IFormFile> missionDocFiles, List<IFormFile> missionImageFiles, string[] preloadedmissdocs, string[] preloadedmissimage)
         {
@@ -618,226 +1026,7 @@ namespace CI_platform.Controllers
             }
             _unitOfWork.Save();
         }
-
-        [HttpPost]
-        public IActionResult DeleteMissionData(long missionId)
-        {
-            if (missionId > 0)
-            {
-                Mission deletingData = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionId);
-                if (deletingData != null)
-                {
-                    deletingData.DeletedAt = DateTime.Now;
-                    _unitOfWork.Mission.Update(deletingData);
-                }
-
-                var deletingComments = _unitOfWork.Comment.GetAccToFilter(m => m.MissionId == missionId);
-                if (deletingComments != null)
-                {
-                    foreach (var comment in deletingComments)
-                    {
-                        _unitOfWork.Comment.Remove(comment);
-                    }
-                }
-
-                var favrouiteMission = _unitOfWork.FavouriteMission.GetAccToFilter(m => m.MissionId == missionId);
-                if (favrouiteMission != null)
-                {
-                    foreach (var mission in favrouiteMission)
-                    {
-                        _unitOfWork.FavouriteMission.Remove(mission);
-                    }
-                }
-
-                var goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == missionId);
-                if (goalMission != null)
-                {
-                    _unitOfWork.GoalMission.Remove(goalMission);
-                }
-
-                var missionDoc = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == missionId);
-                if(missionDoc != null)
-                {
-                    foreach(var doc in missionDoc)
-                    {
-                        string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + doc.DocumentPath);
-                        System.IO.File.Delete(alrExists);
-                        _unitOfWork.MissionDocument.Remove(doc);
-                    }
-                }
-
-                var missionMedia = _unitOfWork.MissionMedia.GetAccToFilter(m => m.MissionId == missionId);
-                if (missionMedia != null)
-                {
-                    foreach (var media in missionMedia)
-                    {
-                        if(media.MediaType != "video")
-                        {
-                            string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/" + media.MediaPath);
-                            System.IO.File.Delete(alrExists);
-                        }
-                        _unitOfWork.MissionMedia.Remove(media);
-                    }
-                }
-
-                var inviteMission = _unitOfWork.MissionInvite.GetAccToFilter(m => m.MissionId == missionId);
-                if (inviteMission != null)
-                {
-                    foreach (var mission in inviteMission)
-                    {
-                        _unitOfWork.MissionInvite.Remove(mission);
-                    }
-                }
-
-                var deletingRating = _unitOfWork.MissionRating.GetAccToFilter(m => m.MissionId == missionId);
-                if (deletingRating != null)
-                {
-                    foreach (var rate in deletingRating)
-                    {
-                        rate.UpdatedAt = DateTime.Now;
-                        _unitOfWork.MissionRating.Update(rate);
-                    }
-                }
-
-                var deletingSkill = _unitOfWork.MissionSkills.GetAccToFilter(m => m.MissionId == missionId);
-                if (deletingSkill != null)
-                {
-                    foreach (var del in deletingSkill)
-                    {
-                        _unitOfWork.MissionSkills.Remove(del);
-                    }
-                }
-
-                var deletingMissionApplication = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == missionId);
-                if (deletingMissionApplication != null)
-                {
-                    foreach (var app in deletingMissionApplication)
-                    {
-                        app.ApprovalStatus = "DECLINE";
-                        app.UpdatedAt = DateTime.Now;
-                        _unitOfWork.MissionApplication.Update(app);
-                    }
-                }
-
-                _unitOfWork.Save();
-
-
-                return RedirectToAction("AdminMissionDetails");
-            }
-
-            TempData["error"] = "Opps! something went wrong";
-            return RedirectToAction("AdminMissionDetails");
-        }
-
-        [HttpGet]
-        public IActionResult AdminEditMission(long missionId)
-        {
-            if (missionId > 0)
-            {
-                User user = GetThisUser();
-                Mission thisMissionDetails = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
-                if (thisMissionDetails != null)
-                {
-                    IEnumerable<MissionSkill> missionSkillList = _unitOfWork.MissionSkills.GetAccToFilter(missionSkills => missionSkills.MissionId == missionId);
-                    IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(missionMedia => missionMedia.MissionId == missionId);
-                    IEnumerable<MissionDocument> missionDocList = _unitOfWork.MissionDocument.GetAccToFilter(missionDoc => missionDoc.MissionId == missionId);
-                    IEnumerable<Country> countryList = _unitOfWork.Country.GetAll();
-                    IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAll();
-                    IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAll();
-                    adminMissionDetails obj = new()
-                    {
-                        MissionId = thisMissionDetails.MissionId,
-                        Title = thisMissionDetails.Title,
-                        ShortDescription = thisMissionDetails.ShortDescription,
-                        Description = thisMissionDetails.Description,
-                        CountryId = thisMissionDetails.CountryId,
-                        CityId = thisMissionDetails.CityId,
-                        OrganizationName = thisMissionDetails.OrganizationName,
-                        OrganizationDetail = thisMissionDetails.OrganizationDetail,
-                        StartDate = thisMissionDetails.StartDate,
-                        EndDate = thisMissionDetails.EndDate,
-                        MissionType = thisMissionDetails.MissionType,
-                        TotalSeats = thisMissionDetails.Seats,
-                        MissionDeadline = thisMissionDetails.Deadline,
-                        MissionThemeId = thisMissionDetails.MissionThemeId,
-                        Availability = thisMissionDetails.Availability,
-                        UserDetails = user
-                    };
-
-                    obj.CountryList = countryList;
-                    obj.ThemeList = themeList;
-                    obj.SkillList = skillList;
-                    obj.MissionSkillList = missionSkillList;
-                    obj.MissionMediumList = missionMediaList;
-                    obj.MissionDocumentList = missionDocList;
-
-                    return View(obj);
-                }
-            }
-
-            return RedirectToAction("AdminMissionDetails");
-        }
-
-        //Edit mission post method 
-        [HttpPost]
-        public IActionResult AdminEditMission(adminMissionDetails obj, List<long> finalMissSkillList, List<IFormFile> MissionDocFiles, List<IFormFile> MissionImageFiles, string[] preloadedmissimage, string[] preloadedmissdocs)
-        {
-            if (obj != null)
-            {
-                if (obj?.MissionId != null)
-                {
-                    Mission editThisMission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == obj.MissionId);
-                    if (editThisMission != null)
-                    {
-                        editThisMission.Title = obj.Title;
-                        editThisMission.ShortDescription = obj.ShortDescription;
-                        editThisMission.Description = obj.Description;
-                        editThisMission.CountryId = obj.CountryId;
-                        editThisMission.CityId = obj.CityId;
-                        editThisMission.OrganizationName = obj.OrganizationName;
-                        editThisMission.OrganizationDetail = obj.OrganizationDetail;
-                        editThisMission.StartDate = obj.StartDate;
-                        editThisMission.EndDate = obj.EndDate;
-                        editThisMission.MissionType = obj.MissionType;
-                        editThisMission.Seats = obj.TotalSeats;
-                        editThisMission.Deadline = obj.MissionDeadline;
-                        editThisMission.MissionThemeId = obj.MissionThemeId;
-                        editThisMission.Availability = obj.Availability;
-
-                        _unitOfWork.Mission.Update(editThisMission);
-
-                        IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
-                        IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
-                        SaveMissionMediaAndDocs(editThisMission.MissionId, obj.VideoUrl, missionMediaList, missionDocumentList, MissionDocFiles, MissionImageFiles, preloadedmissdocs, preloadedmissimage);
-                        var MissionSkillsId = _unitOfWork.MissionSkills.GetAccToFilter(missionSkill => missionSkill.MissionId == obj.MissionId).Select(missionSkill => missionSkill.SkillId);
-
-                        AddMissionSkills(obj.MissionId, MissionSkillsId, finalMissSkillList);
-
-                        _unitOfWork.Save();
-                        return RedirectToAction("AdminMissionDetails");
-
-                    }
-                }
-            }
-            return View(obj);
-        }
-
-        //cascade city for mission edit get method
-        public JsonResult AdminEditMissCasCity(long countryId, long missionId)
-        {
-            Mission mission = new();
-            long cityId = 0;
-            if (missionId > 0)
-            {
-                mission = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
-                if (mission != null)
-                {
-                    cityId = mission.CityId;
-                }
-            }
-            IEnumerable<City> cityList = _unitOfWork.City.GetAccToFilter(city => city.CountryId == countryId);
-            return new JsonResult(new { CityId = cityId, Cities = cityList });
-        }
+        #endregion
 
         #endregion
 
@@ -1056,6 +1245,12 @@ namespace CI_platform.Controllers
                         {
                             data.Seats = data.Seats - 1;
                             missionData.ApprovalStatus = "APPROVE";
+
+                            if (data.Seats == 0)
+                            {
+                                data.Status = 0;
+                            }
+
                             TempData["success"] = "Application Approved successfully!";
                             _unitOfWork.Mission.Update(data);
                         }
@@ -1064,12 +1259,14 @@ namespace CI_platform.Controllers
                             missionData.ApprovalStatus = "DECLINE";
                             TempData["error"] = "Application can't be added";
                         }
+
                     }
                     else
                     {
                         missionData.ApprovalStatus = "DECLINE";
                         TempData["success"] = "Application Declined successfully!";
                     }
+
                     _unitOfWork.MissionApplication.Update(missionData);
                     _unitOfWork.Save();
                     return RedirectToAction("AdminMissionSkillDetails");

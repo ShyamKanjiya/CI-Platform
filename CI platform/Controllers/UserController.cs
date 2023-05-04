@@ -2,6 +2,8 @@
 using CI_platform.Entities.ViewModels;
 using CI_platform.Repositories.GenericRepository;
 using CI_platform.Repositories.GenericRepository.Interface;
+using CI_platform.Repositories.MethodRepository;
+using CI_platform.Repositories.MethodRepository.Interface;
 using CI_pltform.Entities.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -14,12 +16,14 @@ namespace CI_platform.Controllers
         private readonly ILogger<UserController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _iweb;
+        private readonly IStoryMethodRepository _repo;
 
-        public UserController(ILogger<UserController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment iweb)
+        public UserController(ILogger<UserController> logger, IUnitOfWork unitOfWork, IWebHostEnvironment iweb, IStoryMethodRepository storyMethodRepository)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _iweb = iweb;
+            _repo = storyMethodRepository;
         }
 
         public User GetThisUser()
@@ -203,7 +207,7 @@ namespace CI_platform.Controllers
             User user = GetThisUser();
 
             IEnumerable<MissionApplication> draftMissAppListForTime = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "TIME");
-            IEnumerable<MissionApplication> draftMissAppListForGoal = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE" && m.Mission.MissionType == "GOAL");
+            IEnumerable<MissionApplication> draftMissAppListForGoal = _repo.GetMissionApplicationsData(user.UserId);
             IEnumerable<Timesheet> dataOfTimeBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(timeData => timeData.UserId == user.UserId && timeData.Mission.MissionType == "Time" && timeData.DeletedAt == null);
             IEnumerable<Timesheet> dataOfGoalBasedMission = _unitOfWork.Timesheet.GetTimeSheetData(goalData => goalData.UserId == user.UserId && goalData.Mission.MissionType == "Goal" && goalData.DeletedAt == null);
 
@@ -218,15 +222,6 @@ namespace CI_platform.Controllers
             obj.Cities = _unitOfWork.City.GetAll();
 
             return View(obj);
-        }
-
-        public bool CheckEnterdTime(int Minutes, int Hours)
-        {
-            if(Hours == 0 && Minutes == 0)
-            {
-                return false;
-            }
-            return true;
         }
 
         [HttpPost]
@@ -244,11 +239,23 @@ namespace CI_platform.Controllers
                     UserId = user.UserId,
                     MissionId = obj.MissionId,
                     Time = time,
-                    Action = obj.Action,
                     DateVolunteered = obj.DateVolunteered,
                     Notes = obj.Notes,
                     Status = "SUBMIT_FOR_APPROVAL",
                 };
+
+                if (obj.Action != null)
+                {
+                    data.Action = obj.Action;
+
+                    GoalMission goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == obj.MissionId);
+
+                    if (goalMission != null)
+                    {
+                        goalMission.GoalValue = goalMission.GoalValue + obj.Action;
+                        _unitOfWork.GoalMission.Update(goalMission);
+                    }
+                }
                 _unitOfWork.Timesheet.Add(data);
                 _unitOfWork.Save();
                 TempData["success"] = "Data added successfully!";
@@ -259,11 +266,25 @@ namespace CI_platform.Controllers
                 Timesheet updatedData = _unitOfWork.Timesheet.GetFirstOrDefault(timeSheetData => timeSheetData.TimesheetId == obj.TimeSheetId);
                 if (updatedData != null)
                 {
-                    updatedData.Action = obj.Action;
                     updatedData.Time = time;
                     updatedData.Notes = obj.Notes;
                     updatedData.DateVolunteered = obj.DateVolunteered;
                     updatedData.UpdatedAt = DateTime.Now;
+
+
+                    if (obj.Action != null)
+                    {
+                        GoalMission goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == updatedData.MissionId);
+
+                        if (goalMission != null)
+                        {
+                            goalMission.GoalValue = (int)(goalMission.GoalValue - updatedData.Action);
+                            goalMission.GoalValue = goalMission.GoalValue + obj.Action;
+
+                            _unitOfWork.GoalMission.Update(goalMission);
+                        }
+                        updatedData.Action = obj.Action;
+                    }
 
                     _unitOfWork.Timesheet.Update(updatedData);
                     _unitOfWork.Save();
@@ -291,6 +312,16 @@ namespace CI_platform.Controllers
             {
                 Timesheet deletingData = _unitOfWork.Timesheet.GetFirstOrDefault(m => m.TimesheetId == timesheetId);
                 deletingData.DeletedAt = DateTime.Now;
+
+                GoalMission goalMission = _unitOfWork.GoalMission.GetFirstOrDefault(m => m.MissionId == deletingData.MissionId);
+
+                if (goalMission != null)
+                {
+                    goalMission.GoalValue = (int)(goalMission.GoalValue - deletingData.Action);
+
+                    _unitOfWork.GoalMission.Update(goalMission);
+                }
+
                 _unitOfWork.Timesheet.Update(deletingData);
                 _unitOfWork.Save();
 

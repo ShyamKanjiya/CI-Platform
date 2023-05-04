@@ -40,7 +40,18 @@ namespace CI_platform.Repositories.MethodRepository
                              Type = md.Type
                          }).ToList();
             return query;
+        }
 
+        public List<MissionApplication> GetMissionApplicationsData (long userId)
+        {
+            var quary = from ma in _dbContext.MissionApplications
+                        join gm in _dbContext.GoalMissions
+                        on ma.MissionId equals gm.MissionId into g
+                        from gm in g.DefaultIfEmpty()
+                        where ma.UserId == userId && ma.ApprovalStatus == "APPROVE" && ma.Mission.MissionType == "GOAL" && gm.TotalValue > gm.GoalValue
+                        select ma;
+
+            return quary.ToList();
         }
     }
 }

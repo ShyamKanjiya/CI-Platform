@@ -53,19 +53,22 @@
                                                 <input asp-for="DateVolunteered" type="date" id="dateForTimeMiss" class="form-control getDate" placeholder="Select Date" min="" max="" value="">
                                                 <span class="text-danger" asp-validation-for="DateVolunteered"></span>
                                             </div>
-                                            <div class="form-group mb-3 d-flex justify-content-between">
+                                            <div class="form-group d-flex justify-content-between">
                                                 <div class="col me-2">
                                                     <label class="form-label">Hours</label>
-                                                    <input asp-for="Hours" id="hrsForTimeMiss" class="form-control" placeholder="Enter Spent Hours" value="">
+                                                    <input asp-for="Hours" id="hrsForTimeMiss" class="form-control" placeholder="Enter Spent Hours" value="" onkeyup="timeValidation()">
                                                     <span class="text-danger" asp-validation-for="Hours"></span>
                                                 </div>
                                                 <div class="col ms-2">
                                                     <label class="form-label">Minutes</label>
-                                                    <input asp-for="Minutes" id="minForTimeMiss" class="form-control" placeholder="Enter Spent Minutes" value="">
+                                                    <input asp-for="Minutes" id="minForTimeMiss" class="form-control" placeholder="Enter Spent Minutes" value="" onkeyup="timeValidation()">
                                                     <span class="text-danger" asp-validation-for="Minutes"></span>
                                                 </div>
                                             </div>
-                                            <div class="form-group mb-3">
+                                            <div id="validation" hidden>
+                                                <span class="text-danger">Enter Valid Time</span>
+                                            </div>
+                                            <div class="form-group my-3">
                                                 <label class="form-label">Message</label>
                                                 <textarea asp-for="Notes" id="msgForTimeMiss" class="form-control" placeholder="Enter your Message" style="min-height:15vh;"></textarea>
                                                 <span class="text-danger" asp-validation-for="Notes"></span>
@@ -73,7 +76,7 @@
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn border px-4" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                                            <button class="btn border-warning text-warning px-4" style="border-radius:50px" type="submit">Submit</button>
+                                            <button class="btn border-warning text-warning px-4" id="timsheetSubmit" style="border-radius:50px" type="submit">Submit</button>
                                         </div>
                                     </form>
                                 </div>
@@ -118,7 +121,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="missForTimeMissEdit" class="form-label">Mission</label>
-                                                                <select asp-for="MissionId" id="missForTimeMissEdit" class="form-select" disabled>
+                                                                <select asp-for="MissionId" id="missForTimeMissEdit" class="form-select" disabled >
                                                                     <option value="">Select Mission</option>
                                                                     @foreach (var mission in Model.MissionApplicationForTime)
                                                                     {
@@ -134,21 +137,20 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-sm-6">
-                                                                    <div class="mb-3">
-                                                                        <label for="hrsForTimeMissEdit" class="form-label">Hours</label>
-                                                                        <input asp-for="Hours" id="hrsForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Hours..." value="" />
-                                                                        <span class="text-danger" asp-validation-for="Hours"></span>
-                                                                    </div>
+                                                                    <label for="hrsForTimeMissEdit" class="form-label">Hours</label>
+                                                                    <input asp-for="Hours" id="hrsForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Hours..." value="" onkeyup="timeValidationForEdit()" />
+                                                                    <span class="text-danger" asp-validation-for="Hours"></span>
                                                                 </div>
                                                                 <div class="col-sm-6">
-                                                                    <div class="mb-3">
-                                                                        <label for="minForTimeMissEdit" class="form-label">Minutes</label>
-                                                                        <input asp-for="Minutes" id="minForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Minutes..." value=""  />
-                                                                        <span class="text-danger" asp-validation-for="Minutes"></span>
-                                                                    </div>
+                                                                    <label for="minForTimeMissEdit" class="form-label">Minutes</label>
+                                                                    <input asp-for="Minutes" id="minForTimeMissEdit" type="text" class="form-control" placeholder="Enter Spent Minutes..." value="" onkeyup="timeValidationForEdit()" />
+                                                                    <span class="text-danger" asp-validation-for="Minutes"></span>
                                                                 </div>
                                                             </div>
-                                                            <div class="mb-3">
+                                                            <div id="validationEdit" hidden>
+                                                                <span class="text-danger">Enter Valid Time</span>
+                                                            </div>
+                                                            <div class="my-3">
                                                                 <label for="msgForTimeMissEdit" class="form-label">Message</label>
                                                                 <textarea asp-for="Notes" id="msgForTimeMissEdit" class="form-control" rows="3" placeholder="Enter message..."></textarea>
                                                                 <span class="text-danger" asp-validation-for="Notes"></span>
@@ -156,7 +158,7 @@
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn border rounded-pill px-3" data-bs-dismiss="modal">Cancel</button>
-                                                            <button class="btn border-warning text-warning rounded-pill px-3" type="submit">Submit</button>
+                                                            <button class="btn border-warning text-warning rounded-pill px-3" id="timsheetEditSubmit" type="submit">Submit</button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -280,7 +282,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label for="dateForGoalMissEdit" class="form-label">Date</label>
-                                                                <input asp-for="DateVolunteered" type="date" id="dateForGoalMissEdit getDate" class="form-control" min="" max="" value="" />
+                                                                <input asp-for="DateVolunteered" type="date" id="dateForGoalMissEdit" class="form-control getDate" min="" max="" />
                                                                 <span class="text-danger" asp-validation-for="DateVolunteered"></span>
                                                             </div>
                                                             <div class="mb-3">

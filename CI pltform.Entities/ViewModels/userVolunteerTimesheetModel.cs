@@ -16,16 +16,15 @@ namespace CI_platform.Entities.ViewModels
         [Required(ErrorMessage = "Required!")]
         public long MissionId { get; set; }
 
-        [Remote("CheckEnterdTime", "User", AdditionalFields = "Minutes", ErrorMessage = "Please, Enter valid time")]
         [Range(00, 23, ErrorMessage = "Hours must between 00 to 23")]
         [Required(ErrorMessage = "Required!")]
         public int Hours { get; set; }
 
         [Required(ErrorMessage = "Required!")]
         [Range(00, 59, ErrorMessage = "Minutes must between 00 to 59")]
-        [Remote("CheckEnterdTime", "User",AdditionalFields = "Hours", ErrorMessage = "Please, Enter valid time")]
         public int Minutes { get; set; }
 
+        [Range(1, Double.PositiveInfinity, ErrorMessage = "Minimum value must be 1")]
         [Required(ErrorMessage = "Required!")]
         public int Action { get; set; }
 

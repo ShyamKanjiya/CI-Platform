@@ -37,4 +37,11 @@
     <Folder Include="wwwroot\StoryImages\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\images\MissionDocuments\19CE052_Presentation.pptx %281%29.pdf" />
+    <None Include="wwwroot\images\MissionDocuments\CI Platform - DB.xlsx" />
+    <None Include="wwwroot\images\MissionDocuments\CI-SRS-Final-23.docx" />
+    <None Include="wwwroot\images\MissionDocuments\keyboard-shortcuts.pdf" />
+  </ItemGroup>
+
 </Project>

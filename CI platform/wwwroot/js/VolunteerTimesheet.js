@@ -32,6 +32,8 @@
     })
 }
 
+//---------------------------------------------------------------------------------------------------//
+
 function getTimesheetDataForTimeMiss(timesheetId) {
     if (timesheetId > 0) {
         $.ajax({
@@ -51,6 +53,7 @@ function getTimesheetDataForTimeMiss(timesheetId) {
                 $('#hrsForTimeMissEdit').val(time[0]);
                 $('#minForTimeMissEdit').val(time[1]);
                 $('#msgForTimeMissEdit').val(data.notes);
+                getDate('#missForTimeMissEdit');
             },
             error: function () {
                 console.log('error');
@@ -64,6 +67,8 @@ function getTimesheetDataForTimeMiss(timesheetId) {
         )
     }
 }
+
+//---------------------------------------------------------------------------------------------------//
 
 function getTimesheetDataForGoalMiss(timesheetId) {
     if (timesheetId > 0) {
@@ -81,6 +86,7 @@ function getTimesheetDataForGoalMiss(timesheetId) {
                 dt = dt.split('T');
                 $('#dateForGoalMissEdit').val(dt[0]);
                 $('#msgForGoalMissEdit').val(data.notes);
+                getDate('#missForGoalMissEdit');
             },
             error: function () {
                 console.log('error');
@@ -94,6 +100,8 @@ function getTimesheetDataForGoalMiss(timesheetId) {
         )
     }
 }
+
+//---------------------------------------------------------------------------------------------------//
 
 function getDate(x) {
     var missionId = $(x).val();
@@ -120,3 +128,44 @@ function getDate(x) {
         }
     });
 }
+
+//---------------------------------------------------------------------------------------------------//
+
+function timeValidation() {
+    var hours = $("#hrsForTimeMiss").val();
+    var minutes = $("#minForTimeMiss").val();
+
+    if (hours == "" && minutes == "" || hours == 0 && minutes == "" | hours == "" && minutes == 0){
+        document.getElementById("validation").setAttribute("hidden", true);
+        document.getElementById("timsheetSubmit").removeAttribute("disabled");
+    }
+    else if (hours == 0 && minutes == 0) {
+        document.getElementById("validation").removeAttribute("hidden");
+        document.getElementById("timsheetSubmit").setAttribute("disabled",true);
+    }
+    else {
+        document.getElementById("validation").setAttribute("hidden", true);
+        document.getElementById("timsheetSubmit").removeAttribute("disabled");
+    }
+}
+
+
+function timeValidationForEdit() {
+    var hours = $("#hrsForTimeMissEdit").val();
+    var minutes = $("#minForTimeMissEdit").val();
+
+    if (hours == "" && minutes == "" || hours == 0 && minutes == "" | hours == "" && minutes == 0) {
+        document.getElementById("validationEdit").setAttribute("hidden", true);
+        document.getElementById("timsheetEditSubmit").removeAttribute("disabled");
+    }
+    else if (hours == 0 && minutes == 0) {
+        document.getElementById("validationEdit").removeAttribute("hidden");
+        document.getElementById("timsheetEditSubmit").setAttribute("disabled", true);
+    }
+    else {
+        document.getElementById("validationEdit").setAttribute("hidden", true);
+        document.getElementById("timsheetEditSubmit").removeAttribute("disabled");
+    }
+}
+
+//---------------------------------------------------------------------------------------------------//
