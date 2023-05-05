@@ -1291,7 +1291,7 @@ namespace CI_platform.Controllers
             adminStoryDetails obj = new()
             {
                 StoryLists = storyListsByFilter,
-                UserDetails = user
+                UserDetails = user,
             };
             return View(obj);
         }
@@ -1327,11 +1327,11 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult GetStoryDetails(long storyId)
         {
-            User? FindingStoryCreator = _repo.UserOfStory(storyId);
+            Story FindingStoryCreator = _repo.StoryData(storyId);
 
             adminStoryDetails storyDetails = new()
             {
-                UserOfStory = FindingStoryCreator,
+                StoryData = FindingStoryCreator,
             };
 
             return Json(storyDetails);

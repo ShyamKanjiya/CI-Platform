@@ -102,10 +102,8 @@
                         }
                         else
                         {
-                            <img class="card-img-top" id="mission-img" src="/images/Grow-Trees-On-the-path-to-environment-sustainability-1.png" alt="Card image cap">
+                            <img class="card-img-top border border-bottom" id="mission-img" src="~/images/no_mission_story_image.png" alt="Card image cap">
                         }
-
-
 
                         <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
                          id="location" style="width: 7rem">
@@ -174,10 +172,10 @@
                             <p class="d-inline px-4" id="missionTheme">@item.MissionTheme.Title</p>
                         </div>
                     </div>
-                    <div class="card-body p-0 mt-2">
-                        <h5 class="card-title mt-3 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.Title</h5>
-                        <p class="card-text px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">@item.ShortDescription</p>
-                        <div class="d-flex justify-content-between px-3">
+                    <div class="card-body p-0 mt-3">
+                        <h5 class="card-title mt-3 mb-3 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.Title</h5>
+                        <p class="card-text mx-2 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.ShortDescription</p>
+                        <div class="d-flex justify-content-between px-3 mb-4">
                             <div>
                                 <p>@item.OrganizationName</p>
                             </div>
@@ -186,13 +184,13 @@
                                 {
                                     @for (int i = 0; i < (int)@item.MissionRatings.Average(m => m.Rating); i++)
                                     {
-                                        <span id="ratings d-flex">
+                                        <span class="ratings" id="ratings d-flex">
                                             <img src="~/images/star-fill.png" />
                                         </span>
                                     }
                                     @for (int i = (int)@item.MissionRatings.Average(m => m.Rating); i < 5; i++)
                                     {
-                                        <span id="ratings d-flex">
+                                        <span class="ratings" id="ratings d-flex">
                                             <img src="~/images/star-empty.png" />
                                         </span>
                                     }
@@ -201,7 +199,7 @@
                                 {
                                     @for (int i = 0; i < 5; i++)
                                     {
-                                        <span id="ratings d-flex">
+                                        <span class="ratings" id="ratings d-flex">
                                             <img src="~/images/star-empty.png" />
                                         </span>
                                     }
@@ -221,7 +219,7 @@
                                 <div class="border text-center px-2" id="missionPeriod">
                                     <small>From @item.StartDate.Value.ToShortDateString() until @item.EndDate.Value.ToShortDateString()</small>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                <div class="d-flex justify-content-between align-items-center px-4 py-4">
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
                                         <div>
@@ -247,7 +245,7 @@
                                         Total Goal @totalValue
                                     </small>
                                 </div>
-                                <div class="d-flex justify-content-between align-items-center px-4 py-3">
+                                <div class="d-flex justify-content-between align-items-center px-4 py-4">
                                     <div class="d-flex align-items-center">
                                         <img class="me-2" height="20" src="/images/Seats-left.png" alt="">
                                         <div>
@@ -282,43 +280,43 @@
                         <div>
                             @if (totalValue <= goalValue)
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Goal Archived</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Archived</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
                             else if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now && (thisMissApp?.ApprovalStatus == "APPROVE" || thisMissApp?.ApprovalStatus == "PENDING"))
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Applied</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Applied</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
                             else if (item.EndDate > DateTime.Now && item.Seats == 0)
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Fulled</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Fulled</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
                             else if (User.Identity.IsAuthenticated && item.EndDate > DateTime.Now)
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Apply</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
                             else if (User.Identity.IsAuthenticated && item.EndDate < DateTime.Now)
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Explore</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Explore</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }
                             else
                             {
-                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
-                                    <p class="mb-0 pe-4 text-warning h6">Explore</p>
+                                <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 px-3 py-2" asp-action="volunteeringMissionPage" asp-controller="Pages" id="applyNowBtn" asp-route-id="@item.MissionId">
+                                    <p class="mb-0 pe-3 text-warning h6">Explore</p>
                                     <img src="/images/right-arrow.png" alt="">
                                 </a>
                             }

@@ -1,6 +1,7 @@
 ﻿using CI_platform.Entities.DataModels;
 using CI_platform.Repositories.MethodRepository.Interface;
 using CI_pltform.Entities.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,11 @@ namespace CI_platform.Repositories.MethodRepository
         {
                 User? FindingStoryCreator = _dbContext.Stories.Where(s => s.StoryId == storyId).Select(s => s.User).FirstOrDefault();
                 return FindingStoryCreator;
+        }
+        public Story StoryData(long storyId)
+        {
+            IQueryable<Story> FindingStoryCreator = _dbContext.Stories.Where(s => s.StoryId == storyId).Include(s => s.User).Include(s => s.StoryMedia);
+            return FindingStoryCreator.FirstOrDefault();
         }
 
         public List<SavedStory> GetStory (long missionId, long userId)

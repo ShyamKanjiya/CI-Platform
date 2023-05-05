@@ -64,24 +64,24 @@
 
 
 /* Position the image container (needed to position the left and right arrows) */
-.container {
+/*.container {
     position: relative;
-}
+}*/
 
 /* Hide the images by default */
-.mySlides {
+/*.mySlides {
     display: none;
-}
+}*/
 
 /*/ prevent streching for slider images /*/
-.slider-images {
+/*.slider-images {
     object-fit: cover;
-}
+}*/
 
 /*/ Add a pointer when hovering over the thumbnail images /*/
-.cursor {
+/*.cursor {
     cursor: pointer;
-}
+}*/
 
 /*/ Next & previous buttons /*/
 /*.prev,
@@ -108,14 +108,14 @@
 }*/
 
 /*/ Six columns side by side /*/
-.column {
+/*.column {
     padding: 0 5px;
     float: left;
     width: 16.66%;
-}
+}*/
 
 /*/ Add a transparency effect for thumnbail images /*/
-.demo {
+/*.demo {
     opacity: 0.6;
     object-fit: cover;
 }
@@ -123,7 +123,7 @@
     .active,
     .demo:hover {
         opacity: 1;
-    }
+    }*/
 
 
 .container {
@@ -141,7 +141,7 @@
     padding-inline: 2vw;
 }
 
-.mySlides {
+/*.mySlides {
     height: 85%;
 }
 
@@ -150,7 +150,7 @@
         height: 100%;
         object-fit: cover;
     }
-
+*/
 
 @media (max-width: 1199px) {
     #data {

@@ -213,7 +213,7 @@ namespace CI_platform.Controllers
             IEnumerable<Comment> comments = _unitOfWork.Comment.GetAccToFilter(m => m.MissionId == id).OrderByDescending(m => m.CreatedAt);
             var missionApp = _unitOfWork.MissionApplication.GetAccToFilter(m => m.MissionId == id && m.ApprovalStatus == "APPROVE");
             var missionDocuments = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == id);
-
+            var missionMedia = _unitOfWork.MissionMedia.GetAccToFilter(m => m.MissionId == id);
 
             userVolunteerMission viewModel = new()
             {
@@ -229,6 +229,7 @@ namespace CI_platform.Controllers
                 favoriteMissions = favouriteMission,
                 MissionApp = missionApp,
                 MissionDocuments = missionDocuments,
+                MissionMedias = missionMedia
             };
 
 
@@ -249,9 +250,10 @@ namespace CI_platform.Controllers
 
             try
             {
+
                 viewModel.RatedVolunteeres = missionRatings.Count();
                 viewModel.Missionrate = (int)missionRatings.Average(m => m.Rating);
-                
+
             }
             catch
             {

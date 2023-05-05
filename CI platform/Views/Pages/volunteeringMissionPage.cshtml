@@ -7,6 +7,7 @@
 }
 
 <link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/slider.css" asp-append-version="true" />
 
 <body onload="loadVolunteers(pg = 1, @Model.MissionDetail.MissionId)">
     <!-- Upper Section -->
@@ -19,53 +20,67 @@
             <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
                 <div class="col-lg-6 col-md-12 w-100 px-3">
 
-                    <!-- Full-width images with number text -->
-                    <div class="mySlides">
-                        <img src="~/images/img1.png" style="width:100%">
-                    </div>
-
-                    <div class="mySlides">
-                        <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
-                    </div>
-
-                    <div class="mySlides">
-                        <img src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png">
-                    </div>
-
-                    <div class="mySlides">
-                        <img src="~/images/img11.png">
-                    </div>
-
-                    <div class="mySlides">
-                        <img src="~/images/img1.png">
-                    </div>
-
-                    <div class="mySlides">
-                        <img src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png">
-                    </div>
-
-
+                    @if (Model.MissionMedias.Count() != 0)
+                    {
+                        foreach (var media in Model.MissionMedias)
+                        {
+                            if (media.MediaType != "video")
+                            {
+                                <!-- Full-width images with number text -->
+                                <div class="mySlides">
+                                    <img src="/MissionMedia/@media.MediaPath" style="width:100%">
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="mySlides ">
+                                    @{
+                                        string videoId = media.MediaPath.Replace("https://youtu.be/", "");
+                                        string videoUrl = $"https://www.youtube.com/embed/{videoId}";
+                                    }
+                                    <iframe class="W-100" src="@videoUrl"></iframe>
+                                </div>
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <div class="mySlides">
+                            <img src="~/images/no_mission_story_image.png" style="width:100%">
+                        </div>
+                    }
 
                     <!-- Thumbnail images -->
                     <div class="row mt-4 position-relative " style="height:10%">
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(2)">
-                        </div>
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(1)">
-                        </div>
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/Grow-Trees-On-the-path-to-environment-sustainability-2.png" style="width:100%" onclick="currentSlide(3)">
-                        </div>
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/img11.png" style="width:100%" onclick="currentSlide(4)">
-                        </div>
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/img1.png" style="width:100%" onclick="currentSlide(5)">
-                        </div>
-                        <div class="column mx-auto">
-                            <img class="demo cursor" src="~/images/CSR-initiative-stands-for-Coffee--and-Farmer-Equity-3.png" style="width:100%" onclick="currentSlide(6)">
-
+                        <div class="thumb-images d-flex">
+                            @{
+                                var current = 1;
+                            }
+                            @if (Model.MissionMedias.Count() != 0)
+                            {
+                                @foreach (var media in Model.MissionMedias)
+                                {
+                                    if (media.MediaType != "video")
+                                    {
+                                        <div class="column">
+                                            <img class="demo cursor" src="/MissionMedia/@media.MediaPath" onclick="currentSlide(@current)" alt="">
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="column">
+                                            <img class="demo cursor" src="/images/youtubelink.gif" onclick="currentSlide(@current)" alt="">
+                                        </div>
+                                    }
+                                    current++;
+                                }
+                            }
+                            else
+                            {
+                                <div class="column">
+                                    <img class="demo cursor" src="/images/no_mission_story_image.png" onclick="currentSlide(@current)" alt="">
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
@@ -321,11 +336,23 @@
                             {
                                 if (Model.MissionApplications != null)
                                 {
-                                    if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0 || Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
+                                    if (Model.MissionDetail.MissionType == "GOAL")
                                     {
-                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
-                                            <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
-                                        </a>
+                                        if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0 || Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
+                                            </a>
+                                        }
+                                    }
+                                    else if (Model.MissionDetail.MissionType == "TIME")
+                                    {
+                                        if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0)
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
+                                            </a>
+                                        }
                                     }
                                     else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
                                     {
@@ -355,7 +382,17 @@
                                     </a>
                                 }
                             }
-                            else if (Model.MissionDetail.Seats == 0 || Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
+                            else if (Model.MissionDetail.MissionType == "GOAL")
+                            {
+                                if (Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
+                                {
+                                    <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                        <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
+                                        <img src="/images/right-arrow.png" alt="">
+                                    </a>
+                                }
+                            }
+                            else if (Model.MissionDetail.Seats == 0)
                             {
                                 <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
                                     <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>

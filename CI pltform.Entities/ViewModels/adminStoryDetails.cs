@@ -13,6 +13,6 @@ namespace CI_platform.Entities.ViewModels
 
         public User UserDetails { get; set; }
 
-        public User? UserOfStory { get; set; }
+        public Story StoryData { get; set; }
     }
 }
