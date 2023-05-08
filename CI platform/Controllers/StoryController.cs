@@ -122,7 +122,6 @@ namespace CI_platform.Controllers
                 {
                     draftMissAppList.Add(mission);
                 }
-
             }
 
             try

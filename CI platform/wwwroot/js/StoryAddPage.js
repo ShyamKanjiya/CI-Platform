@@ -118,22 +118,6 @@ function GetDraftedStory() {
 
 //----------------------------------------------------------------------------------------------------------------------//
 
-/*function submitStory() {
-    var missionId = $("select").val();
-    $.ajax({
-        url: "/Story/SubmitStory",
-        data: { 'missionId': missionId },
-        success: function (data) {
-            location.reload();
-        },
-        error: function (error) {
-            console.log(error);
-        }
-    });
-}*/
-
-//----------------------------------------------------------------------------------------------------------------------//
-
 function validateYouTubeUrl() {
     var url = document.getElementById("video_url").value;
     if (url != null) {

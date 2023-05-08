@@ -1,5 +1,6 @@
 ﻿let missionToSearch = "";
 let sortBy = "";
+let exploreBy = "";
 
 
 $(document).ready(function () {
@@ -11,7 +12,7 @@ $("#searchtab").on("keyup", function (e) {
     loadMissions();
 });
 
-function loadMissions(pg, sortVal) {
+function loadMissions(pg, sortVal,exploreVal) {
     var country = [];
     console.log(country);
     $('#dropDownCountry').find("input:checked").each(function (i, ob) {
@@ -38,6 +39,10 @@ function loadMissions(pg, sortVal) {
         sortBy = sortVal;
     }
 
+    if (exploreVal != null) {
+        exploreBy = exploreVal;
+    }
+
     $("#divLoader").attr('style', 'height:100vh');
     $("#divLoader").removeClass('d-none');
 
@@ -46,7 +51,7 @@ function loadMissions(pg, sortVal) {
         url: "/Pages/bringMissions",
         method: "POST",
         dataType: "html",
-        data: { 'sortBy': sortBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme, 'skill': skill },
+        data: { 'sortBy': sortBy, 'exploreBy': exploreBy, 'missionToSearch': missionToSearch, 'pg': pg, 'country': country, 'cities': cities, 'theme': theme, 'skill': skill },
         success: function (data) {
             $("#divLoader").addClass("d-none");
             $('#mission-list').html("");

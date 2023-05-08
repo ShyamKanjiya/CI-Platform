@@ -48,7 +48,7 @@ namespace CI_platform.Controllers
         }
 
         [HttpPost]
-        public IActionResult bringMissions(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? missionToSearch, int pg = 1)
+        public IActionResult bringMissions(string[]? country, string[]? cities, string[]? theme, string[]? skill, string? sortBy, string? exploreBy, string? missionToSearch, int pg = 1)
         {
             var user = GetThisUser();
 
@@ -65,7 +65,7 @@ namespace CI_platform.Controllers
                 MissionApplications = _unitOfWork.MissionApplication.GetAll(),
             };
 
-            List<Mission> missions = (List<Mission>)_unitOfWork.Mission.GetAllMissions();
+           IEnumerable<Mission> missions = _unitOfWork.Mission.GetAllMissions();
 
 
             if (country.Count() > 0 || cities.Count() > 0 || theme.Count() > 0 || skill.Count() > 0)
@@ -79,6 +79,8 @@ namespace CI_platform.Controllers
             }
 
             missions = sortMission(sortBy, missions);
+
+            missions = exploreMission(exploreBy, missions);
 
             const int pageSize = 3;
             if (pg < 1)
@@ -130,7 +132,7 @@ namespace CI_platform.Controllers
             }
         }
 
-        public List<Mission> sortMission(string sortBy, List<Mission> missions)
+        public IEnumerable<Mission> sortMission(string sortBy, IEnumerable<Mission> missions)
         {
             switch (sortBy)
             {
@@ -157,7 +159,39 @@ namespace CI_platform.Controllers
             }
         }
 
-        public List<Mission> filterMission(List<Mission> missions, string[] country, string[] cities, string[] theme, string[] skills)
+        public IEnumerable<Mission> exploreMission(string exploreBy, IEnumerable<Mission> missions)
+        {
+            switch (exploreBy)
+            {
+                case "GOAL":
+                    missions = missions.Where(m => m.MissionType.Equals("GOAL")).ToList();
+                    break;
+
+                case "topThemes":
+                    missions = missions.GroupBy(m => m.MissionThemeId).OrderByDescending(g => g.Count()).First().ToList();
+                    break;
+
+                case "mostRanked":
+                    missions = missions.Where(mission => mission.MissionRatings.Any()).OrderByDescending(mission => mission.MissionRatings.Average(rating => rating.Rating));
+                    break;
+
+                case "topFavourite":
+                    missions = missions.OrderByDescending(mission => mission.FavoriteMissions.Count()).ToList(); 
+                    break;
+
+                case "random":
+                    var random = new Random();
+                    missions = missions.OrderBy(mission => random.Next());
+                    break;
+
+                default:
+                    missions = missions.ToList();
+                    break;
+            }
+            return missions;
+        }
+
+        public List<Mission> filterMission(IEnumerable<Mission> missions, string[] country, string[] cities, string[] theme, string[] skills)
         {
             if (country.Length > 0)
             {
