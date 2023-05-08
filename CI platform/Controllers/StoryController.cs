@@ -100,12 +100,25 @@ namespace CI_platform.Controllers
             List<MissionApplication> usersAppMission = _unitOfWork.MissionApplication.GetAccToFilter(m => m.UserId == user.UserId && m.ApprovalStatus == "APPROVE");
             foreach (var mission in usersAppMission)
             {
-                var story = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
-                if (story != null && (story.Status == "DRAFT" || story.Status == "DECLINED"))
+                var story = _unitOfWork.Story.GetAccToFilter(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
+                var count = story.Count();
+                if (story != null)
                 {
-                    draftMissAppList.Add(mission);
+                    var increment = 1;
+                    foreach (var s in story)
+                    {
+                        if (s.Status == "DRAFT")
+                        {
+                            draftMissAppList.Add(mission);
+                        }
+                        else if (s.Status == "DECLINED" && count == increment)
+                        {
+                            draftMissAppList.Add(mission);
+                        }
+                        increment++;
+                    }
                 }
-                else if (story == null)
+                else
                 {
                     draftMissAppList.Add(mission);
                 }
@@ -129,7 +142,7 @@ namespace CI_platform.Controllers
 
 
         [HttpPost]
-        public IActionResult StoryAddPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files, string[] preloaded)
+        public IActionResult StoryAddAndEditPage(long MissionId, string storyTitle, string storyDate, string storyDesc, string videoURL, List<IFormFile> files, string[] preloaded)
         {
             var user = GetThisUser();
             var uid = user.UserId;
@@ -152,7 +165,6 @@ namespace CI_platform.Controllers
                 };
 
                 _unitOfWork.Story.Add(story);
-                _unitOfWork.Save();
 
             }
 
@@ -162,14 +174,21 @@ namespace CI_platform.Controllers
                 alreadyPostedStory.Description = storyDesc;
                 alreadyPostedStory.PublishedAt = DateTime.Parse(storyDate);
 
-                _unitOfWork.Save();
+                _unitOfWork.Story.Update(alreadyPostedStory);
             }
 
-
-            var st = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.MissionId == MissionId);
+            _unitOfWork.Save();
+            var st = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.MissionId == MissionId && m.Status == "DRAFT");
             var media = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == st.StoryId);
 
+            SaveStoryMedia(videoURL, files, preloaded, st, media);
 
+            return RedirectToAction("StoryAddPage");
+        }
+
+
+        public void SaveStoryMedia(string videoURL, List<IFormFile> files, string[] preloaded, Story st, List<StoryMedium> media)
+        {
             if (videoURL != null)
             {
                 foreach (var video in media)
@@ -253,7 +272,6 @@ namespace CI_platform.Controllers
                 }
             }
 
-            var data = _unitOfWork.Story.GetFirstOrDefault(m => m.UserId == user.UserId && m.MissionId == MissionId);
             foreach (IFormFile img in files)
             {
                 string imgExt = Path.GetExtension(img.FileName);
@@ -261,12 +279,13 @@ namespace CI_platform.Controllers
                 {
                     string ImageName = Guid.NewGuid().ToString() + Path.GetExtension(img.FileName);
                     var imgSaveTo = Path.Combine(_iweb.WebRootPath, "StoryImages", ImageName);
-                    using(FileStream stream = new (imgSaveTo, FileMode.Create)) {
+                    using (FileStream stream = new(imgSaveTo, FileMode.Create))
+                    {
                         img.CopyTo(stream);
                     }
 
                     StoryMedium storyMedium = new StoryMedium();
-                    storyMedium.StoryId = data.StoryId;
+                    storyMedium.StoryId = st.StoryId;
                     storyMedium.Type = imgExt;
                     storyMedium.Path = ImageName;
 
@@ -275,7 +294,6 @@ namespace CI_platform.Controllers
                 }
             }
 
-            return RedirectToAction("StoryAddPage");
         }
 
 
@@ -289,19 +307,21 @@ namespace CI_platform.Controllers
         }
 
 
-        [HttpPost]
-        public IActionResult SubmitStory(long missionId)
+        public IActionResult SubmitStory(long missionId, string videoURL, List<IFormFile> files, string[] preloaded)
         {
             User user = GetThisUser();
-            Story storyOfUser = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == missionId && m.UserId == user.UserId && m.Status == "DRAFT");
-            if (storyOfUser != null)
+            Story story = _unitOfWork.Story.GetFirstOrDefault(m => m.MissionId == missionId && m.UserId == user.UserId && m.Status == "DRAFT");
+            if (story != null)
             {
-                storyOfUser.Status = "PENDING";
+                story.Status = "PENDING";
+                _unitOfWork.Story.Update(story);
 
-                _unitOfWork.Story.Update(storyOfUser);
+                var media = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == story.StoryId);
+                SaveStoryMedia(videoURL, files, preloaded, story, media);
+
                 _unitOfWork.Save();
             }
-            return RedirectToAction("StoryListingPage");
+            return RedirectToAction("storyListingPage", "Story");
         }
         #endregion
 
@@ -322,14 +342,13 @@ namespace CI_platform.Controllers
 
 
             User? user = GetThisUser();
-            User? FindingStoryCreator = _repo.UserOfStory(storyId);
+            Story StoryDetails = _repo.StoryData(storyId);
             List<User> ListOfUsers = (List<User>)_unitOfWork.User.GetAll();
             userVolunteerStoryModel userVolunteerStoryModel = new()
             {
                 UserDetails = user,
                 UserList = ListOfUsers,
-                UserOfStory = FindingStoryCreator,
-                StoryDetails = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId),
+                StoryDetails = StoryDetails,
                 StoryMedia = _unitOfWork.StoryMedia.GetAccToFilter(m => m.StoryId == storyId)
             };
 

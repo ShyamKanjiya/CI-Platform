@@ -294,10 +294,10 @@ function getStoryDetails(SId) {
         success: function (data) {
             console.log(data);
             $("#viewStory").modal("toggle");
-            $("#userAvatar").attr("src", data.userOfStory.avatar);
-            $("#userFName").html(data.userOfStory.firstName);
-            $("#userLName").html(data.userOfStory.lastName);
-            $("#userVolunteer").html(data.userOfStory.whyIVolunteer);
+            $("#userAvatar").attr("src", data.storyData.user.avatar);
+            $("#userFName").html(data.storyData.user.firstName);
+            $("#userLName").html(data.storyData.user.lastName);
+            $("#userVolunteer").html(data.storyData.user.whyIVolunteer);
         },
         error: function () {
             console.log('error');

@@ -1313,6 +1313,7 @@ namespace CI_platform.Controllers
                     else
                     {
                         storyData.Status = "DECLINED";
+                        storyData.DeletedAt = DateTime.Now;
                         TempData["success"] = "Data Declined successfully!";
                     }
                     _unitOfWork.Story.Update(storyData);
@@ -1327,11 +1328,11 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult GetStoryDetails(long storyId)
         {
-            Story FindingStoryCreator = _repo.StoryData(storyId);
+            Story DataOfStory = _repo.StoryData(storyId);
 
             adminStoryDetails storyDetails = new()
             {
-                StoryData = FindingStoryCreator,
+                StoryData = DataOfStory
             };
 
             return Json(storyDetails);

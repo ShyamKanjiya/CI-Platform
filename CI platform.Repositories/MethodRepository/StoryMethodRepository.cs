@@ -17,11 +17,7 @@ namespace CI_platform.Repositories.MethodRepository
         {
             _dbContext = db;
         }
-        public User UserOfStory(long storyId)
-        {
-                User? FindingStoryCreator = _dbContext.Stories.Where(s => s.StoryId == storyId).Select(s => s.User).FirstOrDefault();
-                return FindingStoryCreator;
-        }
+
         public Story StoryData(long storyId)
         {
             IQueryable<Story> FindingStoryCreator = _dbContext.Stories.Where(s => s.StoryId == storyId).Include(s => s.User).Include(s => s.StoryMedia);

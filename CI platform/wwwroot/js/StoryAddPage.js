@@ -118,11 +118,10 @@ function GetDraftedStory() {
 
 //----------------------------------------------------------------------------------------------------------------------//
 
-function submitStory() {
+/*function submitStory() {
     var missionId = $("select").val();
     $.ajax({
         url: "/Story/SubmitStory",
-        method: 'POST',
         data: { 'missionId': missionId },
         success: function (data) {
             location.reload();
@@ -131,7 +130,7 @@ function submitStory() {
             console.log(error);
         }
     });
-}
+}*/
 
 //----------------------------------------------------------------------------------------------------------------------//
 

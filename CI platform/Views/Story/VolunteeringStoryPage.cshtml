@@ -11,30 +11,37 @@
         <!-- Container for the image gallery -->
         <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
             <div class="col-lg-6 col-md-12 w-100 px-3">
-
                 <div class="position-relative" style="height: 400px">
-                    @foreach (var media in Model.StoryDetails.StoryMedia)
+
+                    @if (Model.StoryDetails.StoryMedia.Count() != 0)
                     {
-                        if (media.Type != "video")
+                        foreach (var media in Model.StoryDetails.StoryMedia)
                         {
-                            <div class="mySlides h-100">
-                                <img class="h-100 slider-images" src="/StoryImages/@media.Path" style="width:100%;">
-                            </div>
+                            if (media.Type != "video")
+                            {
+                                <div class="mySlides h-100">
+                                    <img class="h-100 slider-images" src="/StoryImages/@media.Path" style="width:100%;">
+                                </div>
+                            }
+                            else
+                            {
+                                var videoUrl = "https://www.youtube.com/embed/" + @media.Path?.Split('=')[1];
+                                <div class="mySlides h-100 ">
+                                    <iframe class="h-100 slider-images" src="@videoUrl"></iframe>
+                                </div>
+                            }
                         }
-                        else
-                        {
-                            var videoUrl = "https://www.youtube.com/embed/" + @media.Path?.Split('=')[1];
-                            <div class="mySlides h-100 ">
-                                <iframe class="h-100 slider-images" src="@videoUrl"></iframe>
-                            </div>
-                        }
+                        <!-- Next and previous buttons -->
+                        <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                        <a class="next" onclick="plusSlides(1)">&#10095;</a>
                     }
-                    <!-- Next and previous buttons -->
-                    <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-                    <a class="next" onclick="plusSlides(1)">&#10095;</a>
+                    else
+                    {
+                        <div class="mySlides h-100">
+                            <img class="h-100 slider-images" src="~/images/no_mission_story_image.png" style="width:100%;">
+                        </div>
+                    }
                 </div>
-
-
 
                 <!-- Thumbnail images -->
                 <div class="row mt-4 position-relative " style="height:10%">
@@ -42,21 +49,30 @@
                         @{
                             var current = 1;
                         }
-                        @foreach (var media in Model.StoryMedia)
+                        @if (Model.StoryDetails.StoryMedia.Count() != 0)
                         {
-                            if (media.Type != "video")
+                            foreach (var media in Model.StoryDetails.StoryMedia)
                             {
-                                <div class="column">
-                                    <img class="demo cursor" src="/StoryImages/@media.Path" onclick="currentSlide(@current)" alt="">
-                                </div>
+                                if (media.Type != "video")
+                                {
+                                    <div class="column">
+                                        <img class="demo cursor" src="/StoryImages/@media.Path" onclick="currentSlide(@current)" alt="">
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="column">
+                                        <img class="demo cursor" src="/images/youtubelink.jpeg" onclick="currentSlide(@current)" alt="">
+                                    </div>
+                                }
+                                current++;
                             }
-                            else
-                            {
-                                <div class="column">
-                                    <img class="demo cursor" src="/images/youtubelink.gif" onclick="currentSlide(@current)" alt="">
-                                </div>
-                            }
-                            current++;
+                        }
+                        else
+                        {
+                            <div class="column">
+                                <img class="demo cursor" src="~/images/no_mission_story_image.png" onclick="currentSlide(@current)" alt="">
+                            </div>
                         }
                     </div>
                 </div>
@@ -67,11 +83,11 @@
         <div class="container-fluid col-lg-6 d-flex justify-content-center align-items-center" id="data">
             <div class="row">
                 <div id="owner-img">
-                    <img class="rounded-circle" height="50" width="50" src="@Model.UserOfStory.Avatar" />
+                    <img class="rounded-circle" height="50" width="50" src="@Model.StoryDetails.User.Avatar" />
                 </div>
 
                 <div class="owner-name--story-views d-flex justify-content-between align-items-center my-2 ms-2">
-                    <span>@Model.UserOfStory.FirstName @Model.UserOfStory.LastName</span>
+                    <span>@Model.StoryDetails.User.FirstName @Model.StoryDetails.User.LastName</span>
                     <span id="story-views">
                         <i class="bi bi-eye"></i>
                         <span>@Model.StoryDetails.Views Views</span>
@@ -79,7 +95,7 @@
                 </div>
 
                 <div class="my-2 mx-1">
-                    @Model.UserOfStory.WhyIVolunteer
+                    @Model.StoryDetails.User.WhyIVolunteer
                 </div>
 
                 <div class="row story-detail-buttons mt-3 d-flex align-items-center">

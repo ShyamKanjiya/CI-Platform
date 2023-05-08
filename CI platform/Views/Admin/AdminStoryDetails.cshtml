@@ -62,11 +62,11 @@
                                             </div>
                                             <div class="modal-body">
 
-                                                <div class="me-2 justify-content-center ">
+                                                <div class="w-100">
 
                                                     <!-- Container for the image gallery -->
-                                                    <div class="container-fluid px-0 col-lg-6 d-flex justify-content-center">
-                                                        <div class="col-lg-6 col-md-12 w-100 px-3">
+                                                    <div class="w-100 px-0 d-flex">
+                                                        <div class="col-md-12 w-100 px-3">
 
                                                             <div class="position-relative" style="height: 400px">
                                                                 @foreach (var media in item.StoryMedia)
@@ -74,7 +74,7 @@
                                                                     if (media.Type != "video")
                                                                     {
                                                                         <div class="mySlides h-100">
-                                                                            <img class="h-100 slider-images" src="/StoryImages/@media.Path" style="width:100%;">
+                                                                            <img class="h-100 slider-images" src="/StoryImages/@media.Path" style="width:100%;" id="StoryMainImage">
                                                                         </div>
                                                                     }
                                                                     else
@@ -156,7 +156,7 @@
                                                         </button>
                                                     </span>
                                                     <span>
-                                                        <button class="btn border-0 bg-transparent decline-btn d-flex" onclick="approveAndDeclineStory(@item.StoryId,1)">
+                                                        <button class="btn border-0 bg-transparent decline-btn d-flex" onclick="approveAndDeclineStory(@item.StoryId,0)">
                                                             <i class="bi bi-x-circle text-danger"></i>
                                                             <span class="ms-2"> Decline</span>
                                                         </button>
@@ -177,7 +177,7 @@
                                 </button>
                             </span>
                             <span>
-                                <button class="btn border-0 bg-transparent decline-btn" onclick="approveAndDeclineStory(@item.StoryId,1)">
+                                <button class="btn border-0 bg-transparent decline-btn" onclick="approveAndDeclineStory(@item.StoryId,0)">
                                     <i class="bi bi-x-circle text-danger"></i>
                                 </button>
                             </span>

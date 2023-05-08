@@ -23,7 +23,7 @@
     <h1 class="my-4">Share your story</h1>
 
     @*story form*@
-    <form method="post" asp-action="StoryAddPage" asp-controller="Story" enctype="multipart/form-data">
+    <form method="post"  enctype="multipart/form-data">
         <div class="row">
             <div class="col-12 col-md-4 form-group">
                 <label class="mb-1" for="missionDropDownList">Select Mission</label>
@@ -76,8 +76,8 @@
                     <a class="btn border rounded-pill px-4 mt-2" asp-action="storyListingPage" asp-controller="Story">Cancel</a>
                 </div>
                 <div class="col-12 col-sm-6 text-sm-end">
-                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2" type="submit" id="saveStoryBtn">Save</button>
-                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2 disabled" id="submitStoryBtn" onclick="submitStory();">Submit</button>
+                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2" id="saveStoryBtn" asp-action="StoryAddAndEditPage" asp-controller="Story">Save</button>
+                    <button class="btn border-warning text-warning rounded-pill px-4 mt-2 disabled" id="submitStoryBtn" asp-action="SubmitStory" asp-controller="Story" asp-route-missionId="@Model.MissionId">Submit</button>
                 </div>
             </div>
         </div>
