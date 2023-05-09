@@ -63,6 +63,7 @@ namespace CI_platform.Controllers
                 UserDetails = GetThisUser(),
                 FavoriteMissions = _unitOfWork.FavouriteMission.GetAll(),
                 MissionApplications = _unitOfWork.MissionApplication.GetAll(),
+                RateMission = _unitOfWork.MissionRating.GetAll(),
             };
 
            IEnumerable<Mission> missions = _unitOfWork.Mission.GetAllMissions();
@@ -163,10 +164,6 @@ namespace CI_platform.Controllers
         {
             switch (exploreBy)
             {
-                case "GOAL":
-                    missions = missions.Where(m => m.MissionType.Equals("GOAL")).ToList();
-                    break;
-
                 case "topThemes":
                     missions = missions.GroupBy(m => m.MissionThemeId).OrderByDescending(g => g.Count()).First().ToList();
                     break;

@@ -69,7 +69,7 @@
                               placeholder="Enter organization detail"></textarea>
                     <span class="text-danger" asp-validation-for="OrganizationDetail"></span>
                 </div>
-                <div class="row my-3">
+                <div class="row mt-3">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="mb-1" for="startDate">Select StartDate<span class="text-danger"> * </span></label>
@@ -110,7 +110,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+                
+                <div class="row" id="forTimeBasedMiss">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="totalSeats">Total Seats</label>
@@ -127,6 +128,26 @@
                         </div>
                     </div>
                 </div>
+
+                @*<div class="row" id="forGoalBasedMiss">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalGoal">Goal Value</label>
+                            <input asp-for="GoalValue" type="number" class="form-control" id="totalGoal"
+                                   placeholder="Enter total goal value" value="">
+                            <span class="text-danger" asp-validation-for="GoalValue"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">s
+                            <label class="form-label" for="totalSeats">Goal Objective</label>
+                            <input asp-for="GoalObjectiveText" type="text" class="form-control" id="totalSeats"
+                                   placeholder="Enter goal objective">
+                            <span class="text-danger" asp-validation-for="GoalObjectiveText"></span>
+                        </div>
+                    </div>
+                </div>*@
+
                 <div class="form-group">
                     <label class="form-label" for="missAvailabilty">Mission Availability<span class="text-danger"> * </span></label>
                     <select asp-for="Availability" class="form-select select" id="missAvailabilty">

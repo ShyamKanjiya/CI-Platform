@@ -56,7 +56,7 @@
             <!-- mission card -->
             <div class="col-12 col-md-6 col-lg-4 mission d-flex align-items-stretch justify-content-center">
                 <div class="card">
-                    <div style="position: relative; ">
+                    <div class="border" style="position: relative;">
                         @{
                             var thisMissApp = Model?.MissionApplications?.Where(m => m.UserId == Model?.UserDetails?.UserId && m.MissionId == item.MissionId).FirstOrDefault();
                         }
@@ -102,7 +102,7 @@
                         }
                         else
                         {
-                            <img class="card-img-top border border-bottom" id="mission-img" src="~/images/no_mission_story_image.png" alt="Card image cap">
+                            <img class="card-img-top" id="mission-img" src="~/images/no_mission_story_image.png" alt="Card image cap">
                         }
 
                         <div class="bg-dark bg-opacity-50 d-flex justify-items-center align-items-center py-2 pe-auto"
@@ -172,9 +172,11 @@
                             <p class="d-inline px-4" id="missionTheme">@item.MissionTheme.Title</p>
                         </div>
                     </div>
-                    <div class="card-body p-0 mt-3">
-                        <h5 class="card-title mt-3 mb-3 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.Title</h5>
-                        <p class="card-text mx-2 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.ShortDescription</p>
+                    
+                    <!-- Grid View -->
+                    <div class="card-body p-0">
+                        <h5 class="card-title my-3 px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.Title</h5>
+                        <p class="card-text px-3" style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;">@item.ShortDescription</p>
                         <div class="d-flex justify-content-between px-3 mb-4">
                             <div>
                                 <p>@item.OrganizationName</p>
@@ -322,6 +324,7 @@
                             }
                         </div>
                     </div>
+   
                 </div>
             </div>
         }

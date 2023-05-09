@@ -159,8 +159,8 @@
                                aria-expanded="false" style="width:auto">
                                     <img src="@Model.UserDetails.Avatar" class="rounded-circle" height="35" width="35" alt="Profile pic"
                                      loading="lazy" />
-                                    <span class="px-2">@name @surname</span>
-                                    <img class="me-4" src="/images/drop-down.png" alt="">
+                                    <span class="px-2" style="color: rgba(0,0,0,.55);">@name @surname</span>
+                                    <img class="me-4" src="/images/drop-down.png" style="color: rgba(0,0,0,.55);" alt="">
                                 </a>
                                 <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                                     <li><a class="dropdown-item btn" asp-controller="Admin" asp-action="AdminUserDetails" style="border-radius : 0px;">Admin Dashboard</a></li>
@@ -169,7 +169,6 @@
                                     <li><a class="dropdown-item btn" asp-controller="User" asp-action="VolunteerTimesheet" style="border-radius : 0px;">Volunteering Timesheet</a></li>
                                     <li><a class="dropdown-item btn" asp-controller="Home" asp-action="Logout" style="border-radius : 0px;">Logout</a></li>
                                 </ul>
-
                             </li>
                         </ul>
                     }
