@@ -89,7 +89,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="missionType">Mission Type<span class="text-danger"> * </span></label>
-                            <select asp-for="MissionType" class="form-select select" id="missionType">
+                            <select asp-for="MissionType" class="form-select select" id="missionType" onchange="timeGoalMission()">
                                 <option value="TIME">Time Based</option>
                                 <option value="GOAL">Goal Based</option>
                             </select>
@@ -122,14 +122,14 @@
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label class="mb-1" for="missionDeadline">Select Mission Deadline</label>
+                            <label class="form-label" for="missionDeadline">Select Mission Deadline</label>
                             <input asp-for="MissionDeadline" value="" type="date" class="form-control" id="missionDeadline" min="" max="" value="">
                             <span asp-validation-for="MissionDeadline" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
 
-                @*<div class="row" id="forGoalBasedMiss">
+                <div class="row" id="forGoalBasedMiss">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="totalGoal">Goal Value</label>
@@ -139,14 +139,14 @@
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <div class="form-group">s
+                        <div class="form-group">
                             <label class="form-label" for="totalSeats">Goal Objective</label>
-                            <input asp-for="GoalObjectiveText" type="text" class="form-control" id="totalSeats"
+                            <input asp-for="GoalObjectiveText" type="text" class="form-control" id="goalObjectiveText"
                                    placeholder="Enter goal objective">
                             <span class="text-danger" asp-validation-for="GoalObjectiveText"></span>
                         </div>
                     </div>
-                </div>*@
+                </div>
 
                 <div class="form-group">
                     <label class="form-label" for="missAvailabilty">Mission Availability<span class="text-danger"> * </span></label>
@@ -268,8 +268,10 @@
 <script src="https://cdn.tiny.cloud/1/qagffr3pkuv17a8on1afax661irst1hbr4e6tbv888sz91jc/tinymce/6/tinymce.min.js"></script>
 <script src="~/js/AdminAddEditMission.js"></script>
 <script src="~/js/AdminAddEditDocument.js"></script>
+
 <script type="text/javascript">
     $(document).ready(function () {
+        timeGoalMission();
         var countryId = $('#missCountry').val();
         if (countryId > 0) {
             addMissCityCascade(countryId);
@@ -302,4 +304,18 @@
         });
     }
     $('#mission').addClass('active');
+
+    function timeGoalMission() {
+        var missionType = $('#missionType').val();
+        console.log(missionType);
+        if (missionType == 'TIME') {
+            $("#forTimeBasedMiss").removeClass('d-none');
+            $("#forGoalBasedMiss").addClass('d-none');
+        }
+        else {
+            $("#forGoalBasedMiss").removeClass('d-none');
+            $("#forTimeBasedMiss").addClass('d-none');
+        }
+    }
+
 </script>

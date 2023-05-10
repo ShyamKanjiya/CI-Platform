@@ -90,7 +90,7 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="missionType">Mission Type<span class="text-danger"> * </span></label>
-                            <select asp-for="MissionType" class="form-select select" id="missionType">
+                            <select asp-for="MissionType" class="form-select select" id="missionType" onchange="timeGoalMission()">
                                 <option value="TIME">Time Based</option>
                                 <option value="GOAL">Goal Based</option>
                             </select>
@@ -111,7 +111,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
+
+                <div class="row" id="forTimeBasedMiss">
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="totalSeats">Total Seats</label>
@@ -123,11 +124,31 @@
                     <div class="col-sm-6">
                         <div class="form-group">
                             <label class="form-label" for="missionDeadline">Select Mission Deadline</label>
-                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline" min="" max="" value="">
+                            <input asp-for="MissionDeadline" type="date" class="form-control" id="missionDeadline" min="" max="">
                             <span asp-validation-for="MissionDeadline" class="text-danger"></span>
                         </div>
                     </div>
                 </div>
+
+                <div class="row" id="forGoalBasedMiss">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalGoal">Goal Value</label>
+                            <input asp-for="GoalValue" type="number" class="form-control" id="totalGoal"
+                                   placeholder="Enter total goal value">
+                            <span class="text-danger" asp-validation-for="GoalValue"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label class="form-label" for="totalSeats">Goal Objective</label>
+                            <input asp-for="GoalObjectiveText" type="text" class="form-control" id="goalObjectiveText"
+                                   placeholder="Enter goal objective">
+                            <span class="text-danger" asp-validation-for="GoalObjectiveText"></span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="form-group">
                     <label class="form-label" for="missAvailabilty">Mission Availability<span class="text-danger"> * </span></label>
                     <select asp-for="Availability" class="form-select select" id="missAvailabilty">
@@ -261,12 +282,22 @@
     $('#mission').addClass('active');
 
     $(document).ready(function () {
+        timeGoalMission();
+        checkDateForEdit();
         var cId = $('#missCountry').val();
         var mId = $('#missionId').val();
         editMissCasCity(cId, mId);
         setEndDate();
         getDeadline();
     });
+
+    function checkDateForEdit() {
+        var today = new Date();
+        var start = new Date($("#startDate").val());
+        if (start < today) {
+            $('#startDate').attr('disabled', true);
+        }
+    }
 
     $('#missCountry').change(function () {
         var cId = $('#missCountry').val();
@@ -351,6 +382,19 @@
         $('.preview-mission-docs').docsUploader({
             preloadeddocs: preloadeddocument
         });
+    }
+
+    function timeGoalMission() {
+        var missionType = $('#missionType').val();
+        console.log(missionType);
+        if (missionType == 'TIME') {
+            $("#forTimeBasedMiss").removeClass('d-none');
+            $("#forGoalBasedMiss").addClass('d-none');
+        }
+        else {
+            $("#forGoalBasedMiss").removeClass('d-none');
+            $("#forTimeBasedMiss").addClass('d-none');
+        }
     }
 
 </script>

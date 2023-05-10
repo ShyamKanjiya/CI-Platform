@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using System.Net.WebSockets;
+using System.Reflection;
 using System.Security.Claims;
 using System.Xml.Serialization;
 
@@ -501,8 +502,8 @@ namespace CI_platform.Controllers
         {
             User user = GetThisUser();
             IEnumerable<Country> Countries = _unitOfWork.Country.GetAll();
-            IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAll();
-            IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAll();
+            IEnumerable<MissionTheme> themeList = _unitOfWork.MissionTheme.GetAccToFilter(m => m.DeletedAt == null);
+            IEnumerable<Skill> skillList = _unitOfWork.Skill.GetAccToFilter(m => m.DeletedAt == null);
             adminMissionDetails obj = new()
             {
                 UserDetails = user,
@@ -537,13 +538,33 @@ namespace CI_platform.Controllers
                     EndDate = obj.EndDate,
                     MissionType = obj.MissionType,
                     MissionThemeId = obj.MissionThemeId,
-                    Seats = obj.TotalSeats,
-                    Deadline = obj.MissionDeadline,
                     Availability = obj.Availability,
                 };
-
+                if (obj.MissionType == "TIME")
+                {
+                    mission.Seats = obj.TotalSeats;
+                    mission.Deadline = obj.MissionDeadline;
+                }
+                else
+                {
+                    mission.Seats = 100;
+                }
                 _unitOfWork.Mission.Add(mission);
                 _unitOfWork.Save();
+
+                if (obj.MissionType == "GOAL")
+                {
+                    GoalMission goalMission = new()
+                    {
+                        MissionId = mission.MissionId,
+                        TotalValue = obj.GoalValue,
+                        GoalValue = 0,
+                        GoalObjectiveText = obj.GoalObjectiveText
+                    };
+                    _unitOfWork.GoalMission.Add(goalMission);
+                }
+                _unitOfWork.Save();
+
                 long addedMissionId = mission.MissionId;
                 IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == addedMissionId);
                 IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == addedMissionId);
@@ -729,6 +750,7 @@ namespace CI_platform.Controllers
             {
                 User user = GetThisUser();
                 Mission thisMissionDetails = _unitOfWork.Mission.GetFirstOrDefault(mission => mission.MissionId == missionId);
+                GoalMission thisGoalMissionDetails = _unitOfWork.GoalMission.GetFirstOrDefault(mission => mission.MissionId == missionId);
                 if (thisMissionDetails != null)
                 {
                     IEnumerable<MissionSkill> missionSkillList = _unitOfWork.MissionSkills.GetAccToFilter(missionSkills => missionSkills.MissionId == missionId);
@@ -750,12 +772,21 @@ namespace CI_platform.Controllers
                         StartDate = thisMissionDetails.StartDate,
                         EndDate = thisMissionDetails.EndDate,
                         MissionType = thisMissionDetails.MissionType,
-                        TotalSeats = thisMissionDetails.Seats,
-                        MissionDeadline = thisMissionDetails.Deadline,
                         MissionThemeId = thisMissionDetails.MissionThemeId,
                         Availability = thisMissionDetails.Availability,
-                        UserDetails = user
+                        MissionDeadline = thisMissionDetails.Deadline,
+                        UserDetails = user, 
                     };
+                    if(thisMissionDetails.MissionType == "TIME")
+                    {
+                        obj.TotalSeats = thisMissionDetails.Seats;
+                        obj.MissionDeadline = thisMissionDetails.Deadline;
+                    }
+                    else
+                    {
+                        obj.GoalValue = thisGoalMissionDetails.TotalValue;
+                        obj.GoalObjectiveText = thisGoalMissionDetails.GoalObjectiveText;
+                    }
 
                     obj.CountryList = countryList;
                     obj.ThemeList = themeList;
@@ -789,15 +820,42 @@ namespace CI_platform.Controllers
                         editThisMission.CityId = obj.CityId;
                         editThisMission.OrganizationName = obj.OrganizationName;
                         editThisMission.OrganizationDetail = obj.OrganizationDetail;
-                        editThisMission.StartDate = obj.StartDate;
                         editThisMission.EndDate = obj.EndDate;
                         editThisMission.MissionType = obj.MissionType;
-                        editThisMission.Seats = obj.TotalSeats;
-                        editThisMission.Deadline = obj.MissionDeadline;
                         editThisMission.MissionThemeId = obj.MissionThemeId;
                         editThisMission.Availability = obj.Availability;
 
+                        if(editThisMission.StartDate > DateTime.Now)
+                        {
+                            editThisMission.StartDate = obj.StartDate;
+                        }
+
+                        if (obj.MissionType == "TIME")
+                        {
+                            editThisMission.Seats = obj.TotalSeats;
+                            editThisMission.Deadline = obj.MissionDeadline;
+                        }
+                        else
+                        {
+                            editThisMission.Seats = 100;
+                        }
+
                         _unitOfWork.Mission.Update(editThisMission);
+                        _unitOfWork.Save();
+
+
+                        if (obj.MissionType == "GOAL")
+                        {
+                            GoalMission goalMission = new()
+                            {
+                                MissionId = editThisMission.MissionId,
+                                TotalValue = obj.GoalValue,
+                                GoalValue = 0,
+                                GoalObjectiveText = obj.GoalObjectiveText
+                            };
+                            _unitOfWork.GoalMission.Add(goalMission);
+                        }
+                        _unitOfWork.Save();
 
                         IEnumerable<MissionMedium> missionMediaList = _unitOfWork.MissionMedia.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);
                         IEnumerable<MissionDocument> missionDocumentList = _unitOfWork.MissionDocument.GetAccToFilter(media => media.MissionId == editThisMission.MissionId);

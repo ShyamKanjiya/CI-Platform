@@ -51,6 +51,10 @@ namespace CI_platform.Entities.ViewModels
         [Required(ErrorMessage = "Required!")]
         public string? Availability { get; set; }
 
+        public string? GoalObjectiveText { get; set; }
+
+        public int? GoalValue { get; set; }
+        
         public DateTime? MissionDeadline { get; set; }
 
         public int? TotalSeats { get; set; }

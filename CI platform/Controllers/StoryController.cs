@@ -51,7 +51,7 @@ namespace CI_platform.Controllers
 
         public IActionResult bringStories(int pg = 1)
         {
-            List<Story> stories = (List<Story>)_unitOfWork.Story.GetAccToFilter(m => m.Status == "PUBLISHED");
+            List<Story> stories = (List<Story>)_unitOfWork.Story.GetAccToFilter(m => m.Status == "PUBLISHED" && m.DeletedAt == null);
 
             userStoryListModel userStory = new userStoryListModel
             {

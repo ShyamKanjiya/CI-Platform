@@ -244,7 +244,10 @@
                             <div class="border-top border-bottom mt-3" id="missionInfo" style="position: relative;">
                                 <div class="border text-center px-2" id="missionPeriod">
                                     <small>
-                                        Total Goal @totalValue
+                                        @{
+                                            var goalM = Model.GoalMissions.FirstOrDefault(x => x.MissionId == item.MissionId);
+                                        }
+                                        @goalM.GoalObjectiveText
                                     </small>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center px-4 py-4">
