@@ -12,6 +12,30 @@
     }
 }
 
+<style>
+    .page-link {
+        color: #ffc107;
+        border-color: #ffc107;
+    }
+
+        .page-link.active {
+            color: white;
+            border-color: #ffc107;
+            background-color: #ffc107;
+        }
+
+        .page-link.disabled {
+            color: #ffc107;
+            border-color: #ffc107;
+        }
+
+    .pagination {
+        --bs-pagination-hover-color: #ffffff;
+        --bs-pagination-hover-bg: #ffc107;
+        --bs-pagination-hover-border-color: #ffc107;
+    }
+</style>
+
 @*Top Image and overlay Part*@
 <div class="top-img-part justify-content-center">
     <div class="image-overlay d-flex justify-content-center align-items-center text-center flex-column mx-auto my-auto h-100">
@@ -39,7 +63,7 @@
             <div class="col-12 col-md-6 col-lg-4 align-items-stretch">
                 <div class="card pb-3 align-items-stretch">
                     <div style="position: relative;" class="card-image-part">
-                        
+
                         @{
                             var media = story.StoryMedia.Where(m => m.Type != "video").FirstOrDefault();
                         }
