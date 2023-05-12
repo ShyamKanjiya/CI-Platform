@@ -49,6 +49,12 @@ public partial class CIDbContext : DbContext
 
     public virtual DbSet<MissionTheme> MissionThemes { get; set; }
 
+    public virtual DbSet<NotificationPreference> NotificationPreferences { get; set; }
+
+    public virtual DbSet<NotificationSpecuser> NotificationSpecusers { get; set; }
+
+    public virtual DbSet<NotificationType> NotificationTypes { get; set; }
+
     public virtual DbSet<PasswordReset> PasswordResets { get; set; }
 
     public virtual DbSet<Skill> Skills { get; set; }
@@ -67,7 +73,7 @@ public partial class CIDbContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=SHYAM\\SQL2019;Initial Catalog=CI_platform;Persist Security Info=False;User ID=sa;Password=Tatva@123;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Connection Timeout=300;");
+        => optionsBuilder.UseSqlServer("Server=SHYAM\\SQL2019;Initial Catalog=CI_Platform;Persist Security Info=False;User ID=sa;Password=Tatva@123;MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -209,7 +215,7 @@ public partial class CIDbContext : DbContext
                 .IsUnicode(false)
                 .HasDefaultValueSql("('PENDING')")
                 .HasColumnName("approval_status");
-            entity.Property(e => e.CommentText)
+            entity.Property(e => e.CommentText )
                 .IsUnicode(false)
                 .HasColumnName("comment");
             entity.Property(e => e.CreatedAt)
@@ -669,6 +675,92 @@ public partial class CIDbContext : DbContext
                 .HasColumnName("updated_at");
         });
 
+        modelBuilder.Entity<NotificationPreference>(entity =>
+        {
+            entity.HasKey(e => e.NotiPrefId).HasName("PK__notifica__82D830C2385A26EB");
+
+            entity.ToTable("notification_preference");
+
+            entity.Property(e => e.NotiPrefId).HasColumnName("noti_pref_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.NotiTypeId).HasColumnName("noti_type_id");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.NotiType).WithMany(p => p.NotificationPreferences)
+                .HasForeignKey(d => d.NotiTypeId)
+                .HasConstraintName("FK__notificat__noti___1D314762");
+
+            entity.HasOne(d => d.User).WithMany(p => p.NotificationPreferences)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK__notificat__user___1C3D2329");
+        });
+
+        modelBuilder.Entity<NotificationSpecuser>(entity =>
+        {
+            entity.HasKey(e => e.NotiSpecId).HasName("PK__notifica__FA4BE0C6BD2BE845");
+
+            entity.ToTable("notification_specuser");
+
+            entity.Property(e => e.NotiSpecId).HasColumnName("noti_spec_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.FromUserId).HasColumnName("from_user_id");
+            entity.Property(e => e.Isread).HasColumnName("isread");
+            entity.Property(e => e.NotiTypeId).HasColumnName("noti_type_id");
+            entity.Property(e => e.Notification)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("notification");
+            entity.Property(e => e.ToUserId).HasColumnName("to_user_id");
+            entity.Property(e => e.Url)
+                .HasMaxLength(255)
+                .IsUnicode(false)
+                .HasColumnName("url");
+
+            entity.HasOne(d => d.FromUser).WithMany(p => p.NotificationSpecuserFromUsers)
+                .HasForeignKey(d => d.FromUserId)
+                .HasConstraintName("FK__notificat__from___24D2692A");
+
+            entity.HasOne(d => d.NotiType).WithMany(p => p.NotificationSpecusers)
+                .HasForeignKey(d => d.NotiTypeId)
+                .HasConstraintName("FK__notificat__noti___21F5FC7F");
+
+            entity.HasOne(d => d.ToUser).WithMany(p => p.NotificationSpecuserToUsers)
+                .HasForeignKey(d => d.ToUserId)
+                .HasConstraintName("FK__notificat__to_us__25C68D63");
+        });
+
+        modelBuilder.Entity<NotificationType>(entity =>
+        {
+            entity.HasKey(e => e.NotiTypeId).HasName("PK__notifica__420B70A1EFEEC863");
+
+            entity.ToTable("notification_type");
+
+            entity.Property(e => e.NotiTypeId).HasColumnName("noti_type_id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DeletedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("deleted_at");
+            entity.Property(e => e.NotiType)
+                .HasMaxLength(16)
+                .IsUnicode(false)
+                .HasColumnName("noti_type");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("datetime")
+                .HasColumnName("updated_at");
+        });
+
         modelBuilder.Entity<PasswordReset>(entity =>
         {
             entity.HasKey(e => e.Token);
@@ -914,6 +1006,10 @@ public partial class CIDbContext : DbContext
             entity.Property(e => e.ProfileText)
                 .HasColumnType("text")
                 .HasColumnName("profile_text");
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
+                .HasDefaultValueSql("('USER')")
+                .HasColumnName("role");
             entity.Property(e => e.Status)
                 .HasDefaultValueSql("((1))")
                 .HasColumnName("status");
@@ -927,10 +1023,6 @@ public partial class CIDbContext : DbContext
             entity.Property(e => e.WhyIVolunteer)
                 .HasColumnType("text")
                 .HasColumnName("why_i_volunteer");
-            entity.Property(e => e.Role)
-                .HasMaxLength(50)
-                .HasDefaultValueSql("('USER')")
-                .HasColumnName("role");
 
             entity.HasOne(d => d.City).WithMany(p => p.Users)
                 .HasForeignKey(d => d.CityId)

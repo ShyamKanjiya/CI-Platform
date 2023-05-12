@@ -33,7 +33,7 @@ public partial class Mission
 
     public string? Availability { get; set; }
 
-    public byte[] CreatedAt { get; set; } = null!;
+    public byte[]? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
 

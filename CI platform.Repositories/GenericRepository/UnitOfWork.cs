@@ -41,6 +41,9 @@ namespace CI_platform.Repositories.GenericRepository
             CMSPage = new CMSPageRepository(_db);
             Banner = new BannerRepository(_db);
             MissionMedia = new MissionMediaRepository(_db);
+            NotificationType = new NotificationTypeRepository(_db);
+            NotificationPreference = new NotificationPreferenceRepository(_db);
+            NotificationSpecuser = new NotificationSpecuserRepository(_db);
         }
         public ICityRepository City { get; private set; }
 
@@ -89,6 +92,12 @@ namespace CI_platform.Repositories.GenericRepository
         public ICMSPageRepository CMSPage { get; private set; }
 
         public IBannerRepository Banner { get; private set; }
+
+        public INotificationTypeRepository NotificationType { get; private set; }
+
+        public INotificationPreferenceRepository NotificationPreference { get; private set; }
+
+        public INotificationSpecuserRepository NotificationSpecuser { get; private set; }
 
         public int Save()
         {

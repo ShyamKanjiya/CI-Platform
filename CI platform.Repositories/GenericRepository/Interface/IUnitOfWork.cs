@@ -33,6 +33,9 @@ namespace CI_platform.Repositories.GenericRepository.Interface
         IMissionSkillsRepository MissionSkills { get; }
         ICMSPageRepository CMSPage { get; }
         IBannerRepository Banner { get; }
+        INotificationTypeRepository NotificationType { get; }
+        INotificationPreferenceRepository NotificationPreference { get; }
+        INotificationSpecuserRepository NotificationSpecuser { get; }
         int Save();
     }
 }
