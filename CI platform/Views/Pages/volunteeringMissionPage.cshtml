@@ -334,18 +334,9 @@
                         <div id="apply">
                             @if (User.Identity.IsAuthenticated)
                             {
-                                if (Model.MissionApplications != null)
+                                if (Model.MissionApp != null)
                                 {
-                                    if (Model.MissionDetail.MissionType == "GOAL")
-                                    {
-                                        if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0 || Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
-                                        {
-                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
-                                                <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
-                                            </a>
-                                        }
-                                    }
-                                    else if (Model.MissionDetail.MissionType == "TIME")
+                                    if (Model.MissionDetail.MissionType == "TIME")
                                     {
                                         if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0)
                                         {
@@ -353,25 +344,53 @@
                                                 <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
                                             </a>
                                         }
+                                        else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
+                                            </a>
+                                        }
+                                        else if (Model.MissionApplications.ApprovalStatus == "PENDING")
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                                <img src="/images/right-arrow.png" alt="">
+                                            </a>
+                                        }
                                     }
-                                    else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                    else if (Model.MissionDetail.MissionType == "GOAL")
                                     {
-                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
-                                            <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
-                                        </a>
-                                    }
-                                    else if (Model.MissionApplications.ApprovalStatus == "PENDING")
-                                    {
-                                        <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
-                                            <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
-                                        </a>
-                                    }
-                                    else
-                                    {
-                                        <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
-                                            <p class="mb-0 pe-4 text-warning h6">Apply</p>
-                                            <img src="/images/right-arrow.png" alt="">
-                                        </a>
+                                        if (@Model.MissionDetail.EndDate < DateTime.Now || Model.MissionDetail.Seats == 0 || Model.GoalMissions.TotalValue <= Model.GoalMissions.GoalValue)
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Mission Closed</p>
+                                            </a>
+                                        }
+                                        else if (Model.MissionApplications.ApprovalStatus == "APPROVE")
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Already Applied</p>
+                                            </a>
+                                        }
+                                        else if (Model.MissionApplications.ApprovalStatus == "PENDING")
+                                        {
+                                            <a class="btn border-warning disabled d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Request has been submitted</p>
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a class="btn border-warning d-flex align-items-center justify-content-center mx-auto my-3 py-3 w-50 px-3 " onclick="applyMission(@Model.MissionDetail.MissionId)" style="border-radius:50px;">
+                                                <p class="mb-0 pe-4 text-warning h6">Apply</p>
+                                                <img src="/images/right-arrow.png" alt="">
+                                            </a>
+                                        }
                                     }
                                 }
                                 else
@@ -797,7 +816,7 @@
                                                     else
                                                     {
                                                         <small><span>@goal.GoalValue</span> achieved</small>
-                                                    } 
+                                                    }
                                                 }
                                             </div>
                                         </div>

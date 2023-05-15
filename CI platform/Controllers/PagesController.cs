@@ -28,6 +28,15 @@ namespace CI_platform.Controllers
             _unitOfWork = unitOfWork;
         }
 
+        public User GetThisUser()
+        {
+            var identity = User.Identity as ClaimsIdentity;
+            var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
+
+            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
+            return user;
+        }
+
         //---------------------- Platform Landing Page --------------------------//
 
         #region Platform Landing Page
@@ -293,15 +302,6 @@ namespace CI_platform.Controllers
             };
 
             return View(viewModel);
-        }
-
-        public User GetThisUser()
-        {
-            var identity = User.Identity as ClaimsIdentity;
-            var email = identity?.FindFirst(ClaimTypes.Email)?.Value;
-
-            var user = _unitOfWork.User.GetFirstOrDefault(m => m.Email == email);
-            return user;
         }
 
         public void AddToFavourite(int missionId)

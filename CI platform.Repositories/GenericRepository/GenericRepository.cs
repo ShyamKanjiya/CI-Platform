@@ -9,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.CompilerServices;
 
 namespace CI_platform.Repositories.GenericRepository
 {
@@ -46,6 +47,11 @@ namespace CI_platform.Repositories.GenericRepository
             IQueryable<T> query = dbSet;
             query = query.Where(filter);
             return query.FirstOrDefault();
+        }
+
+        public void RemoveRange(IEnumerable<T> entity)
+        {
+            dbSet.RemoveRange(entity);
         }
 
         public void Update(T entity)

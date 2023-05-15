@@ -15,6 +15,6 @@ namespace CI_platform.Repositories.Interface
         void Add(T entity);
         void Update(T entity);
         void Remove(T entity);
-
+        void RemoveRange(IEnumerable<T> entity);
     }
 }
