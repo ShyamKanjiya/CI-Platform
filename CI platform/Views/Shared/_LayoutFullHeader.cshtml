@@ -103,21 +103,14 @@
                                                                         <p class="mb-0" style="color:darkslategrey">Get a notification for</p>
                                                                     </div>
 
-                                                                    @*<ul class="my-3 mx-4 p-0" id="notifType">
-                                                                @foreach (var notiftype in Model.NotificationTypeList)
-                                                                {
-                                                                <li class="form-check mb-2 d-flex align-items-center">
-                                                                <input class="form-check-input" type="checkbox" value="@notiftype.NottypeId" style="float: right">
-                                                                <label class="form-check-label ms-2" for="">@notiftype.NotifType</label>
-                                                                </li>
-                                                                }
-                                                                </ul>*@
+                                                                    <ul class="my-3 mx-4 p-0" id="notifType">
+                                                                    </ul>
 
                                                                 </div>
 
                                                                 <div class="modal-footer justify-content-center py-2">
-                                                                    <button type="button" class="btn px-4 py-1 border-warning text-warning" style="border:3px solid; border-radius:50px; font-weight: 600;" data-bs-dismiss="modal" onclick="savePref()">Save</button>
                                                                     <button type="button" class="btn px-4 py-1" style="border:3px solid; border-radius:50px; font-weight: 600;" data-bs-dismiss="modal">Cancel</button>
+                                                                    <button type="button" class="btn px-4 py-1 border-warning text-warning" style="border:3px solid; border-radius:50px; font-weight: 600;" data-bs-dismiss="modal" onclick="savePref()">Save</button>
                                                                 </div>
 
                                                             </div>
@@ -128,61 +121,62 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
                                                 <button type="button" class="btn px-2 py-0" style="border-radius:50px" data-bs-dismiss="modal" aria-label="Close">Clear all</button>
                                             </div>
-                                            <form id="formForAddSkill" asp-controller="Admin" asp-action="AddAndUpdateSkill" method="post">
+                                            @*                                            <form id="formForAddSkill" asp-controller="Admin" asp-action="AddAndUpdateSkill" method="post">
+                                        *@
+                                            <div class="modal-body p-0">
 
-                                                <div class="modal-body p-0">
+                                                <div style="max-height:39vh">
+                                                    <table class="table table-borderless w-100 m-0 " id="notifListNew">
+                                                        @*@foreach (var notiftoall in Model.NotificationToAllList)
+                                                    {
+                                                    if (notiftoall.Isread == 0)
+                                                    {
+                                                    <tr class="border-1 d-flex align-items-center">
+                                                    <td><i class="bi bi-plus-circle fs-5"></i></td>
+                                                    <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
+                                                    <td class="text-end" id="markAsReadIcon">
+                                                    <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
+                                                    <i class="bi bi-circle-fill fs-5" style="color: #F88634;"></i>
+                                                    </button>
+                                                    </td>
+                                                    </tr>
+                                                    }
+                                                    }*@
+                                                    </table>
 
-                                                    <div style="max-height:39vh">
-                                                        <table class="table table-borderless w-100 m-0 notifList">
-                                                            @*@foreach (var notiftoall in Model.NotificationToAllList)
-                                                        {
-                                                        if (notiftoall.Isread == 0)
-                                                        {
-                                                        <tr class="border-1 d-flex align-items-center">
-                                                        <td><i class="bi bi-plus-circle fs-5"></i></td>
-                                                        <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
-                                                        <td class="text-end" id="markAsReadIcon">
-                                                        <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
-                                                        <i class="bi bi-circle-fill fs-5" style="color: #F88634;"></i>
-                                                        </button>
+                                                    <table class="table table-borderless w-100 m-0 d-none" id="older">
+                                                        <td class="px-4 py-1 m-0" style="background-color:#e8e8e8">
+                                                            <p class="m-2 justify-content-center d-flex" style="color:darkslategrey">Older</p>
                                                         </td>
-                                                        </tr>
-                                                        }
-                                                        }*@
-                                                        </table>
+                                                    </table>
 
-                                                        <table class="table table-borderless w-100 m-0">
-                                                            <td class="px-4 py-1 m-0" style="background-color:#e8e8e8">
-                                                                <p class="mb-0 justify-content-center d-flex" style="color:darkslategrey">Older</p>
-                                                            </td>
-                                                        </table>
-
-                                                        <table class="table table-borderless w-100 m-0 notifList">
-                                                            @*@foreach (var notiftoall in Model.NotificationToAllList)
-                                                        {
-                                                        if (notiftoall.Isread == 1)
-                                                        {
-                                                        <tr class="border-1 d-flex align-items-center">
-                                                        <td><i class="bi bi-plus-circle fs-5"></i></td>
-                                                        <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
-                                                        <td class="text-end" id="markAsReadIcon">
-                                                        <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
-                                                        <i class="bi bi-circle-fill fs-5" style="color: #e3e3e3;"></i>
-                                                        </button>
-                                                        </td>
-                                                        </tr>
-                                                        }
-                                                        }*@
-                                                        </table>
-                                                    </div>
-
+                                                    <table class="table table-borderless w-100 m-0" id="notifListOld">
+                                                        @*@foreach (var notiftoall in Model.NotificationToAllList)
+                                                    {
+                                                    if (notiftoall.Isread == 1)
+                                                    {
+                                                    <tr class="border-1 d-flex align-items-center">
+                                                    <td><i class="bi bi-plus-circle fs-5"></i></td>
+                                                    <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
+                                                    <td class="text-end" id="markAsReadIcon">
+                                                    <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
+                                                    <i class="bi bi-circle-fill fs-5" style="color: #e3e3e3;"></i>
+                                                    </button>
+                                                    </td>
+                                                    </tr>
+                                                    }
+                                                    }*@
+                                                    </table>
                                                 </div>
 
-                                                <div class="modal-footer py-2">
-                                                    <button type="button" class="btn px-3 py-1" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
-                                                </div>
+                                            </div>
 
-                                            </form>
+                                            <div class="modal-footer py-2">
+                                                <button type="button" class="btn px-3 py-1" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
+                                            </div>
+
+                                            @*                                            </form>
+                                        *@
                                         </div>
                                     </div>
                                 </div>
@@ -246,7 +240,7 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="text/javascript" src='http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
+    <script type="text/javascript" src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.3.min.js' asp-append-version="true"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>

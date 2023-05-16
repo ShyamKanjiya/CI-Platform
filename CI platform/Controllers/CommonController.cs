@@ -30,16 +30,17 @@ namespace CI_platform.Controllers
         #region Notification Preferences
 
         [HttpPost]
-        public void SaveUserNotificationPreferences(long[] notiPref)
+        public void SaveUserNotificationPreferences(long[] notifPref)
         {
             User user = GetThisUser();
 
             IEnumerable<NotificationPreference> userPrefList = _unitOfWork.NotificationPreference.GetAccToFilter(m => m.UserId == user.UserId);
             _unitOfWork.NotificationPreference.RemoveRange(userPrefList);
+            _unitOfWork.Save();
 
-            if(notiPref.Length > 0 && user != null)
+            if (notifPref.Length > 0 && user != null)
             {
-                foreach(var preId in notiPref)
+                foreach(var preId in notifPref)
                 {
                     NotificationPreference userNotificationPreference = new()
                     {
@@ -101,7 +102,7 @@ namespace CI_platform.Controllers
             {
                 NotificationTypeList = notificationTypeList,
                 NotificationToUserList = notificationToUserList,
-                NotificationCount = notificationToUserList.Count(m => m.Isread == 0),
+                NotificationCount = notificationToUserList.Count(),
             };
 
             if(userNotificationPreferenceList != null)

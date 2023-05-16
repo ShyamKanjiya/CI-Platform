@@ -6,8 +6,8 @@
     Layout = "~/Views/Shared/_LayoutFullHeader.cshtml";
 }
 
-<link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
 <link rel="stylesheet" href="~/css/slider.css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/volunteeringMissionPage.css" asp-append-version="true" />
 
 <body onload="loadVolunteers(pg = 1, @Model.MissionDetail.MissionId)">
     <!-- Upper Section -->
@@ -559,8 +559,8 @@
                         <p class="py-3">@Model.MissionDetail.Availability</p>
                     </div>
                     <div class="d-flex pt-3">
-                        <p class="pe-4 mb-4">Ratting</p>
-                        <span class="col-8 " id="avg-rating-part">
+                        <p class="pe-4 mb-4">Rating</p>
+                        <span class="col" id="avg-rating-part">
                             @for (int i = 0; i < Model.Missionrate; i++)
                             {
                                 <span id="ratings d-flex">

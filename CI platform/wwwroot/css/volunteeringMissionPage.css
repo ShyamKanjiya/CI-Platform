@@ -154,3 +154,19 @@
     max-height: 50vh;
     overflow-y: scroll;
 }
+
+.prev,
+.next {
+    cursor: pointer;
+    top: 55%;
+    position: relative;
+    width: auto;
+    padding: 0;
+    justify-content: center;
+    color: white;
+    display: contents;
+    font-weight: bold;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
