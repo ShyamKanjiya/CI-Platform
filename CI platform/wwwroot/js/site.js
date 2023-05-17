@@ -81,61 +81,69 @@ function loadNotification() {
         success: function (data) {
             $('#notifListNew').html('');
             $('#notifListOld').html('');
-            $('#notifCount').text(data.notificationCount);
+            $('#notifCount').text(data.unreadNotificationCount);
             $.each(data.notificationTypeList, function (index, notificationTypeList) {
-                $('#notifType').append(`<li class="form-check mb-2 p-0 d-flex align-items-center justify-content-between">
-                                   <label class="form-check-label ms-3" for="">`+ notificationTypeList.notiType + `</label>
+                $('#notifType').append(`<li class="form-check my-4 p-0 d-flex align-items-center justify-content-between">
+                                   <h5 class="form-check-label ms-3" for="">`+ notificationTypeList.notiType + `</h5>
                                 <input class="form-check-input" type="checkbox" value="`+ notificationTypeList.notiTypeId + `">
                             </li>
                         `);
             });
 
-            $.each(data.notificationToUserList, function (index, notificationToUserList) {
-                var dbDate = notificationToUserList.createdAt;
-                var dbD = new Date(dbDate);
-                var maxDate = dbD.setDate(dbD.getDate() + 5);
+            if (data.notificationCount == 0) {
+                $('#notifListNew').append(`<tr class="border-1 d-flex align-items-center justify-content-center px-2" style="height: 60px;">
+                                <td><small> No Notifications </small></td>
+                            </tr>
+                            `);
+            }
+            else {
+                $.each(data.notificationToUserList, function (index, notificationToUserList) {
+                    var dbDate = notificationToUserList.createdAt;
+                    var dbD = new Date(dbDate);
+                    var maxDate = dbD.setDate(dbD.getDate() + 5);
 
-                dbDate = dbDate.split("T")[0];
-                var currentDate = new Date().toISOString().split("T")[0];
-                maxDate = new Date(maxDate).toISOString().split("T")[0];
+                    dbDate = dbDate.split("T")[0];
+                    var currentDate = new Date().toISOString().split("T")[0];
+                    maxDate = new Date(maxDate).toISOString().split("T")[0];
 
 
-                console.log(maxDate);
+                    console.log(maxDate);
 
-                if (dbDate == currentDate) {
-                    $('#notifListNew').append(`<tr class="border-1 d-flex align-items-center px-2" style="height: 60px;">
+                    if (dbDate == currentDate) {
+                        $('#notifListNew').append(`<tr class="border-1 d-flex align-items-center px-2" style="height: 60px;">
                                 <td style="width: 10%;"><i class="bi bi-chat-text fs-5"></i></td>
                                 <td style="width: 80%;"><a href="`+ notificationToUserList.url + `" class="text-decoration-none text-black d-flex"><small>` + notificationToUserList.notification + `</small></a></td>
                                 <td class="text-end" id="markAsReadIcon`+ notificationToUserList.notiSpecId + `" style="width: 10%;"></td>
                             </tr>
                             `);
-                    if (notificationToUserList.isread == 0) {
-                        $("#markAsReadIcon" + notificationToUserList.notiSpecId).append(`<button class="border-0 bg-transparent" onclick="isRead(` + notificationToUserList.notiSpecId + `)">
+                        if (notificationToUserList.isread == 0) {
+                            $("#markAsReadIcon" + notificationToUserList.notiSpecId).append(`<button class="border-0 bg-transparent" onclick="isRead(` + notificationToUserList.notiSpecId + `)">
                                 <i class="bi bi-check-circle-fill fs-5" style="color: #F88634;"></i>
                                 </button>`);
+                        }
+                        else {
+                            $('#markAsReadIcon' + notificationToUserList.notiSpecId).append(`<i class="bi bi-check-circle-fill fs-5" style="color: #b0b0b0;"></i>`);
+                        }
                     }
-                    else {
-                        $('#markAsReadIcon' + notificationToUserList.notiSpecId).append(`<i class="bi bi-check-circle-fill fs-5" style="color: #b0b0b0;"></i>`);
-                    }
-                }
-                else if (currentDate < maxDate && currentDate > dbDate) {
-                    $("#older").removeClass("d-none");
-                    $('#notifListOld').append(`<tr class="border-1 d-flex align-items-center px-2" style="height: 60px;">
+                    else if (currentDate < maxDate && currentDate > dbDate) {
+                        $("#older").removeClass("d-none");
+                        $('#notifListOld').append(`<tr class="border-1 d-flex align-items-center px-2" style="height: 60px;">
                                 <td style="width: 10%;"><i class="bi bi-chat-text fs-5"></i></td>
                                 <td style="width: 80%;"><a href="`+ notificationToUserList.url + `" class="text-decoration-none text-black d-flex"><small>` + notificationToUserList.notification + `</small></a></td>
                                 <td class="text-end" id="markAsReadIcon`+ notificationToUserList.notiSpecId + `" style="width: 10%;"></td>
                             </tr>
                             `);
-                    if (notificationToUserList.isread == 0) {
-                        $("#markAsReadIcon" + notificationToUserList.notiSpecId).append(`<button class="border-0 bg-transparent" onclick="isRead(` + notificationToUserList.notiSpecId + `)">
+                        if (notificationToUserList.isread == 0) {
+                            $("#markAsReadIcon" + notificationToUserList.notiSpecId).append(`<button class="border-0 bg-transparent" onclick="isRead(` + notificationToUserList.notiSpecId + `)">
                                 <i class="bi bi-check-circle-fill fs-5" style="color: #F88634;"></i>
                                 </button>`);
+                        }
+                        else {
+                            $('#markAsReadIcon' + notificationToUserList.notiSpecId).append(`<i class="bi bi-check-circle-fill fs-5" style="color: #b0b0b0;"></i>`);
+                        }
                     }
-                    else {
-                        $('#markAsReadIcon' + notificationToUserList.notiSpecId).append(`<i class="bi bi-check-circle-fill fs-5" style="color: #b0b0b0;"></i>`);
-                    }
-                }
-            });
+                });
+            }
 
             $("#notifType li input[type='checkbox']").each(function () {
                 // If the checkbox's value is in the list of IDs, check it

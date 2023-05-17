@@ -85,22 +85,24 @@
                                     <div class="modal-content">
                                         <div id="modal-content">
                                             <div class="modal-header justify-content-between py-3">
-                                                <button class="card-btn border-0 bg-transparent" role="button" id="" data-bs-toggle="modal" data-bs-target="#notificationSetting">
-                                                    <i class="bi bi-gear-fill fs-5"></i>
-                                                </button>
+                                                <span data-bs-toggle="modal" data-bs-target="#notification">
+                                                    <button class="card-btn border-0 bg-transparent" role="button" id="" data-bs-toggle="modal" data-bs-target="#notificationSetting">
+                                                        <i class="bi bi-gear-fill fs-5"></i>
+                                                    </button>
+                                                </span>
 
                                                 <div class="modal fade" id="notificationSetting" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-md">
                                                         <div class="modal-content">
                                                             <div id="modal-content">
 
-                                                                <h4 class="modal-header justify-content-center py-3" style="margin: 0;">
+                                                                <h3 class="modal-header justify-content-center py-3" style="margin: 0;">
                                                                     Notification Settings
-                                                                </h4>
+                                                                </h3>
 
                                                                 <div class="modal-body p-0 ">
                                                                     <div class="px-4 py-3 m-0" style="background-color:#e8e8e8">
-                                                                        <p class="mb-0" style="color:darkslategrey">Get a notification for</p>
+                                                                        <h4 class="mb-0" style="color:darkslategrey">Get a notification for</h4>
                                                                     </div>
 
                                                                     <ul class="my-3 mx-4 p-0" id="notifType">
@@ -121,27 +123,11 @@
                                                 <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
                                                 <button type="button" class="btn px-2 py-0" style="border-radius:50px" data-bs-dismiss="modal" aria-label="Close">Clear all</button>
                                             </div>
-                                            @*                                            <form id="formForAddSkill" asp-controller="Admin" asp-action="AddAndUpdateSkill" method="post">
-                                        *@
+
                                             <div class="modal-body p-0">
 
                                                 <div style="max-height:39vh">
                                                     <table class="table table-borderless w-100 m-0 " id="notifListNew">
-                                                        @*@foreach (var notiftoall in Model.NotificationToAllList)
-                                                    {
-                                                    if (notiftoall.Isread == 0)
-                                                    {
-                                                    <tr class="border-1 d-flex align-items-center">
-                                                    <td><i class="bi bi-plus-circle fs-5"></i></td>
-                                                    <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
-                                                    <td class="text-end" id="markAsReadIcon">
-                                                    <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
-                                                    <i class="bi bi-circle-fill fs-5" style="color: #F88634;"></i>
-                                                    </button>
-                                                    </td>
-                                                    </tr>
-                                                    }
-                                                    }*@
                                                     </table>
 
                                                     <table class="table table-borderless w-100 m-0 d-none" id="older">
@@ -151,21 +137,6 @@
                                                     </table>
 
                                                     <table class="table table-borderless w-100 m-0" id="notifListOld">
-                                                        @*@foreach (var notiftoall in Model.NotificationToAllList)
-                                                    {
-                                                    if (notiftoall.Isread == 1)
-                                                    {
-                                                    <tr class="border-1 d-flex align-items-center">
-                                                    <td><i class="bi bi-plus-circle fs-5"></i></td>
-                                                    <td><a href="@notiftoall.Url" class="text-decoration-none text-black"><small>@notiftoall.Notification</small></a></td>
-                                                    <td class="text-end" id="markAsReadIcon">
-                                                    <button class="border-0 bg-transparent" onclick="isRead(@notiftoall.NotallId)">
-                                                    <i class="bi bi-circle-fill fs-5" style="color: #e3e3e3;"></i>
-                                                    </button>
-                                                    </td>
-                                                    </tr>
-                                                    }
-                                                    }*@
                                                     </table>
                                                 </div>
 
@@ -175,8 +146,7 @@
                                                 <button type="button" class="btn px-3 py-1" style="border-radius:50px" data-bs-dismiss="modal">Cancel</button>
                                             </div>
 
-                                            @*                                            </form>
-                                        *@
+
                                         </div>
                                     </div>
                                 </div>

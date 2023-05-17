@@ -102,7 +102,7 @@ namespace CI_platform.Controllers
             {
                 var story = _unitOfWork.Story.GetAccToFilter(m => m.MissionId == mission.MissionId && m.UserId == user.UserId);
                 var count = story.Count();
-                if (story != null)
+                if (count != 0)
                 {
                     var increment = 1;
                     foreach (var s in story)
@@ -354,8 +354,6 @@ namespace CI_platform.Controllers
             return View(userVolunteerStoryModel);
         }
 
-        #region Recommanded To Co-worker
-
         public void RecommandToCoworker(int[]? userIds, long sId, int totalViews)
         {
             var thisUser = GetThisUser();
@@ -389,15 +387,32 @@ namespace CI_platform.Controllers
 
                     var smtpClient = new SmtpClient("smtp.gmail.com", 587)
                     {
-                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "aswytlgxbpbrjpmn"),
+                        Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "nfuugkmtxtjcnect"),
                         EnableSsl = true,
                     };
-                    smtpClient.Send(msg);
+                    
+                    try
+                    {
+                        smtpClient.Send(msg);
+
+                        NotificationSpecuser notificationSpecuser = new()
+                        {
+                            FromUserId = thisUser.UserId,
+                            NotiTypeId = 10,
+                            ToUserId = id,
+                            Notification = $"{thisUser.FirstName + " " + thisUser.LastName} has invited you to a intresting story, {thisStory.Title}",
+                            Url = inviteLink
+                        };
+                        _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
+                        _unitOfWork.Save();
+                    }
+                    catch
+                    {
+                        TempData["error"] = "Opps! Something went wrong, try again later.";
+                    }
                 }
             }
         }
-
-        #endregion
 
         #endregion
     }

@@ -13,5 +13,6 @@ namespace CI_pltform.Entities.ViewModels
         public IEnumerable<NotificationSpecuser> NotificationToUserList { get; set; } = new List<NotificationSpecuser>();
         public IEnumerable<long?> UserNotifPrefList { get; set; } = new List<long?>();
         public int NotificationCount { get; set; } = 0;
+        public int UnreadNotificationCount { get; set; }
     }
 }

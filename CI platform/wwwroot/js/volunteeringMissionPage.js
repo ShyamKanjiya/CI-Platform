@@ -60,7 +60,7 @@ function sendMail(missionId) {
     });
 
     $('#divLoader').removeClass('d-none');
-    $('#modal-content').addClass('d-none');
+    $('.modal-content').addClass('d-none');
     if (recUsersList.length != 0) {
         $.ajax({
             type: 'POST',
@@ -71,7 +71,7 @@ function sendMail(missionId) {
                 $('#modal-content').removeClass('d-none');
                 Swal.fire({
                     title: 'Success!',
-                    html: 'Story sent succesfully.',
+                    html: 'Mission invite sent succesfully.',
                     timer: 2000,
                     didOpen: () => {
                         Swal.showLoading()
@@ -94,7 +94,7 @@ function sendMail(missionId) {
     }
     else {
         $("#divLoader").addClass("d-none");
-        $('#modal-content').removeClass('d-none');
+        $('.modal-content').removeClass('d-none');
         alterForMail(0);
         $('#divLoader').addClass('d-none');
         $('#modal-content').removeClass('d-none');

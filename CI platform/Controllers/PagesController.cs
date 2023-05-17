@@ -384,7 +384,28 @@ namespace CI_platform.Controllers
                         Credentials = new NetworkCredential("kanjiyashyam15@gmail.com", "nfuugkmtxtjcnect"),
                         EnableSsl = true
                     };
-                    smtpClient.Send(message);
+
+                    try
+                    {
+                        smtpClient.Send(message);
+
+                        Mission mission = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionId);
+
+                        NotificationSpecuser notificationSpecuser = new()
+                        {
+                            FromUserId = thisUser.UserId,
+                            NotiTypeId = 8,
+                            ToUserId = id,
+                            Notification = $"{thisUser.FirstName + " " + thisUser.LastName} has invited you to a mission, {mission.Title}",
+                            Url = inviteLink
+                        };
+                        _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
+                        _unitOfWork.Save();
+                    }
+                    catch
+                    {
+                        TempData["error"] = "Opps! Something went wrong, try again later.";
+                    }
                 }
             }
         }

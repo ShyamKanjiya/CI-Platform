@@ -135,7 +135,7 @@ namespace CI_platform.Controllers
                 {
                     deletingData.DeletedAt = DateTime.Now;
                     _unitOfWork.User.Update(deletingData);
-                    
+
                     string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/" + deletingData.Avatar);
                     System.IO.File.Delete(alrExists);
                     _unitOfWork.User.Update(deletingData);
@@ -523,6 +523,8 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult AdminAddMission(adminMissionDetails obj, List<long> finalMissSkillList, List<IFormFile> MissionDocFiles, List<IFormFile> MissionImageFiles, string[] preloadedmissimage, string[] preloadedmissdocs)
         {
+            User user = GetThisUser();
+
             if (obj != null)
             {
                 Mission mission = new()
@@ -563,6 +565,23 @@ namespace CI_platform.Controllers
                     };
                     _unitOfWork.GoalMission.Add(goalMission);
                 }
+
+                IEnumerable<User> allUser = _unitOfWork.User.GetAccToFilter(m => m.UserId != user.UserId);
+
+                foreach (var User in allUser)
+                {
+                    NotificationSpecuser notificationSpecuser = new()
+                    {
+                        FromUserId = user.UserId,
+                        NotiTypeId = 13,
+                        ToUserId = User.UserId,
+                        Notification = $"New mission {obj.Title} is available",
+                        Url = null,
+                    };
+                    _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
+                }
+
+
                 _unitOfWork.Save();
 
                 long addedMissionId = mission.MissionId;
@@ -619,9 +638,9 @@ namespace CI_platform.Controllers
                 }
 
                 var missionDoc = _unitOfWork.MissionDocument.GetAccToFilter(m => m.MissionId == missionId);
-                if(missionDoc != null)
+                if (missionDoc != null)
                 {
-                    foreach(var doc in missionDoc)
+                    foreach (var doc in missionDoc)
                     {
                         string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionDocuments/" + doc.DocumentPath);
                         System.IO.File.Delete(alrExists);
@@ -636,10 +655,10 @@ namespace CI_platform.Controllers
                 {
                     foreach (var media in missionMedia)
                     {
-                        if(media.MediaType != "video")
+                        if (media.MediaType != "video")
                         {
                             string alrExists = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/MissionMedia/" + media.MediaPath);
-                            System.IO.File.Delete(alrExists); 
+                            System.IO.File.Delete(alrExists);
                         }
 
                         media.DeletedAt = DateTime.Now;
@@ -689,7 +708,7 @@ namespace CI_platform.Controllers
                 }
 
                 var deletingRelatedStory = _unitOfWork.Story.GetAccToFilter(m => m.MissionId == missionId);
-                if(deletingRelatedStory != null)
+                if (deletingRelatedStory != null)
                 {
                     foreach (var story in deletingRelatedStory)
                     {
@@ -775,9 +794,9 @@ namespace CI_platform.Controllers
                         MissionThemeId = thisMissionDetails.MissionThemeId,
                         Availability = thisMissionDetails.Availability,
                         MissionDeadline = thisMissionDetails.Deadline,
-                        UserDetails = user, 
+                        UserDetails = user,
                     };
-                    if(thisMissionDetails.MissionType == "TIME")
+                    if (thisMissionDetails.MissionType == "TIME")
                     {
                         obj.TotalSeats = thisMissionDetails.Seats;
                         obj.MissionDeadline = thisMissionDetails.Deadline;
@@ -825,7 +844,7 @@ namespace CI_platform.Controllers
                         editThisMission.MissionThemeId = obj.MissionThemeId;
                         editThisMission.Availability = obj.Availability;
 
-                        if(editThisMission.StartDate > DateTime.Now)
+                        if (editThisMission.StartDate > DateTime.Now)
                         {
                             editThisMission.StartDate = obj.StartDate;
                         }
@@ -1290,16 +1309,17 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult ApproveAndDeclineMissionApplication(long missionApplicationId, int flag)
         {
+            User user = GetThisUser();
             if (missionApplicationId > 0)
             {
                 MissionApplication missionData = _unitOfWork.MissionApplication.GetFirstOrDefault(m => m.MissionApplicationId == missionApplicationId);
 
                 if (missionData != null)
                 {
+                    Mission data = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionData.MissionId);
                     if (flag == 1)
                     {
-                        Mission data = _unitOfWork.Mission.GetFirstOrDefault(m => m.MissionId == missionData.MissionId);
-                        if(data.Seats > 0)
+                        if (data.Seats > 0)
                         {
                             data.Seats = data.Seats - 1;
                             missionData.ApprovalStatus = "APPROVE";
@@ -1309,18 +1329,45 @@ namespace CI_platform.Controllers
                                 data.Status = 0;
                             }
 
-                            TempData["success"] = "Application Approved successfully!";
+                            NotificationSpecuser notificationSpecuser = new()
+                            {
+                                FromUserId = user.UserId,
+                                NotiTypeId = 11,
+                                ToUserId = missionData.UserId,
+                                Notification = $"Admin has approved your mission, {data.Title}, request",
+                                Url = null
+                            };
+                            _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
                             _unitOfWork.Mission.Update(data);
+                            TempData["success"] = "Application Approved successfully!";
                         }
                         else
                         {
                             missionData.ApprovalStatus = "DECLINE";
                             TempData["error"] = "Application can't be added";
-                        }
 
+                            NotificationSpecuser notificationSpecuser = new()
+                            {
+                                FromUserId = user.UserId,
+                                NotiTypeId = 11,
+                                ToUserId = missionData.UserId,
+                                Notification = $"Admin has rejected your mission, {data.Title}, request",
+                                Url = null
+                            };
+                            _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
+                        }
                     }
                     else
                     {
+                        NotificationSpecuser notificationSpecuser = new()
+                        {
+                            FromUserId = user.UserId,
+                            NotiTypeId = 11,
+                            ToUserId = missionData.UserId,
+                            Notification = $"Admin has rejected your mission, {data.Title}, request",
+                            Url = null
+                        };
+                        _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
                         missionData.ApprovalStatus = "DECLINE";
                         TempData["success"] = "Application Declined successfully!";
                     }
@@ -1357,6 +1404,7 @@ namespace CI_platform.Controllers
         [HttpPost]
         public IActionResult ApproveAndDeclineStory(long storyId, int flag)
         {
+            User user = GetThisUser();
             if (storyId > 0)
             {
                 Story storyData = _unitOfWork.Story.GetFirstOrDefault(m => m.StoryId == storyId);
@@ -1366,12 +1414,30 @@ namespace CI_platform.Controllers
                     if (flag == 1)
                     {
                         storyData.Status = "PUBLISHED";
+                        NotificationSpecuser notificationSpecuser = new()
+                        {
+                            FromUserId = user.UserId,
+                            NotiTypeId = 12,
+                            ToUserId = storyData.UserId,
+                            Notification = $"Admin has approved your Story, {storyData.Title}, request",
+                            Url = null
+                        };
+                        _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
                         TempData["success"] = "Story published successfully!";
                     }
                     else
                     {
                         storyData.Status = "DECLINED";
                         storyData.DeletedAt = DateTime.Now;
+                        NotificationSpecuser notificationSpecuser = new()
+                        {
+                            FromUserId = user.UserId,
+                            NotiTypeId = 12,
+                            ToUserId = storyData.UserId,
+                            Notification = $"Admin has declined your Story, {storyData.Title}, request",
+                            Url = null
+                        };
+                        _unitOfWork.NotificationSpecuser.Add(notificationSpecuser);
                         TempData["success"] = "Data Declined successfully!";
                     }
                     _unitOfWork.Story.Update(storyData);

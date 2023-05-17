@@ -103,6 +103,7 @@ namespace CI_platform.Controllers
                 NotificationTypeList = notificationTypeList,
                 NotificationToUserList = notificationToUserList,
                 NotificationCount = notificationToUserList.Count(),
+                UnreadNotificationCount = notificationToUserList.Where(m => m.Isread == 0).Count()
             };
 
             if(userNotificationPreferenceList != null)
